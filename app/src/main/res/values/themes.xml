@@ -50,7 +50,7 @@
         <item name="colorControlNormal">@color/white</item>
         <item name="actionModeBackground">@color/white</item>
         <item name="fontFamily">@font/opensanbold</item>
-        <item name="android:fontFamily">@font/opensanbold</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
     </style>
 
 

@@ -100,7 +100,7 @@ android:background="@color/btm_regis_color"
 
 
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/loader"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:theme="@style/WhiteAccent"

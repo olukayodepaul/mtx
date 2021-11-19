@@ -1,8 +1,5 @@
 package com.example.mtx.di
 
-
-
-
 import com.example.mtx.datasource.AppDao
 import com.example.mtx.datasource.RetrofitService
 import com.example.mtx.ui.login.repository.LoginRepo

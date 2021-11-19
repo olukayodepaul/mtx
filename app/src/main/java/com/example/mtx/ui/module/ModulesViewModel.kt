@@ -23,5 +23,4 @@ class ModulesViewModel @ViewModelInject constructor(private val repo: ModulesRep
             _userModulesResponseState.value = NetworkResult.Error(e)
         }
     }
-
 }

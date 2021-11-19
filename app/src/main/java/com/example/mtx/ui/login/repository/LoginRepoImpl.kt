@@ -15,6 +15,4 @@ class LoginRepoImpl (
     ): LoginResponse {
         return retrofitClient.login(username, password)
     }
-
-
 }

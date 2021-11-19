@@ -12,6 +12,6 @@ import com.example.mtx.dto.CustomersListEntity
 abstract class AppDatabase: RoomDatabase() {
     abstract val appdao: AppDao
     companion object {
-        val DATABASE_NAME = "itl_m_1_2_3"
+        val DATABASE_NAME = "mtx_m_1_2_3"
     }
 }

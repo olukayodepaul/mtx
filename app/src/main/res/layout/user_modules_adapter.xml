@@ -44,10 +44,11 @@
                 android:id="@+id/modulecontents"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/opensanbold"
-                android:textSize="20sp"
+                android:fontFamily="@font/roboto_bold"
+                android:textSize="18sp"
                 android:lines="1"
                 android:text="bhchdgycdgs"
+                android:textStyle="bold"
                 android:layout_toStartOf="@+id/icons_images"
                 android:layout_alignParentStart="true"
                 />
@@ -60,7 +61,7 @@
                 android:lines="1"
                 android:text="dbchdgchdw"
                 android:textSize="15sp"
-                android:fontFamily="@font/opensansitalic"
+                android:fontFamily="@font/roboto_light"
                 android:textColor="@color/base"
                 android:textStyle="bold"
                 android:layout_toStartOf="@+id/icons_images"
@@ -76,7 +77,7 @@
                 app:srcCompat="@drawable/arry_left"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentTop="true"
-                 />
+                />
 
 
         </RelativeLayout>

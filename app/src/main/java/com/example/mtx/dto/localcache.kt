@@ -12,7 +12,7 @@ data class CustomersListEntity (
     var auto: Int = 0,
     var outlet_id: Int = 0,
     var urno: Int = 0,
-    var customerno: String = "",
+    var customerno: String? = null,
     var outletclass_id: Int = 0,
     var outletlanguage_id: Int = 0,
     var outlettype_id: Int = 0,

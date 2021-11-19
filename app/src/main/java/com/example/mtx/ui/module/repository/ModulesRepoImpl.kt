@@ -12,6 +12,4 @@ class ModulesRepoImpl(
     override suspend fun userModules(employee_id: Int): ModulesResponse {
         return retrofitClient.userModules(employee_id)
     }
-
-
 }

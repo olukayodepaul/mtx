@@ -81,3 +81,115 @@ data class UserModules(
     var imageurl: String? = null
 )
 
+data class CustomersResponse(
+    @SerializedName("status")
+    @Expose
+    var status: Int? = null,
+    @SerializedName("msg")
+    @Expose
+    var msg: String? = null,
+    @SerializedName("customers")
+    @Expose
+    var customers: List<Customers>? = null
+)
+
+data class Customers(
+    @SerializedName("dates")
+    @Expose
+    var dates: String? = null,
+    @SerializedName("_id")
+    @Expose
+    var _id: String? = null,
+    @SerializedName("employee_id")
+    @Expose
+    var employee_id: Int? = null,
+    @SerializedName("urno")
+    @Expose
+    var urno: Int? = null,
+    @SerializedName("customerno")
+    @Expose
+    var customerno: String? = null,
+    @SerializedName("outletname")
+    @Expose
+    var outletname: String? = null,
+    @SerializedName("latitude")
+    @Expose
+    var latitude: String? = null,
+    @SerializedName("longitude")
+    @Expose
+    var longitude: String? = null,
+    @SerializedName("sort")
+    @Expose
+    var sort: Int? = null,
+    @SerializedName("notice")
+    @Expose
+    var notice: String? = null,
+    @SerializedName("outlet_waiver")
+    @Expose
+    var outlet_waiver: String? = null,
+    @SerializedName("seq")
+    @Expose
+    var seq: String? = null,
+    @SerializedName("cust_token")
+    @Expose
+    var cust_token: String? = null,
+    @SerializedName("defaulttoken")
+    @Expose
+    var defaulttoken: String? = null,
+    @SerializedName("modes")
+    @Expose
+    var modes: String? = null,
+    @SerializedName("rep_id")
+    @Expose
+    var rep_id: Int? = null,
+    @SerializedName("outletclassid")
+    @Expose
+    var outletclassid: Int? = null,
+    @SerializedName("outletlanguageid")
+    @Expose
+    var outletlanguageid: Int? = null,
+    @SerializedName("outlettypeid")
+    @Expose
+    var outlettypeid: Int? = null,
+    @SerializedName("outletaddress")
+    @Expose
+    var outletaddress: String? = null,
+    @SerializedName("contactphone")
+    @Expose
+    var contactphone: String? = null,
+    @SerializedName("contactname")
+    @Expose
+    var contactname: String? = null,
+    @SerializedName("outlet_pic")
+    @Expose
+    var outlet_pic: String? = null,
+    @SerializedName("repname")
+    @Expose
+    var repname: String? = null,
+    @SerializedName("volumeclass")
+    @Expose
+    var volumeclass: String? = null,
+    @SerializedName("employee_code")
+    @Expose
+    var employee_code: String? = null,
+    @SerializedName("customer_code")
+    @Expose
+    var customer_code: String? = null,
+    @SerializedName("distance")
+    @Expose
+    var distance: String? = null,
+    @SerializedName("duration")
+    @Expose
+    var duration: String? = null,
+    @SerializedName("depotwaivers")
+    @Expose
+    var depotwaivers: String? = null,
+    @SerializedName("spec")
+    @Expose
+    var spec: String? = null,
+    @SerializedName("timeago")
+    @Expose
+    var timeago: String? = null,
+
+)
+

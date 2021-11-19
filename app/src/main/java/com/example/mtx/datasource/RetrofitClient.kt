@@ -1,6 +1,7 @@
 package com.example.mtx.datasource
 
 
+import com.example.mtx.dto.CustomersResponse
 import com.example.mtx.dto.LoginResponse
 import com.example.mtx.dto.ModulesResponse
 import retrofit2.http.GET
@@ -22,5 +23,13 @@ interface RetrofitService {
     suspend fun userModules(
         @Query("employee_id") employee_id: Int
     ): ModulesResponse
+
+    @Headers("Connection:close")
+    @GET("/sales/customers")
+    suspend fun getCustomers(
+        @Query("employee_id") employee_id: Int
+    ): CustomersResponse
+
+
 
 }

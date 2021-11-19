@@ -12,10 +12,10 @@ android:background="@color/white">
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/baseReleaseColor"
-    app:title="Segment"
+    app:title="Modules"
     app:titleTextColor="@color/white"
     android:theme="@style/AppTheme.Toolbar"
-    app:subtitleTextAppearance="@font/roboto_mediumitalic"
+    app:subtitleTextAppearance="@font/roboto_light"
     app:subtitleTextColor="@color/white"/>
 
 <LinearLayout
@@ -25,11 +25,14 @@ android:background="@color/white">
     android:orientation="vertical"
     android:layout_below="@+id/toolbar"
     android:background="@color/white">
+
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/loaders"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:indeterminate="true" />
+        android:indeterminate="true"
+        android:visibility="gone"/>
+
 </LinearLayout>
 
 
