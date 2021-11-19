@@ -33,8 +33,6 @@ class ModulesActivity : AppCompatActivity() {
 
     private lateinit var sessionManager: SessionManager
 
-    var searchView: SearchView? = null
-
     var notificationBadgeView: View? = null
 
     var notificationBadge: NotificationBadge? = null
