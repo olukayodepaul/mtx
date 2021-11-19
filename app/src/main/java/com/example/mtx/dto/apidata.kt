@@ -94,12 +94,15 @@ data class CustomersResponse(
 )
 
 data class Customers(
+    @SerializedName("auto")
+    @Expose
+    var auto: Int = 0,
     @SerializedName("dates")
     @Expose
     var dates: String? = null,
-    @SerializedName("_id")
+    @SerializedName("timeago")
     @Expose
-    var _id: String? = null,
+    var timeago: String? = null,
     @SerializedName("employee_id")
     @Expose
     var employee_id: Int? = null,
@@ -127,18 +130,18 @@ data class Customers(
     @SerializedName("outlet_waiver")
     @Expose
     var outlet_waiver: String? = null,
-    @SerializedName("seq")
-    @Expose
-    var seq: String? = null,
     @SerializedName("cust_token")
     @Expose
     var cust_token: String? = null,
     @SerializedName("defaulttoken")
     @Expose
     var defaulttoken: String? = null,
+    @SerializedName("seq")
+    @Expose
+    var seq: String? = null,
     @SerializedName("modes")
     @Expose
-    var modes: String? = null,
+    var modes: Int? = null,
     @SerializedName("rep_id")
     @Expose
     var rep_id: Int? = null,
@@ -151,9 +154,6 @@ data class Customers(
     @SerializedName("outlettypeid")
     @Expose
     var outlettypeid: Int? = null,
-    @SerializedName("outletaddress")
-    @Expose
-    var outletaddress: String? = null,
     @SerializedName("contactphone")
     @Expose
     var contactphone: String? = null,
@@ -187,9 +187,5 @@ data class Customers(
     @SerializedName("spec")
     @Expose
     var spec: String? = null,
-    @SerializedName("timeago")
-    @Expose
-    var timeago: String? = null,
-
 )
 

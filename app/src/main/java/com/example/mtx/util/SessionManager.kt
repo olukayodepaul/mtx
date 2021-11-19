@@ -17,6 +17,7 @@ class SessionManager (context: Context)  {
         val userName = preferencesKey<String>("username")
         val passWord = preferencesKey<String>("password")
         val entryDate = preferencesKey<String>("entryDate")
+        val customerEntryDate = preferencesKey<String>("customerEntryDate")
     }
 
     //delete state flow
@@ -74,6 +75,18 @@ class SessionManager (context: Context)  {
     //retrieve session
     val fetchDate: Flow<String> = dataStore.data.map {
         it[entryDate] ?: "0000-00-00"
+    }
+
+    //store session
+    suspend fun storeCustomerEntryDate(date: String) {
+        dataStore.edit {
+            it[customerEntryDate] = date
+        }
+    }
+
+    //retrieve session
+    val fetchCustomerEntryDate: Flow<String> = dataStore.data.map {
+        it[customerEntryDate] ?: "0000-00-00"
     }
 
 }

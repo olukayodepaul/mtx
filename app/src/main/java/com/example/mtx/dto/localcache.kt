@@ -3,30 +3,43 @@ package com.example.mtx.dto
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-@Entity(tableName = "customersdetails")
-data class CustomersListEntity (
+@Entity(tableName = "customers")
+data class CustomersList (
     @PrimaryKey(autoGenerate = false)
     var auto: Int = 0,
-    var outlet_id: Int = 0,
-    var urno: Int = 0,
+    var dates: String? = null,
+    var timeago: String? = null,
+    var employee_id: Int? = null,
+    var urno: Int? = null,
     var customerno: String? = null,
-    var outletclass_id: Int = 0,
-    var outletlanguage_id: Int = 0,
-    var outlettype_id: Int = 0,
-    var outletname: String = "",
-    var outletaddress: String = "",
-    var contactname: String = "",
-    var contactphone: String = "",
-    var latitude: String = "",
-    var longitude: String = "",
-    var posting_date: String = "",
-    var entry_date: String = "",
-    var outlet_waiver: String = "",
-    var cust_token: String = "",
-    var defaulttoken: String = "",
-    var volumeclass: String = "",
-    var salesentrytime: String = "00:00:00"
+    var outletname: String? = null,
+    var latitude: String? = null,
+    var longitude: String? = null,
+    var sort: Int? = null,
+    var notice: String? = null,
+    var outlet_waiver: String? = null,
+    var cust_token: String? = null,
+    var defaulttoken: String? = null,
+    var seq: String? = null,
+    var modes: Int? = null,
+    var rep_id: Int? = null,
+    var outletclassid: Int? = null,
+    var outletlanguageid: Int? = null,
+    var outlettypeid: Int? = null,
+    var contactphone: String? = null,
+    var contactname: String? = null,
+    var outlet_pic: String? = null,
+    var repname: String? = null,
+    var volumeclass: String? = null,
+    var employee_code: String? = null,
+    var customer_code: String? = null,
+    var distance: String? = null,
+    var duration: String? = null,
+    var depotwaivers: String? = null,
+    var spec: String? = null
 ): Parcelable

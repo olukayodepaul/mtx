@@ -4,10 +4,10 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.mtx.datasource.AppDao
-import com.example.mtx.dto.CustomersListEntity
+import com.example.mtx.dto.CustomersList
 
 
-@Database(entities = [CustomersListEntity::class],version = 1, exportSchema = false)
+@Database(entities = [CustomersList::class],version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract val appdao: AppDao

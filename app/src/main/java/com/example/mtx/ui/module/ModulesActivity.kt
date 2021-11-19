@@ -115,7 +115,6 @@ class ModulesActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }
-
         setupBadge()
         return true
     }
