@@ -3,7 +3,9 @@ package com.example.mtx.ui.login
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mtx.dto.BasketLimitResponse
 import com.example.mtx.dto.LoginResponse
+import com.example.mtx.dto.toBasketLimit
 import com.example.mtx.ui.login.repository.LoginRepo
 import com.example.mtx.util.NetworkResult
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,9 +21,11 @@ class LoginViewModel @ViewModelInject constructor(private val repo: LoginRepo): 
         try {
             val data = repo.isUserLogin(username, password)
             _loginResponseState.value = NetworkResult.Success(data)
+
         } catch (e: Throwable) {
             _loginResponseState.value = NetworkResult.Error(e)
         }
     }
+
 
 }

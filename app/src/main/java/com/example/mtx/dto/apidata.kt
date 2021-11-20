@@ -1,5 +1,7 @@
 package com.example.mtx.dto
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -187,5 +189,85 @@ data class Customers(
     @SerializedName("spec")
     @Expose
     var spec: String? = null,
+    @SerializedName("_id")
+    @Expose
+    var _id: String? = null
 )
+
+data class BasketLimitResponse(
+    @SerializedName("status")
+    @Expose
+    var status: Int? = null,
+    @SerializedName("msg")
+    @Expose
+    var msg: String? = null,
+    @SerializedName("basketlimit")
+    @Expose
+    var basketlimit: List<BasketLimit>? = null
+)
+
+data class BasketLimit (
+    @SerializedName("auto")
+    @Expose
+    var auto: Int = 0,
+    @SerializedName("employee_id")
+    @Expose
+    var employee_id: Int? = null,
+    @SerializedName("product_id")
+    @Expose
+    var product_id: Int? = null,
+    @SerializedName("product_code")
+    @Expose
+    var product_code: String? = null,
+    @SerializedName("qty")
+    @Expose
+    var qty: Float? = null,
+    @SerializedName("soq")
+    @Expose
+    var soq: String? = null,
+    @SerializedName("order_sold")
+    @Expose
+    var order_sold: Float? = null,
+    @SerializedName("price")
+    @Expose
+    var price: Float? = null,
+    @SerializedName("product_name")
+    @Expose
+    var product_name: String? = null,
+    @SerializedName("seperator")
+    @Expose
+    var seperator: String? = null,
+    @SerializedName("seperatorname")
+    @Expose
+    var seperatorname: String? = null,
+    @SerializedName("dates")
+    @Expose
+    var dates: String? = null,
+    @SerializedName("pricing")
+    @Expose
+    var pricing: Float? = null,
+    @SerializedName("inventory")
+    @Expose
+    var inventory: Float? = null,
+    @SerializedName("orders")
+    @Expose
+    var orders: Float? = null,
+    @SerializedName("entry_time")
+    @Expose
+    var entry_time: String? = null,
+    @SerializedName("controlpricing")
+    @Expose
+    var controlpricing: String? = null,
+    @SerializedName("controlinventory")
+    @Expose
+    var controlinventory: String? = null,
+    @SerializedName("controlorder")
+    @Expose
+    var controlorder: String? = null
+)
+
+
+
+
+
 

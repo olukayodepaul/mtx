@@ -41,5 +41,30 @@ data class CustomersList (
     var distance: String? = null,
     var duration: String? = null,
     var depotwaivers: String? = null,
-    var spec: String? = null
+    var spec: String? = null,
+    var _id: String? = null
 ): Parcelable
+
+@Entity(tableName = "osqty")
+data class BasketLimitList (
+    @PrimaryKey(autoGenerate = false)
+    var auto: Int = 0,
+    var employee_id: Int? = null,
+    var product_id: Int? = null,
+    var product_code: String? = null,
+    var qty: Float? = null,
+    var soq: String? = null,
+    var order_sold: Float? = null,
+    var price: Float? = null,
+    var product_name: String? = null,
+    var seperator: String? = null,
+    var seperatorname: String? = null,
+    var dates: String? = null,
+    var pricing: Float? = null,
+    var inventory: Float? = null,
+    var orders: Float? = null,
+    var entry_time: String? = null,
+    var controlpricing: String? = null,
+    var controlinventory: String? = null,
+    var controlorder: String? = null
+)

@@ -16,6 +16,7 @@ import com.example.mtx.databinding.ActivitySalesBinding
 import com.example.mtx.databinding.SalesAdapterBinding
 import com.example.mtx.dto.CustomersList
 import com.example.mtx.ui.order.ReOrderActivity
+import com.example.mtx.ui.salesentry.SalesEntryActivity
 import com.example.mtx.util.GeoFencing
 import com.example.mtx.util.NetworkResult
 import com.example.mtx.util.SessionManager
@@ -128,7 +129,9 @@ class SalesActivity : AppCompatActivity() {
         separators: Int,
         adapterBinding: SalesAdapterBinding
     ) {
-
+        val intent = Intent(applicationContext, SalesEntryActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

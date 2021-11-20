@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mtx.R
 import com.example.mtx.databinding.ActivityModulesBinding
 import com.example.mtx.ui.order.ReOrderActivity
+import com.example.mtx.util.GeoFencing
 import com.example.mtx.util.NetworkResult
 import com.example.mtx.util.SessionManager
 import com.example.mtx.util.ToastDialog
