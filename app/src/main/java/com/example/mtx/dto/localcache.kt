@@ -66,5 +66,5 @@ data class BasketLimitList (
     var entry_time: String? = null,
     var controlpricing: String? = null,
     var controlinventory: String? = null,
-    var controlorder: String? = null
+
 )
