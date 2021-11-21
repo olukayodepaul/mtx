@@ -1,5 +1,6 @@
 package com.example.mtx.ui.sales
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -26,7 +27,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 
 @AndroidEntryPoint
-class SalesActivity : AppCompatActivity() {
+class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivitySalesBinding
 
@@ -53,17 +54,17 @@ class SalesActivity : AppCompatActivity() {
         initAdapter()
         refreshAdapter()
         salesResponse()
+        binding.loader.refreshImG.setOnClickListener(this)
     }
 
     private fun initAdapter() {
         val layoutManager = LinearLayoutManager(this)
-        binding.tvCustomers.layoutManager = layoutManager
-        binding.tvCustomers.setHasFixedSize(true)
+        binding.tvRecycler.layoutManager = layoutManager
+        binding.tvRecycler.setHasFixedSize(true)
     }
 
     private fun refreshAdapter() {
         lifecycleScope.launchWhenCreated {
-            println("EPOLOG 1 ${sessionManager.fetchEmployeeId.first()}")
             viewModel.fetchAllSalesEntries(
                 738,
                 sessionManager.fetchCustomerEntryDate.first(),
@@ -72,6 +73,7 @@ class SalesActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun salesResponse() {
         lifecycleScope.launchWhenResumed {
             viewModel.salesResponseState.collect {
@@ -83,39 +85,48 @@ class SalesActivity : AppCompatActivity() {
                         }
 
                         is NetworkResult.Error -> {
-                            binding.customOverlayView.tvNetwork.text = it.throwable!!.message.toString()
-                            binding.customOverlayView.root.isVisible = true
-                            binding.tvCustomers.isVisible = false
-                            binding.progressbarHolder.isVisible = false
+                            binding.loader.root.isVisible = true
+                            binding.loader.tvTitle.text = it.throwable!!.message.toString()
+                            binding.loader.refreshImG.isVisible = true
+                            binding.loader.subTitles.text = "Tape to Refresh"
+                            binding.loader.imageLoader.isVisible = true
+                            binding.tvRecycler.isVisible = false
                         }
 
                         is NetworkResult.Loading -> {
-                            binding.customOverlayView.root.isVisible = false
-                            binding.tvCustomers.isVisible = false
+                            binding.loader.root.isVisible = true
+                            binding.loader.tvTitle.text = "Connecting to MTx Cloud"
+                            binding.loader.refreshImG.isVisible = false
+                            binding.loader.subTitles.text = "Please Wait"
+                            binding.loader.imageLoader.isVisible = true
+                            binding.tvRecycler.isVisible = false
                         }
 
                         is NetworkResult.Success -> {
 
                             binding.progressbarHolder.isVisible = false
 
+
                             if (it.data!!.status == 200) {
 
-                                binding.customOverlayView.root.isVisible = false
-                                binding.tvCustomers.isVisible = true
+                                binding.loader.root.isVisible = false
+                                binding.tvRecycler.isVisible = true
 
                                 sessionManager.storeCustomerEntryDate(GeoFencing.currentDate!!)
 
                                 adapter = SalesAdapter(it.data.entries!!, applicationContext, ::handleAdapterEvent)
                                 adapter.notifyDataSetChanged()
-                                binding.tvCustomers.setItemViewCacheSize(it.data.entries!!.size)
-                                binding.tvCustomers.adapter = adapter
+                                binding.tvRecycler.setItemViewCacheSize(it.data.entries!!.size)
+                                binding.tvRecycler.adapter = adapter
 
                             } else {
 
-                                binding.customOverlayView.tvNetwork.text = it.data.message
-                                binding.customOverlayView.root.isVisible = true
-                                binding.tvCustomers.isVisible = false
-
+                                binding.loader.root.isVisible = true
+                                binding.loader.tvTitle.text = it.data.message
+                                binding.loader.refreshImG.isVisible = true
+                                binding.loader.subTitles.text = "Tape to refresh"
+                                binding.loader.imageLoader.isVisible = false
+                                binding.tvRecycler.isVisible = false
                             }
                         }
                     }
@@ -163,5 +174,14 @@ class SalesActivity : AppCompatActivity() {
         notificationBadge!!.isVisible = true
         notificationBadge!!.setText("10")
     }
+
+    override fun onClick(v: View?) {
+        when (v!!.id) {
+            R.id.refreshImG -> {
+                refreshAdapter()
+            }
+        }
+    }
+
 
 }

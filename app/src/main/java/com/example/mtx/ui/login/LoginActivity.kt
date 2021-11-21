@@ -95,6 +95,7 @@ class LoginActivity : AppCompatActivity() , View.OnClickListener {
                                 if (arrayOf(it.data.login!!).isEmpty()) {
                                     ToastDialog(applicationContext, "Error, Critical error. User not define").toast
                                 } else {
+
                                     sessionManager.deleteStore()
                                     sessionManager.storeEmployeeId(it.data.login!!.employee_id!!)
                                     sessionManager.storeUsername(it.data.login!!.username!!)

@@ -53,5 +53,11 @@
         <item name="android:fontFamily">@font/roboto_light</item>
     </style>
 
+    <style name="AppTheme.Button" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="background">@color/module_child</item>
+        <item name="fontFamily">@font/opensanbold</item>
+        <item name="android:fontFamily">@font/opensanbold</item>
+    </style>
+
 
 </resources>
