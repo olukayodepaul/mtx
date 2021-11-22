@@ -101,6 +101,8 @@ class LoginActivity : AppCompatActivity() , View.OnClickListener {
                                     sessionManager.storeUsername(it.data.login!!.username!!)
                                     sessionManager.storePassword(it.data.login!!.password!!)
                                     sessionManager.storeDate(it.data.login!!.dates!!)
+                                    sessionManager.storeEmployeeName(it.data.login!!.name!!)
+                                    sessionManager.storeEmployeeEdcode(it.data.login!!.employee_code!!)
 
                                     val intent = Intent(applicationContext, ModulesActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)

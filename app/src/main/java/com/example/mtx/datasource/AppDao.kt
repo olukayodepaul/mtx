@@ -24,5 +24,12 @@ interface AppDao {
 
     @Query("delete from osqty")
     suspend fun deleteBasketFromLocalRep()
+
+    @Query("UPDATE osqty SET inventory=:inventory, pricing=:pricing, orders=:order, entry_time=:entry_time, controlpricing=:controlpricing, controlinventory = :controlinventory, controlorder=:controlorder where  auto=:auto")
+    suspend fun updateDailySales(inventory: Double, pricing: Int, order: Double, entry_time: String, controlpricing:Int, controlinventory:Int, controlorder:Int, auto:Int)
+
+    @Query("SELECT count(auto) FROM osqty WHERE   controlpricing = '' OR controlinventory = '' OR controlorder = ''")
+    suspend fun validateSalesEntry() : Int
+
 }
 

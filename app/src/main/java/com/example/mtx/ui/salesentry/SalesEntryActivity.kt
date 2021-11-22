@@ -15,7 +15,9 @@ import com.example.mtx.R
 import com.example.mtx.databinding.ActivitySalesEntryBinding
 import com.example.mtx.databinding.SalesEntryAdapterBinding
 import com.example.mtx.dto.BasketLimitList
+import com.example.mtx.dto.IsParcelable
 import com.example.mtx.ui.order.ReOrderActivity
+import com.example.mtx.ui.salesrecord.SalesRecordActivity
 import com.example.mtx.util.GeoFencing
 import com.example.mtx.util.NetworkResult
 import com.example.mtx.util.SessionManager
@@ -27,7 +29,7 @@ import kotlinx.coroutines.flow.first
 
 
 @AndroidEntryPoint
-class SalesEntryActivity : AppCompatActivity() , View.OnClickListener{
+class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivitySalesEntryBinding
 
@@ -41,7 +43,9 @@ class SalesEntryActivity : AppCompatActivity() , View.OnClickListener{
 
     var notificationBadge: NotificationBadge? = null
 
-    var item_Notification: MenuItem? = null
+    var itemNotification: MenuItem? = null
+
+    private lateinit var isIntentData : IsParcelable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +56,10 @@ class SalesEntryActivity : AppCompatActivity() , View.OnClickListener{
         initAdapter()
         refreshAdapter()
         basketResponse()
+        validateSalesEntryResponse()
+        isIntentData = intent.extras!!.getParcelable("isParcelable")!!
         binding.loader.refreshImG.setOnClickListener(this)
+        binding.saveSalesEntry.setOnClickListener(this)
         binding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
@@ -60,7 +67,11 @@ class SalesEntryActivity : AppCompatActivity() , View.OnClickListener{
 
     private fun refreshAdapter() {
         lifecycleScope.launchWhenCreated {
-            viewModel.isUserDailyBaskets(sessionManager.fetchEmployeeId.first(), sessionManager.fetchDate.first(), GeoFencing.currentDate!!)
+            viewModel.isUserDailyBaskets(
+                sessionManager.fetchEmployeeId.first(),
+                sessionManager.fetchDate.first(),
+                GeoFencing.currentDate!!
+            )
         }
     }
 
@@ -73,7 +84,7 @@ class SalesEntryActivity : AppCompatActivity() , View.OnClickListener{
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_filter_search -> {
-
+                refreshAdapter()
             }
         }
         return false
@@ -84,13 +95,16 @@ class SalesEntryActivity : AppCompatActivity() , View.OnClickListener{
             R.id.refreshImG -> {
                 refreshAdapter()
             }
+            R.id.save_sales_entry->{
+                validateSalesEntry()
+            }
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.visitdetails, menu)
-        item_Notification = menu!!.findItem(R.id.action_notifications)
-        notificationBadgeView = item_Notification!!.actionView
+        itemNotification = menu!!.findItem(R.id.action_notifications)
+        notificationBadgeView = itemNotification!!.actionView
         notificationBadge = notificationBadgeView!!.findViewById(R.id.badge) as NotificationBadge
 
         notificationBadgeView!!.setOnClickListener {
@@ -124,6 +138,7 @@ class SalesEntryActivity : AppCompatActivity() , View.OnClickListener{
                             binding.loader.subTitles.text = "Tape to Refresh"
                             binding.loader.imageLoader.isVisible = true
                             binding.tvRecycler.isVisible = false
+                            binding.progressbarHolder.isVisible = false
                         }
 
                         is NetworkResult.Loading -> {
@@ -133,17 +148,30 @@ class SalesEntryActivity : AppCompatActivity() , View.OnClickListener{
                             binding.loader.subTitles.text = "Please Wait"
                             binding.loader.imageLoader.isVisible = true
                             binding.tvRecycler.isVisible = false
+                            binding.progressbarHolder.isVisible = true
 
                         }
 
                         is NetworkResult.Success -> {
-                            binding.progressbarHolder.isVisible = false
-                            binding.loader.root.isVisible = false
-                            binding.tvRecycler.isVisible = true
-                            adapter = SalesEntryAdapter(it.data!!.data!!, applicationContext, ::handlesAdapterEvent)
-                            adapter.notifyDataSetChanged()
-                            binding.tvRecycler.setItemViewCacheSize(it.data!!.data!!.size)
-                            binding.tvRecycler.adapter = adapter
+                            if(it.data!!.status==200){
+                                binding.progressbarHolder.isVisible = false
+                                binding.loader.root.isVisible = false
+                                binding.tvRecycler.isVisible = true
+                                adapter = SalesEntryAdapter(it.data!!.data!!, applicationContext, ::handlesAdapterEvent)
+                                adapter.notifyDataSetChanged()
+                                binding.tvRecycler.setItemViewCacheSize(it.data!!.data!!.size)
+                                binding.tvRecycler.adapter = adapter
+                                binding.progressbarHolder.isVisible = false
+                            }else{
+                                binding.loader.root.isVisible = true
+                                binding.loader.tvTitle.text = it.data.message
+                                binding.loader.refreshImG.isVisible = true
+                                binding.loader.subTitles.text = "Tape to Refresh"
+                                binding.loader.imageLoader.isVisible = false
+                                binding.tvRecycler.isVisible = false
+                                binding.progressbarHolder.isVisible = false
+                            }
+
                         }
                     }
                 }
@@ -151,7 +179,7 @@ class SalesEntryActivity : AppCompatActivity() , View.OnClickListener{
         }
     }
 
-    private  fun handlesAdapterEvent(item: BasketLimitList, binding: SalesEntryAdapterBinding) {
+    private fun handlesAdapterEvent(item: BasketLimitList, binding: SalesEntryAdapterBinding) {
 
         var trasformPricing = 0
         var trasformInventory = 0.0
@@ -165,29 +193,79 @@ class SalesEntryActivity : AppCompatActivity() , View.OnClickListener{
             controltrasformPricing = 1
         }
 
-        if(binding.mtInventory.text.toString()==".") {
+        if (binding.mtInventory.text.toString() == ".") {
             binding.mtInventory.setText("")
             controltrasformInventory = 0
-        }else if (binding.mtInventory.text.toString().isNotEmpty()) {
+        } else if (binding.mtInventory.text.toString().isNotEmpty()) {
             trasformInventory = binding.mtInventory.text.toString().toDouble()
             controltrasformInventory = 1
         }
 
-        if(binding.mtOrder.text.toString()==".") {
+        if (binding.mtOrder.text.toString() == ".") {
             binding.mtOrder.setText("")
             controltrasformOrder = 0
-        }else if (binding.mtOrder.text.toString().isNotEmpty()) {
-            trasformOrder = binding.mtOrder.text.toString().toDouble()
-            if(trasformOrder > item.order_sold!!) {
-
-                binding.mtOrder.setText("")
-                controltrasformOrder = 0
-
-            }else{
+        } else if (binding.mtOrder.text.toString().isNotEmpty()) {
+            if(item.blimit=="true") {
+                trasformOrder = binding.mtOrder.text.toString().toDouble()
                 controltrasformOrder = 1
+            }else{
+                trasformOrder = binding.mtOrder.text.toString().toDouble()
+                if (trasformOrder > item.order_sold!!) {
+                    binding.mtOrder.setText("")
+                    trasformOrder = 0.0
+                    controltrasformOrder = 0
+                } else {
+                    controltrasformOrder = 1
+                }
             }
         }
 
-
+        viewModel.updateDailySales(
+            trasformInventory,
+            trasformPricing,
+            trasformOrder,
+            GeoFencing.currentTime!!,
+            controltrasformPricing,
+            controltrasformInventory,
+            controltrasformOrder,
+            item.auto
+        )
     }
+
+    private fun validateSalesEntry() {
+        viewModel.validateSalesEntries()
+    }
+
+    private fun validateSalesEntryResponse() = lifecycleScope.launchWhenCreated{
+        viewModel.validateSalesEntryResponseState.collect {
+            it.let {
+                when (it) {
+
+                    is NetworkResult.Empty -> {
+                    }
+
+                    is NetworkResult.Error -> {
+                    }
+
+                    is NetworkResult.Loading -> {
+                    }
+
+                    is NetworkResult.Success -> {
+
+                    if(it.data==0){
+                        ToastDialog(applicationContext, "Enter all the field").toast
+                        return@collect
+                    }
+
+                    val intent = Intent(applicationContext, SalesRecordActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+
+                    }
+                }
+            }
+        }
+    }
+
+
 }

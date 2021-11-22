@@ -20,12 +20,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mtx"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.messages.MessageActivity"></activity>
-        <activity android:name=".ui.order.ReOrderActivity" />
-        <activity android:name=".ui.salesentry.SalesEntryActivity" />
-        <activity android:name=".ui.sales.SalesActivity" />
-        <activity android:name=".ui.module.ModulesActivity" />
-        <activity android:name=".ui.login.LoginActivity">
+        <activity android:name=".ui.orderpurchase.OrderPurchaseActivity"></activity>
+        <activity android:name=".ui.outletupdate.OutletUpdateActivity" />
+        <activity android:name=".ui.salesrecord.SalesRecordActivity" />
+        <activity
+            android:name=".ui.messages.MessageActivity"
+            android:configChanges="orientation|screenSize|screenLayout" />
+        <activity
+            android:name=".ui.order.ReOrderActivity"
+            android:configChanges="orientation|screenSize|screenLayout" />
+        <activity
+            android:name=".ui.salesentry.SalesEntryActivity"
+            android:configChanges="orientation|screenSize|screenLayout" />
+        <activity
+            android:name=".ui.sales.SalesActivity"
+            android:configChanges="orientation|screenSize|screenLayout" />
+        <activity
+            android:name=".ui.module.ModulesActivity"
+            android:configChanges="orientation|screenSize|screenLayout" />
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:configChanges="orientation|screenSize|screenLayout">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

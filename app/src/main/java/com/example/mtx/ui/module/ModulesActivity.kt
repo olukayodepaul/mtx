@@ -50,6 +50,11 @@ class ModulesActivity : AppCompatActivity() {
         initAdapter()
         refreshAdapter()
         userModulesResponse()
+
+        lifecycleScope.launchWhenResumed {
+            binding.toolbar.subtitle = "${sessionManager.fetchEmployeeName.first()} (${sessionManager.fetchEmployeeEdcode.first()})"
+        }
+
     }
 
     private fun initAdapter() {
@@ -74,6 +79,7 @@ class ModulesActivity : AppCompatActivity() {
                         }
 
                         is NetworkResult.Error -> {
+                            binding.loaders.isVisible = false
                             ToastDialog(applicationContext, it.throwable!!.message.toString()).toast
                         }
 
@@ -97,7 +103,7 @@ class ModulesActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_filter_search -> {
-
+                refreshAdapter()
             }
         }
         return false
@@ -122,4 +128,6 @@ class ModulesActivity : AppCompatActivity() {
         notificationBadge!!.isVisible = true
         notificationBadge!!.setText("10")
     }
+
+
 }

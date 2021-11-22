@@ -1,6 +1,8 @@
 package com.example.mtx.dto
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
 fun Customers.toSalesEntry() : CustomersList {
     return CustomersList(
@@ -13,7 +15,7 @@ fun Customers.toSalesEntry() : CustomersList {
 fun BasketLimit.toBasketLimit() : BasketLimitList {
     return BasketLimitList(
         auto, employee_id, product_id, product_code, qty, soq, order_sold, price, product_name, seperator, seperatorname,
-        dates, pricing, inventory, orders, entry_time, controlpricing, controlinventory, controlorder
+        dates, pricing, inventory, orders, entry_time, controlpricing, controlinventory, controlorder,blimit
     )
 }
 
@@ -34,5 +36,12 @@ data class SalesEntryMapperInterface(
     @SerializedName("data")
     var data: List<BasketLimitList>? = null
 )
+
+@Parcelize
+data class IsParcelable(
+    var latitude: Double? = null,
+    var longitude: Double? = null,
+    var data:CustomersList? = null
+): Parcelable
 
 

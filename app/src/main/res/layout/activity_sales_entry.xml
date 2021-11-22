@@ -136,7 +136,8 @@
         android:layout_height="3dp"
         android:layout_below="@+id/const_la"
         android:background="@color/bp_x"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progressCust"

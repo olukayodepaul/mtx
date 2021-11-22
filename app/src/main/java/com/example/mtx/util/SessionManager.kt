@@ -18,6 +18,8 @@ class SessionManager (context: Context)  {
         val passWord = preferencesKey<String>("password")
         val entryDate = preferencesKey<String>("entryDate")
         val customerEntryDate = preferencesKey<String>("customerEntryDate")
+        val employeeName = preferencesKey<String>("employeeName")
+        val employeeEdcode= preferencesKey<String>("employeeEdcode")
     }
 
     //delete state flow
@@ -25,6 +27,30 @@ class SessionManager (context: Context)  {
         dataStore.edit {
             it.clear()
         }
+    }
+
+    //store session
+    suspend fun storeEmployeeEdcode(employee: String) {
+        dataStore.edit {
+            it[employeeEdcode] = employee
+        }
+    }
+
+    //retrieve session
+    val fetchEmployeeEdcode: Flow<String> = dataStore.data.map {
+        it[employeeEdcode] ?: ""
+    }
+
+    //store session
+    suspend fun storeEmployeeName(employee: String) {
+        dataStore.edit {
+            it[employeeName] = employee
+        }
+    }
+
+    //retrieve session
+    val fetchEmployeeName: Flow<String> = dataStore.data.map {
+        it[employeeName] ?: ""
     }
 
     //store session

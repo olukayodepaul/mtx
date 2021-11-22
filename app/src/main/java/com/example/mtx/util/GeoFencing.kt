@@ -21,4 +21,5 @@ object GeoFencing {
     }
 
     val currentDate: String? = SimpleDateFormat("yyyy-M-dd").format(Date())
+    val currentTime: String? = SimpleDateFormat("HH:mm:ss").format(Date())
 }

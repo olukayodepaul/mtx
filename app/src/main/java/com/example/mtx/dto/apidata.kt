@@ -263,8 +263,12 @@ data class BasketLimit (
     var controlinventory: String? = null,
     @SerializedName("controlorder")
     @Expose
-    var controlorder: String? = null
+    var controlorder: String? = null,
+    @SerializedName("blimit")
+    @Expose
+    var blimit: String? = null
 )
+
 
 
 

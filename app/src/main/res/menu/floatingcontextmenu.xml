@@ -2,31 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="Outlet Location (onGoogle Map)"
-        android:id="@+id/outlet_nav" />
+        android:id="@+id/googleLocations" />
 
     <item android:title="Outlet Close"
-        android:id="@+id/close_outlet" />
+        android:id="@+id/outletClose" />
 
     <item android:title="Outlet Open"
-        android:id="@+id/entries_id" />
+        android:id="@+id/outletOpen" />
 
     <item android:title="Outlet Update"
-        android:id="@+id/update_outlet" />
+        android:id="@+id/outletUpdate" />
 
     <item android:title="Synchronisation"
         android:id="@+id/async" />
 
-    <item android:title="Details"
-        android:id="@+id/details" />
-
-    <!--USING THE SEQUENCE ERROR TO CORRECT THE SEQUENCE ISSUES. NEVER ASK REP TO GO BACK TO THE PREVIOUS OUTLETS-->
-    <!--please not to get SOQ in this adjustment-->
-
-    <item android:title="Sequence Error Correction"
-        android:id="@+id/sq_error" />
-
-    <item android:title="Outlet Status"
-        android:id="@+id/outlet_status" />
-
+    <item android:title="Sales Record"
+        android:id="@+id/salesRecord" />
 
 </menu>

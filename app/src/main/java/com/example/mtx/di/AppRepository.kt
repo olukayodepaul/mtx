@@ -10,6 +10,8 @@ import com.example.mtx.ui.sales.repository.SalesRepo
 import com.example.mtx.ui.sales.repository.SalesRepoImpl
 import com.example.mtx.ui.salesentry.repository.SalesEntryRepo
 import com.example.mtx.ui.salesentry.repository.SalesEntryRepoImpl
+import com.example.mtx.ui.salesrecord.repository.SalesRecordRepo
+import com.example.mtx.ui.salesrecord.repository.SalesRecordRepoImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -60,6 +62,17 @@ object AppRepository {
         appdoa: AppDao
     ): SalesEntryRepo {
         return SalesEntryRepoImpl(
+            retrofitClient, appdoa
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideSalesRecordRepository(
+        retrofitClient: RetrofitService,
+        appdoa: AppDao
+    ): SalesRecordRepo {
+        return SalesRecordRepoImpl(
             retrofitClient, appdoa
         )
     }

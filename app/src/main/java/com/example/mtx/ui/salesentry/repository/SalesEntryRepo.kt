@@ -9,4 +9,6 @@ interface SalesEntryRepo {
     suspend fun setBasket(cust: List<BasketLimitList>)
     suspend fun fetchBasketFromLocalRep() : List<BasketLimitList>
     suspend fun deleteBasketFromLocalRep()
+    suspend fun updateDailySales(inventory: Double, pricing: Int, order: Double, entry_time: String, controlpricing:Int, controlinventory:Int, controlorder:Int, auto:Int)
+    suspend fun validateSalesEntry() : Int
 }

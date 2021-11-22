@@ -1,14 +1,22 @@
 package com.example.mtx.ui.sales
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
+import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,11 +24,17 @@ import com.example.mtx.R
 import com.example.mtx.databinding.ActivitySalesBinding
 import com.example.mtx.databinding.SalesAdapterBinding
 import com.example.mtx.dto.CustomersList
+import com.example.mtx.dto.IsParcelable
 import com.example.mtx.ui.order.ReOrderActivity
+import com.example.mtx.ui.orderpurchase.OrderPurchaseActivity
+import com.example.mtx.ui.outletupdate.OutletUpdateActivity
 import com.example.mtx.ui.salesentry.SalesEntryActivity
-import com.example.mtx.util.GeoFencing
-import com.example.mtx.util.NetworkResult
-import com.example.mtx.util.SessionManager
+import com.example.mtx.util.*
+import com.example.mtx.util.GeoFencing.setGeoFencing
+import com.example.mtx.util.StartGoogleMap.startGoogleMapIntent
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.location.*
 import com.nex3z.notificationbadge.NotificationBadge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -37,6 +51,8 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var sessionManager: SessionManager
 
+    lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+
     var searchView: SearchView? = null
 
     var notificationBadgeView: View? = null
@@ -45,16 +61,35 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
     var item_Notification: MenuItem? = null
 
+    private var hasGps = false
+
+    lateinit var mLocationManager: LocationManager
+
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    private lateinit var locationRequest: LocationRequest
+
+    private var currentLatitude: Double? = null
+
+    private var currentLongitude: Double? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySalesBinding.inflate(layoutInflater)
         setContentView(binding.root)
         sessionManager = SessionManager(this)
         setSupportActionBar(binding.toolbar)
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         initAdapter()
         refreshAdapter()
         salesResponse()
+        onActivityResult()
         binding.loader.refreshImG.setOnClickListener(this)
+
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
     }
 
     private fun initAdapter() {
@@ -65,8 +100,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun refreshAdapter() {
         lifecycleScope.launchWhenCreated {
-            viewModel.fetchAllSalesEntries(
-                738,
+            viewModel.fetchAllSalesEntries(sessionManager.fetchEmployeeId.first(),
                 sessionManager.fetchCustomerEntryDate.first(),
                 GeoFencing.currentDate!!
             )
@@ -140,22 +174,76 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
         separators: Int,
         adapterBinding: SalesAdapterBinding
     ) {
-        val intent = Intent(applicationContext, SalesEntryActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
+        isPermissionRequest()
+
+        when(separators) {
+            1->{
+                val dmode = "d".single()
+                val destination = "${item.latitude},${item.longitude}"
+                startGoogleMapIntent(this, destination, dmode, 't')
+            }
+            2->{
+                getCurrentLocation()
+            }
+            3->{
+
+                getCurrentLocation()
+
+                if (item.outlet_waiver!!.toLowerCase() == "true") {
+                    val ifIsValidOutlet: Boolean = setGeoFencing(currentLatitude!!, currentLongitude!!, item.latitude!!.toDouble(), item.longitude!!.toDouble())
+                    if(!ifIsValidOutlet){
+                        ToastDialog(applicationContext, "You are not at the corresponding outlet")
+                    }else{
+                        val intent = Intent(applicationContext, SalesEntryActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        val contentFlow = IsParcelable(
+                            currentLatitude, currentLongitude, item
+                        )
+                        intent.putExtra("isParcelable", contentFlow)
+                        startActivity(intent)
+                    }
+                }else{
+                    val contentFlow = IsParcelable(
+                        currentLatitude, currentLongitude, item
+                    )
+                    val intent = Intent(applicationContext, SalesEntryActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    intent.putExtra("isParcelable", contentFlow)
+                    startActivity(intent)
+                }
+            }
+            4->{
+                val intent = Intent(applicationContext, OutletUpdateActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra("isParcelable", item)
+                startActivity(intent)
+            }
+            5->{
+
+            }
+            6->{
+                val intent = Intent(applicationContext, OrderPurchaseActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra("isParcelable", item)
+                startActivity(intent)
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_filter_search -> {
-
+                refreshAdapter()
+            }
+            R.id.action_gpd -> {
+                getCurrentLocation()
             }
         }
         return false
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.visitdetails, menu)
+        menuInflater.inflate(R.menu.visitdetail, menu)
         item_Notification = menu!!.findItem(R.id.action_notifications)
         notificationBadgeView = item_Notification!!.actionView
         notificationBadge = notificationBadgeView!!.findViewById(R.id.badge) as NotificationBadge
@@ -181,6 +269,94 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                 refreshAdapter()
             }
         }
+    }
+
+    private fun isPermissionRequest() {
+
+        val usesPermission = PermissionUtility.requestPermission(this)
+
+        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        hasGps = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+        val available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
+
+        if(usesPermission.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, usesPermission.toTypedArray(), 0)
+            return
+        }else if(!hasGps){
+            isGpsEnableIntent()
+            return
+        }else if(available == ConnectionResult.API_UNAVAILABLE){
+            ToastDialog(applicationContext, "Play Update the google play service");
+            return
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 0 && grantResults.isNotEmpty()) {
+            for (i in grantResults.indices) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    println("permissionRequest  Granted")
+                }
+            }
+        }
+    }
+
+    private fun isGpsEnableIntent() {
+        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        activityResultLauncher.launch(intent)
+    }
+
+    private fun onActivityResult() {
+        activityResultLauncher= registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getCurrentLocation() {
+
+        locationRequest = LocationRequest.create().apply {
+            interval = 1 * 1000
+            fastestInterval = 1 * 1000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        val settingsClient = LocationServices.getSettingsClient(this)
+        settingsClient.checkLocationSettings(builder.build())
+
+        binding.loader.root.isVisible = true
+        binding.loader.tvTitle.text = "Location Request"
+        binding.loader.refreshImG.isVisible = false
+        binding.loader.subTitles.text = "Please Wait"
+        binding.loader.imageLoader.isVisible = true
+        binding.tvRecycler.isVisible = false
+
+        fusedLocationProviderClient.requestLocationUpdates(
+            locationRequest, locationCallback, Looper.getMainLooper()
+        )
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            super.onLocationResult(locationResult)
+            currentLatitude = locationResult.lastLocation.latitude
+            currentLongitude = locationResult.lastLocation.longitude
+            stopLocationUpdate()
+            return
+        }
+    }
+
+    //location settings.
+    private fun stopLocationUpdate() {
+        binding.tvRecycler.isVisible = true
+        binding.loader.root.isVisible = false
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
 

@@ -81,26 +81,23 @@ class SalesAdapter(private var mItems: List<CustomersList>, private val context:
 
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
-                    R.id.entries_id -> {
+                    R.id.googleLocations -> {
                         clickItems(item, 1, binding)
                     }
-                    R.id.outlet_nav -> {
+                    R.id.outletClose -> {
                         clickItems(item, 2, binding)
                     }
-                    R.id.update_outlet -> {
-                        clickItems(item, 2, binding)
+                    R.id.outletOpen -> {
+                        clickItems(item, 3, binding)
                     }
-                    R.id.close_outlet -> {
+                    R.id.outletUpdate -> {
                         clickItems(item, 4, binding)
                     }
                     R.id.async -> {
                         clickItems(item, 5, binding)
                     }
-                    R.id.details -> {
+                    R.id.salesRecord -> {
                         clickItems(item, 6, binding)
-                    }
-                    R.id.outlet_status -> {
-                        clickItems(item, 7, binding)
                     }
                 }
                 true

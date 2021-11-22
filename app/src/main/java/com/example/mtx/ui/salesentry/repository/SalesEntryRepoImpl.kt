@@ -26,4 +26,21 @@ class SalesEntryRepoImpl(
     override suspend fun deleteBasketFromLocalRep() {
         return appdoa.deleteBasketFromLocalRep()
     }
+
+    override suspend fun updateDailySales(
+        inventory: Double,
+        pricing: Int,
+        order: Double,
+        entry_time: String,
+        controlpricing: Int,
+        controlinventory: Int,
+        controlorder: Int,
+        auto: Int
+    ) {
+        return appdoa.updateDailySales(inventory, pricing, order, entry_time, controlpricing, controlinventory, controlorder, auto)
+    }
+
+    override suspend fun validateSalesEntry(): Int {
+        return appdoa.validateSalesEntry()
+    }
 }
