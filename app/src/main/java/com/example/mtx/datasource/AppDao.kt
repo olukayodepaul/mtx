@@ -28,8 +28,17 @@ interface AppDao {
     @Query("UPDATE osqty SET inventory=:inventory, pricing=:pricing, orders=:order, entry_time=:entry_time, controlpricing=:controlpricing, controlinventory = :controlinventory, controlorder=:controlorder where  auto=:auto")
     suspend fun updateDailySales(inventory: Double, pricing: Int, order: Double, entry_time: String, controlpricing:Int, controlinventory:Int, controlorder:Int, auto:Int)
 
-    @Query("SELECT count(auto) FROM osqty WHERE   controlpricing = '' OR controlinventory = '' OR controlorder = ''")
+    @Query("SELECT count(auto) FROM osqty WHERE   controlpricing = '0' OR controlinventory = '0' OR controlorder = '0'")
     suspend fun validateSalesEntry() : Int
+
+    @Query("UPDATE  osqty SET  controlpricing = '0', controlinventory = '0',  controlorder = '0' , pricing= '0.0', inventory = '0.0', orders = '0.0', entry_time = ''")
+    suspend fun setBasketToInitState()
+
+    @Query("SELECT * FROM osqty WHERE  (inventory!='0.0'  OR pricing !='0.0' OR orders !='0.0' ) ")
+    suspend fun salesPosted():  List<BasketLimitList>
+
+    @Query("UPDATE  osqty SET  controlpricing = '0', controlinventory = '0',  controlorder = '0' , pricing= '0.0', inventory = '0.0', orders = '0.0', entry_time = '',  order_sold = order_sold - :order_sold  WHERE auto=:auto and seperator = '1'")
+    suspend fun resetOrders(order_sold: Double, auto: Int)
 
 }
 

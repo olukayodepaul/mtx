@@ -45,7 +45,7 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
 
     var itemNotification: MenuItem? = null
 
-    private lateinit var isIntentData : IsParcelable
+    private lateinit var isIntentData: IsParcelable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +59,6 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
         validateSalesEntryResponse()
         isIntentData = intent.extras!!.getParcelable("isParcelable")!!
         binding.loader.refreshImG.setOnClickListener(this)
-        binding.saveSalesEntry.setOnClickListener(this)
         binding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
@@ -84,7 +83,7 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_filter_search -> {
-                refreshAdapter()
+                validateSalesEntry()
             }
         }
         return false
@@ -95,14 +94,11 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
             R.id.refreshImG -> {
                 refreshAdapter()
             }
-            R.id.save_sales_entry->{
-                validateSalesEntry()
-            }
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.visitdetails, menu)
+        menuInflater.inflate(R.menu.visitdetailss, menu)
         itemNotification = menu!!.findItem(R.id.action_notifications)
         notificationBadgeView = itemNotification!!.actionView
         notificationBadge = notificationBadgeView!!.findViewById(R.id.badge) as NotificationBadge
@@ -153,16 +149,20 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
                         }
 
                         is NetworkResult.Success -> {
-                            if(it.data!!.status==200){
+                            if (it.data!!.status == 200) {
                                 binding.progressbarHolder.isVisible = false
                                 binding.loader.root.isVisible = false
                                 binding.tvRecycler.isVisible = true
-                                adapter = SalesEntryAdapter(it.data!!.data!!, applicationContext, ::handlesAdapterEvent)
+                                adapter = SalesEntryAdapter(
+                                    it.data!!.data!!,
+                                    applicationContext,
+                                    ::handlesAdapterEvent
+                                )
                                 adapter.notifyDataSetChanged()
                                 binding.tvRecycler.setItemViewCacheSize(it.data!!.data!!.size)
                                 binding.tvRecycler.adapter = adapter
                                 binding.progressbarHolder.isVisible = false
-                            }else{
+                            } else {
                                 binding.loader.root.isVisible = true
                                 binding.loader.tvTitle.text = it.data.message
                                 binding.loader.refreshImG.isVisible = true
@@ -205,10 +205,10 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
             binding.mtOrder.setText("")
             controltrasformOrder = 0
         } else if (binding.mtOrder.text.toString().isNotEmpty()) {
-            if(item.blimit=="true") {
+            if (item.blimit == "true") {
                 trasformOrder = binding.mtOrder.text.toString().toDouble()
                 controltrasformOrder = 1
-            }else{
+            } else {
                 trasformOrder = binding.mtOrder.text.toString().toDouble()
                 if (trasformOrder > item.order_sold!!) {
                     binding.mtOrder.setText("")
@@ -236,7 +236,7 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
         viewModel.validateSalesEntries()
     }
 
-    private fun validateSalesEntryResponse() = lifecycleScope.launchWhenCreated{
+    private fun validateSalesEntryResponse() = lifecycleScope.launchWhenCreated {
         viewModel.validateSalesEntryResponseState.collect {
             it.let {
                 when (it) {
@@ -251,16 +251,15 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
                     }
 
                     is NetworkResult.Success -> {
-
-                    if(it.data==0){
-                        ToastDialog(applicationContext, "Enter all the field").toast
-                        return@collect
-                    }
-
-                    val intent = Intent(applicationContext, SalesRecordActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-
+                        if (it.data!! == 0) {
+                            val intent = Intent(applicationContext, SalesRecordActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            intent.putExtra("isParcelable", isIntentData)
+                            startActivity(intent)
+                        }else{
+                            ToastDialog(applicationContext, "Enter all the field").toast
+                            return@collect
+                        }
                     }
                 }
             }

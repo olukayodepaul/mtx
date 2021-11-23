@@ -39,6 +39,7 @@ import com.nex3z.notificationbadge.NotificationBadge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import java.util.*
 
 @AndroidEntryPoint
 class SalesActivity : AppCompatActivity(), View.OnClickListener {
@@ -196,15 +197,24 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                     }else{
                         val intent = Intent(applicationContext, SalesEntryActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
                         val contentFlow = IsParcelable(
-                            currentLatitude, currentLongitude, item
+                            currentLatitude, currentLongitude,
+                            GeoFencing.currentTime,
+                            GeoFencing.currentDate,"",
+                            GeoFencing.currentDate + "${item.rep_id}" + UUID.randomUUID().toString()
+                            , item
                         )
                         intent.putExtra("isParcelable", contentFlow)
                         startActivity(intent)
                     }
                 }else{
                     val contentFlow = IsParcelable(
-                        currentLatitude, currentLongitude, item
+                        currentLatitude, currentLongitude,
+                        GeoFencing.currentTime,
+                        GeoFencing.currentDate,"",
+                        GeoFencing.currentDate + "${item.rep_id}" + UUID.randomUUID().toString()
+                        , item
                     )
                     val intent = Intent(applicationContext, SalesEntryActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -357,6 +367,13 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
         binding.tvRecycler.isVisible = true
         binding.loader.root.isVisible = false
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.loader.root.isVisible = false
+        binding.tvRecycler.isVisible = true
+        isPermissionRequest()
     }
 
 

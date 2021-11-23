@@ -1,13 +1,8 @@
 package com.example.mtx.datasource
 
 
-import com.example.mtx.dto.BasketLimitResponse
-import com.example.mtx.dto.CustomersResponse
-import com.example.mtx.dto.LoginResponse
-import com.example.mtx.dto.ModulesResponse
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Query
+import com.example.mtx.dto.*
+import retrofit2.http.*
 
 
 interface RetrofitService {
@@ -36,6 +31,13 @@ interface RetrofitService {
     suspend fun fetchBasketFromRemoteRep(
         @Query("employee_id") employee_id: Int
     ): BasketLimitResponse
+
+
+    @Headers("Connection:close")
+    @POST("/sales/dailysales")
+    suspend fun postSales(
+        @Body data: OrderPosted
+    ): PostSalesResponse
 
 
 }

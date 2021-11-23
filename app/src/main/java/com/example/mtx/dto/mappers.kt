@@ -19,6 +19,13 @@ fun BasketLimit.toBasketLimit() : BasketLimitList {
     )
 }
 
+fun BasketLimitList.toBasketToApi() : BasketLimit {
+    return BasketLimit(
+        auto, employee_id, product_id, product_code, qty, soq, order_sold, price, product_name, seperator, seperatorname,
+        dates, pricing, inventory, orders, entry_time, controlpricing, controlinventory, controlorder,blimit
+    )
+}
+
 data class IsAllCustomers(
     @SerializedName("status")
     var status: Int = 0,
@@ -41,7 +48,13 @@ data class SalesEntryMapperInterface(
 data class IsParcelable(
     var latitude: Double? = null,
     var longitude: Double? = null,
+    var entry_time: String? = null,
+    var entry_date: String? = null,
+    var userToken: String? = null,
+    var uii: String? = null,
     var data:CustomersList? = null
 ): Parcelable
+
+
 
 

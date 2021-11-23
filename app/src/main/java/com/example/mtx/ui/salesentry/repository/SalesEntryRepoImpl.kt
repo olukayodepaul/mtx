@@ -43,4 +43,10 @@ class SalesEntryRepoImpl(
     override suspend fun validateSalesEntry(): Int {
         return appdoa.validateSalesEntry()
     }
+
+    override suspend fun setBasketToInitState() {
+        return appdoa.setBasketToInitState()
+    }
+
+
 }

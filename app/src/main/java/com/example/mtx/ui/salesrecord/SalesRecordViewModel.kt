@@ -3,7 +3,7 @@ package com.example.mtx.ui.salesrecord
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mtx.dto.BasketLimitList
+import com.example.mtx.dto.*
 import com.example.mtx.ui.salesrecord.repository.SalesRecordRepo
 import com.example.mtx.util.NetworkResult
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,4 +25,35 @@ class SalesRecordViewModel @ViewModelInject constructor(private val repo: SalesR
         }
     }
 
+    private val _postSalesResponseState = MutableStateFlow<NetworkResult<PostSalesResponse>>(NetworkResult.Empty)
+    val postSalesResponseState get() = _postSalesResponseState
+
+    fun postSalesToServer(salesRecord: IsParcelable) = viewModelScope.launch {
+        _postSalesResponseState.value = NetworkResult.Loading
+        try {
+
+            val isResponseModel = OrderPosted()
+            isResponseModel.uiid = salesRecord.uii
+            isResponseModel.clat = salesRecord.latitude!!.toString()
+            isResponseModel.clng = salesRecord.longitude!!.toString()
+            isResponseModel.etime = salesRecord.entry_time
+            isResponseModel.edate = salesRecord.entry_date
+            isResponseModel.customerno = salesRecord.data!!.customerno
+            isResponseModel.employee_id = salesRecord.data!!.employee_id
+            isResponseModel.urno = salesRecord.data!!.urno
+            isResponseModel.outletlatitude = salesRecord.data!!.latitude
+            isResponseModel.outletlongitude = salesRecord.data!!.longitude
+            isResponseModel.outletname = salesRecord.data!!.outletname
+            isResponseModel.volumeclass = salesRecord.data!!.volumeclass
+            isResponseModel.token = salesRecord.userToken
+            isResponseModel.order = repo.salesPosted().map { it.toBasketToApi() }
+            val httpResponse = repo.postSales(isResponseModel)
+
+            if
+
+
+        } catch (e: Throwable) {
+            _postSalesResponseState.value = NetworkResult.Error(e)
+        }
+    }
 }

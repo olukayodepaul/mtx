@@ -1,5 +1,6 @@
 package com.example.mtx.ui.salesrecord
 
+import android.icu.text.NumberFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -35,8 +36,7 @@ class SalesRecordAdapter(private var mItems: List<BasketLimitList>) :
             binding.mtInventorys.text = "${item.inventory}"
             binding.mtPricings.text = "${item.pricing}"
             binding.mtOrders.text = "${item.orders}"
-            binding.mtAmounts.text =  "$sum"
-
+            binding.mtAmounts.text =  NumberFormat.getInstance().format(sum)
             }
         }
 }

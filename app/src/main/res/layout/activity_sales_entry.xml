@@ -159,8 +159,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginBottom="50dp"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <include
             android:id="@+id/loader"
@@ -172,23 +171,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-
-        <TextView
-            android:id="@+id/save_sales_entry"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="-50dp"
-            android:background="@color/gray_lights"
-            android:elevation="4dp"
-            android:fontFamily="@font/roboto_regular"
-            android:gravity="center"
-            android:text="SAVE SALES ENTRY"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            tools:ignore="MissingConstraints"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:orientation="horizontal" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

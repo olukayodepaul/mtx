@@ -26,6 +26,7 @@ class SalesEntryViewModel @ViewModelInject constructor(private val repo: SalesEn
 
             try {
 
+                repo.setBasketToInitState()
                 val mapper = SalesEntryMapperInterface()
 
                 if (sysdate == curDate) {

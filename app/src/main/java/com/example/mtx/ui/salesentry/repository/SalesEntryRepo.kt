@@ -2,6 +2,9 @@ package com.example.mtx.ui.salesentry.repository
 
 import com.example.mtx.dto.BasketLimitList
 import com.example.mtx.dto.BasketLimitResponse
+import com.example.mtx.dto.IsParcelable
+import com.example.mtx.dto.PostSalesResponse
+
 
 interface SalesEntryRepo {
 
@@ -11,4 +14,6 @@ interface SalesEntryRepo {
     suspend fun deleteBasketFromLocalRep()
     suspend fun updateDailySales(inventory: Double, pricing: Int, order: Double, entry_time: String, controlpricing:Int, controlinventory:Int, controlorder:Int, auto:Int)
     suspend fun validateSalesEntry() : Int
+    suspend fun setBasketToInitState()
+
 }
