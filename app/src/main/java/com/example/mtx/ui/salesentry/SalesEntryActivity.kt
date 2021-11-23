@@ -62,6 +62,9 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
         binding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+
+        binding.toolbar.subtitle = isIntentData.data!!.outletname
+
     }
 
     private fun refreshAdapter() {
@@ -251,15 +254,21 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
                     }
 
                     is NetworkResult.Success -> {
-                        if (it.data!! == 0) {
-                            val intent = Intent(applicationContext, SalesRecordActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            intent.putExtra("isParcelable", isIntentData)
-                            startActivity(intent)
-                        }else{
-                            ToastDialog(applicationContext, "Enter all the field").toast
-                            return@collect
-                        }
+
+                        val intent = Intent(applicationContext, SalesRecordActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        intent.putExtra("isParcelable", isIntentData)
+                        startActivity(intent)
+
+//                        if (it.data!! == 0) {
+//                            val intent = Intent(applicationContext, SalesRecordActivity::class.java)
+//                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                            intent.putExtra("isParcelable", isIntentData)
+//                            startActivity(intent)
+//                        }else{
+//                            ToastDialog(applicationContext, "Enter all the field").toast
+//                            return@collect
+//                        }
                     }
                 }
             }

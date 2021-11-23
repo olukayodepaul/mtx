@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -70,9 +71,9 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var locationRequest: LocationRequest
 
-    private var currentLatitude: Double? = null
+    private var items: CustomersList? = null
 
-    private var currentLongitude: Double? = null
+    private var separators: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,6 +92,9 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
             onBackPressed()
         }
 
+        lifecycleScope.launchWhenResumed {
+            binding.toolbar.subtitle = "${sessionManager.fetchEmployeeName.first()} (${sessionManager.fetchEmployeeEdcode.first()})"
+        }
     }
 
     private fun initAdapter() {
@@ -172,55 +176,24 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun handleAdapterEvent(
         item: CustomersList,
-        separators: Int,
+        separator: Int,
         adapterBinding: SalesAdapterBinding
     ) {
         isPermissionRequest()
 
-        when(separators) {
+        when(separator) {
             1->{
                 val dmode = "d".single()
                 val destination = "${item.latitude},${item.longitude}"
                 startGoogleMapIntent(this, destination, dmode, 't')
             }
             2->{
-                getCurrentLocation()
+               // getCurrentLocation()
             }
             3->{
-
+                items = item
+                separators = separator
                 getCurrentLocation()
-
-                if (item.outlet_waiver!!.toLowerCase() == "true") {
-                    val ifIsValidOutlet: Boolean = setGeoFencing(currentLatitude!!, currentLongitude!!, item.latitude!!.toDouble(), item.longitude!!.toDouble())
-                    if(!ifIsValidOutlet){
-                        ToastDialog(applicationContext, "You are not at the corresponding outlet")
-                    }else{
-                        val intent = Intent(applicationContext, SalesEntryActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-
-                        val contentFlow = IsParcelable(
-                            currentLatitude, currentLongitude,
-                            GeoFencing.currentTime,
-                            GeoFencing.currentDate,"",
-                            GeoFencing.currentDate + "${item.rep_id}" + UUID.randomUUID().toString()
-                            , item
-                        )
-                        intent.putExtra("isParcelable", contentFlow)
-                        startActivity(intent)
-                    }
-                }else{
-                    val contentFlow = IsParcelable(
-                        currentLatitude, currentLongitude,
-                        GeoFencing.currentTime,
-                        GeoFencing.currentDate,"",
-                        GeoFencing.currentDate + "${item.rep_id}" + UUID.randomUUID().toString()
-                        , item
-                    )
-                    val intent = Intent(applicationContext, SalesEntryActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    intent.putExtra("isParcelable", contentFlow)
-                    startActivity(intent)
-                }
             }
             4->{
                 val intent = Intent(applicationContext, OutletUpdateActivity::class.java)
@@ -350,31 +323,67 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
         fusedLocationProviderClient.requestLocationUpdates(
             locationRequest, locationCallback, Looper.getMainLooper()
         )
+
+
     }
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
-            currentLatitude = locationResult.lastLocation.latitude
-            currentLongitude = locationResult.lastLocation.longitude
-            stopLocationUpdate()
-            return
+            isCurrentLocationSetter(locationResult.lastLocation)
         }
     }
 
     //location settings.
     private fun stopLocationUpdate() {
-        binding.tvRecycler.isVisible = true
-        binding.loader.root.isVisible = false
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     override fun onResume() {
         super.onResume()
-        binding.loader.root.isVisible = false
         binding.tvRecycler.isVisible = true
-        isPermissionRequest()
+        binding.loader.root.isVisible = false
     }
 
+    private fun isCurrentLocationSetter(currentLocation: Location?) {
 
+        stopLocationUpdate()
+
+        if(separators==3) {
+
+            if (items!!.outlet_waiver!!.toLowerCase() == "true") {
+                val ifIsValidOutlet: Boolean = setGeoFencing(currentLocation!!.latitude,currentLocation!!.longitude, items!!.latitude!!.toDouble(), items!!.longitude!!.toDouble())
+                if(!ifIsValidOutlet){
+                    binding.tvRecycler.isVisible = true
+                    binding.loader.root.isVisible = false
+                    ToastDialog(applicationContext, "You are not at the corresponding outlet")
+                }else{
+                    val intent = Intent(applicationContext, SalesEntryActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+                    val contentFlow = IsParcelable(
+                        currentLocation!!.latitude.toString(), currentLocation!!.longitude.toString(),
+                        GeoFencing.currentTime,
+                        GeoFencing.currentDate,"",
+                        GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID().toString()
+                        , items
+                    )
+                    intent.putExtra("isParcelable", contentFlow)
+                    startActivity(intent)
+                }
+            }else{
+                val contentFlow = IsParcelable(
+                    currentLocation!!.latitude.toString(), currentLocation!!.longitude.toString(),
+                    GeoFencing.currentTime,
+                    GeoFencing.currentDate,"",
+                    GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID().toString()
+                    , items
+                )
+                val intent = Intent(applicationContext, SalesEntryActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra("isParcelable", contentFlow)
+                startActivity(intent)
+            }
+        }
+    }
 }

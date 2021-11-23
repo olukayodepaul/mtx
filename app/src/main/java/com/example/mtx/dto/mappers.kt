@@ -46,12 +46,19 @@ data class SalesEntryMapperInterface(
 
 @Parcelize
 data class IsParcelable(
-    var latitude: Double? = null,
-    var longitude: Double? = null,
+    @SerializedName("latitude")
+    var latitude: String? = null,
+    @SerializedName("longitude")
+    var longitude: String? = null,
+    @SerializedName("entry_time")
     var entry_time: String? = null,
+    @SerializedName("entry_date")
     var entry_date: String? = null,
+    @SerializedName("userToken")
     var userToken: String? = null,
+    @SerializedName("uii")
     var uii: String? = null,
+    @SerializedName("data")
     var data:CustomersList? = null
 ): Parcelable
 

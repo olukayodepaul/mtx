@@ -1,5 +1,6 @@
 package com.example.mtx.ui.salesrecord
 
+import android.content.Intent
 import android.icu.text.NumberFormat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mtx.databinding.ActivitySalesRecordBinding
 import com.example.mtx.dto.IsParcelable
+import com.example.mtx.ui.module.ModulesActivity
+import com.example.mtx.ui.sales.SalesActivity
 import com.example.mtx.util.NetworkResult
 import com.example.mtx.util.ToastDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +28,8 @@ class SalesRecordActivity : AppCompatActivity() {
 
     private lateinit var isIntentData: IsParcelable
 
+    private var isForceToRedirect = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySalesRecordBinding.inflate(layoutInflater)
@@ -35,9 +40,23 @@ class SalesRecordActivity : AppCompatActivity() {
         salesRecordResponse()
         postSalesToServer()
         postSalesToServerResponse()
+        binding.toolbar.subtitle = isIntentData.data!!.outletname
     }
 
     private fun initAdapter() {
+
+        binding.button.setOnClickListener {
+            val intent = Intent(applicationContext, SalesActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+        }
+
+        binding.buttons.setOnClickListener {
+            binding.component.isVisible = true
+            binding.awaits.isVisible = false
+        }
+
         val layoutManager = LinearLayoutManager(this)
         binding.layerforcontent.recycler.layoutManager = layoutManager
         binding.layerforcontent.recycler.setHasFixedSize(true)
@@ -72,7 +91,7 @@ class SalesRecordActivity : AppCompatActivity() {
                             }
 
                             val sumAmountRow = it.data!!.sumByDouble {
-                                    price_in_row->price_in_row.price!!.toDouble()*price_in_row.qty!!.toDouble()
+                                    price_in_row->price_in_row.price!!.toDouble()*price_in_row.orders!!.toDouble()
                             }
 
                             binding.layerforcontent.mtInventorys.text = NumberFormat.getInstance().format(sumInventoryRow)
@@ -93,10 +112,24 @@ class SalesRecordActivity : AppCompatActivity() {
     }
 
     private fun postSalesToServer(){
-        binding.layerforcontent.btnComplete.setOnClickListener {
-            binding.component.isVisible = false
-            binding.awaits.isVisible = true
-            viewModel.postSalesToServer(isIntentData, binding.layerforcontent.tokenForm.text.toString())
+        lifecycleScope.launchWhenResumed {
+            binding.layerforcontent.btnComplete.setOnClickListener {
+                when{
+                    isIntentData.data!!.cust_token==binding.layerforcontent.tokenForm.text.toString().trim()->{
+                        binding.component.isVisible = false
+                        binding.awaits.isVisible = true
+                        viewModel.postSalesToServer(isIntentData)
+                    }
+                    isIntentData.data!!.defaulttoken==binding.layerforcontent.tokenForm.text.toString().trim()->{
+                        binding.component.isVisible = false
+                        binding.awaits.isVisible = true
+                        viewModel.postSalesToServer(isIntentData)
+                    }
+                    else->{
+                        ToastDialog(applicationContext, "Invalid Customer Verification code").toast
+                    }
+                }
+            }
         }
     }
 
@@ -110,23 +143,53 @@ class SalesRecordActivity : AppCompatActivity() {
                         }
 
                         is NetworkResult.Error -> {
-                            binding.component.isVisible = true
-                            binding.awaits.isVisible = false
-                            ToastDialog(applicationContext, it.throwable!!.message.toString()).toast
+                            binding.button.isVisible = false
+                            binding.buttons.isVisible = true
+                            binding.titles.text = "FaIL"
+                            binding.subtitle.text = it.throwable!!.message.toString()
+                            binding.progressBa.isVisible = false
+                            binding.progressB.isVisible = true
+                            binding.progressBar.isVisible = false
+                            binding.subTitles.text = "Click on the try button to retry again. Check your Mobile data."
                         }
 
                         is NetworkResult.Loading -> {
-
                         }
 
                         is NetworkResult.Success -> {
 
-                        }
+                            if(it.data!!.status == 200) {
+                                binding.button.isVisible = true
+                                binding.buttons.isVisible = false
+                                binding.titles.text = "Successful"
+                                binding.subtitle.text = "Synchronisation completed."
+                                binding.progressBa.isVisible = true
+                                binding.progressB.isVisible = false
+                                binding.progressBar.isVisible = false
+                                binding.subTitles.text = "Click on the completed button to Visit new customer"
+                                isForceToRedirect =  1
+                               return@collect
+                            }
 
+                            binding.button.isVisible = false
+                            binding.buttons.isVisible = true
+                            binding.titles.text = "FaIL"
+                            binding.subtitle.text = "Synchronisation Failed."
+                            binding.progressBa.isVisible = false
+                            binding.progressB.isVisible = true
+                            binding.progressBar.isVisible = false
+                            binding.subTitles.text = "Click on the try button to retry again. Check your Mobile data."
+                        }
                     }
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.component.isVisible = true
+        binding.awaits.isVisible = false
     }
 
 

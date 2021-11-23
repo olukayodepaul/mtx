@@ -277,8 +277,6 @@ data class PostSalesResponse(
     var msg: String? = null
 )
 
-
-
 data class OrderPosted(
     @SerializedName("clat")
     @Expose
@@ -286,39 +284,50 @@ data class OrderPosted(
     @SerializedName("clng")
     @Expose
     var clng: String? = null,
+
     @SerializedName("etime")
     @Expose
     var etime: String? = null,
+
     @SerializedName("edate")
     @Expose
     var edate: String? = null,
+
     @SerializedName("uiid")
     @Expose
     var uiid: String? = null,
+
     @SerializedName("employee_id")
     @Expose
     var employee_id: Int? = null,
+
     @SerializedName("urno")
     @Expose
     var urno: Int? = null,
+
     @SerializedName("customerno")
     @Expose
     var customerno: String? = null,
+
     @SerializedName("outletname")
     @Expose
     var outletname: String? = null,
+
     @SerializedName("outletlatitude")
     @Expose
     var outletlatitude: String? = null,
+
     @SerializedName("outletlongitude")
     @Expose
     var outletlongitude: String? = null,
+
     @SerializedName("volumeclass")
     @Expose
     var volumeclass: String? = null,
     @SerializedName("token")
     @Expose
     var token: String? = null,
+
     @SerializedName("order")
     @Expose
     var order: List<BasketLimit>? = null,

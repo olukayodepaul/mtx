@@ -9,6 +9,7 @@ interface SalesRecordRepo {
     suspend fun fetchBasketFromLocalRep() : List<BasketLimitList>
     suspend fun postSales(order: OrderPosted): PostSalesResponse
     suspend fun salesPosted(): List<BasketLimitList>
-    suspend fun resetOrders(order_sold: Double, auto: Int)
+    suspend fun resetOrders(auto: Int)
+    suspend fun setVisitTime(timeago:String, urno:Int )
 }
 

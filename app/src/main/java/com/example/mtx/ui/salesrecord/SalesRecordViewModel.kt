@@ -29,10 +29,14 @@ class SalesRecordViewModel @ViewModelInject constructor(private val repo: SalesR
     val postSalesResponseState get() = _postSalesResponseState
 
     fun postSalesToServer(salesRecord: IsParcelable) = viewModelScope.launch {
+
         _postSalesResponseState.value = NetworkResult.Loading
+
         try {
 
+            val isLocalOrder =  repo.salesPosted()
             val isResponseModel = OrderPosted()
+
             isResponseModel.uiid = salesRecord.uii
             isResponseModel.clat = salesRecord.latitude!!.toString()
             isResponseModel.clng = salesRecord.longitude!!.toString()
@@ -46,11 +50,33 @@ class SalesRecordViewModel @ViewModelInject constructor(private val repo: SalesR
             isResponseModel.outletname = salesRecord.data!!.outletname
             isResponseModel.volumeclass = salesRecord.data!!.volumeclass
             isResponseModel.token = salesRecord.userToken
-            isResponseModel.order = repo.salesPosted().map { it.toBasketToApi() }
+            isResponseModel.order = isLocalOrder.map { it.toBasketToApi() }
+
             val httpResponse = repo.postSales(isResponseModel)
 
-            if
+            val compilerObject = PostSalesResponse()
 
+            if(httpResponse.status==200){
+
+                val limitToSalesEntry =  isLocalOrder.filter {
+                    it.seperator.equals("1")
+                }
+
+                limitToSalesEntry.forEach {
+                    repo.resetOrders(it.auto)
+                }
+
+                repo.setVisitTime(salesRecord.entry_time!!, salesRecord.data!!.urno!!)
+                compilerObject.status = httpResponse.status
+                compilerObject.msg = httpResponse.msg
+
+            }else{
+
+                compilerObject.status = httpResponse.status
+                compilerObject.msg = httpResponse.msg
+            }
+
+            _postSalesResponseState.value = NetworkResult.Success(compilerObject)
 
         } catch (e: Throwable) {
             _postSalesResponseState.value = NetworkResult.Error(e)

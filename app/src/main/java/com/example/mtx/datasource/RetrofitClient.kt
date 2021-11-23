@@ -32,7 +32,6 @@ interface RetrofitService {
         @Query("employee_id") employee_id: Int
     ): BasketLimitResponse
 
-
     @Headers("Connection:close")
     @POST("/sales/dailysales")
     suspend fun postSales(

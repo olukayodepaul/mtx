@@ -26,8 +26,12 @@ class SalesRecordRepoImpl (
         return appdoa.salesPosted()
     }
 
-    override suspend fun resetOrders(order_sold: Double, auto: Int) {
-        return appdoa.resetOrders(order_sold, auto)
+    override suspend fun resetOrders(auto: Int) {
+        return appdoa.resetOrders(auto)
+    }
+
+    override suspend fun setVisitTime(timeago: String, urno: Int) {
+        return appdoa.setVisitTime(timeago, urno)
     }
 
 
