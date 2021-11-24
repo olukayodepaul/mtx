@@ -218,9 +218,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
             R.id.action_filter_search -> {
                 refreshAdapter()
             }
-            R.id.action_gpd -> {
-                getCurrentLocation()
-            }
+
         }
         return false
     }

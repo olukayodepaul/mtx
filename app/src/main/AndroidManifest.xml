@@ -20,7 +20,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mtx"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.orderpurchase.OrderPurchaseActivity"></activity>
+        <activity android:name=".ui.attendant.BankActivity"></activity>
+        <activity android:name=".ui.attendant.LoadInActivity" />
+        <activity android:name=".ui.attendant.LoadOutActivity" />
+        <activity android:name=".ui.orderpurchase.OrderPurchaseActivity" />
         <activity android:name=".ui.outletupdate.OutletUpdateActivity" />
         <activity android:name=".ui.salesrecord.SalesRecordActivity" />
         <activity

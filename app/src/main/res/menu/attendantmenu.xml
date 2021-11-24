@@ -4,18 +4,19 @@
     app:menu="@menu/attendant_menu">
 
     <item
-        android:id="@+id/action_notifications"
+        android:id="@+id/clock_in"
         android:title="Search"
         android:icon="@drawable/ic_baseline_accessible_24"
         app:showAsAction="always"
         app:actionLayout="@layout/action_bar_notification" />
 
     <item
-        android:id="@+id/action_filter_search"
+        android:id="@+id/clock_out"
         android:title="Search"
         android:icon="@drawable/ic_baseline_search_24"
         app:showAsAction="always"
         />
+
 
 
     

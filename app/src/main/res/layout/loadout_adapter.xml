@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/skulayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:paddingBottom="5dp">
+
+    <TextView
+        android:id="@+id/sku"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:text="B$H"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/qty"
+        app:layout_constraintHorizontal_bias="0.011"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.483"
+        android:fontFamily="@font/roboto_bold"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
+        android:id="@+id/total"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="200,000.00"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="@font/roboto_regular"
+        android:textSize="13sp"
+        android:layout_marginEnd="5dp"
+        android:textAlignment="textEnd"/>
+
+    <TextView
+        android:id="@+id/amount"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:text="200,000.00"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/total"
+        app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="@font/roboto_regular"
+        android:textAlignment="textEnd"/>
+
+    <TextView
+        android:id="@+id/qty"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:text="20.0"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/amount"
+        app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="@font/roboto_regular"
+        android:textAlignment="textEnd" />
+</androidx.constraintlayout.widget.ConstraintLayout>

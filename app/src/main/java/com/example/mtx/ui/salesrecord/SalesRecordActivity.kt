@@ -41,6 +41,9 @@ class SalesRecordActivity : AppCompatActivity() {
         postSalesToServer()
         postSalesToServerResponse()
         binding.toolbar.subtitle = isIntentData.data!!.outletname
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
     }
 
     private fun initAdapter() {
