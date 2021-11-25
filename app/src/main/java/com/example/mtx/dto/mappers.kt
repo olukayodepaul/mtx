@@ -63,5 +63,19 @@ data class IsParcelable(
 ): Parcelable
 
 
+fun UserSpinner.toSpinners() : UserSpinnerEntity {
+    return UserSpinnerEntity(
+        auto, id, name, sep
+    )
+}
+
+data class SpinnerInterface(
+    @SerializedName("status")
+    var status: Int = 0,
+    @SerializedName("message")
+    var message: String = "",
+    @SerializedName("data")
+    var data: List<UserSpinnerEntity>? = null
+)
 
 

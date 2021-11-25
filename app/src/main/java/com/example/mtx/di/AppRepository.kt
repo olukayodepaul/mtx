@@ -4,6 +4,8 @@ import com.example.mtx.datasource.AppDao
 import com.example.mtx.datasource.RetrofitService
 import com.example.mtx.ui.attendant.repository.AttendantRepo
 import com.example.mtx.ui.attendant.repository.AttendantRepoImpl
+import com.example.mtx.ui.customers.repository.AddCustomerRep
+import com.example.mtx.ui.customers.repository.AddCustomerRepoImpl
 import com.example.mtx.ui.login.repository.LoginRepo
 import com.example.mtx.ui.login.repository.LoginRepoImpl
 import com.example.mtx.ui.module.repository.ModulesRepo
@@ -86,6 +88,17 @@ object AppRepository {
         appdoa: AppDao
     ): AttendantRepo {
         return AttendantRepoImpl(
+            retrofitClient, appdoa
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideAddCustomersRepository(
+        retrofitClient: RetrofitService,
+        appdoa: AppDao
+    ): AddCustomerRep {
+        return AddCustomerRepoImpl(
             retrofitClient, appdoa
         )
     }

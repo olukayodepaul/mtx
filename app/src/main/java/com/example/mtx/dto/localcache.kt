@@ -3,8 +3,6 @@ package com.example.mtx.dto
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -68,4 +66,13 @@ data class BasketLimitList (
     var controlinventory: String? = null,
     var controlorder: String? = null,
     var blimit: String? = null
+)
+
+@Entity(tableName = "spinners")
+data class UserSpinnerEntity(
+    @PrimaryKey(autoGenerate = false)
+    var auto: Int? = null,
+    var id: Int? = null,
+    var name: String? = null,
+    var sep: Int? = null
 )

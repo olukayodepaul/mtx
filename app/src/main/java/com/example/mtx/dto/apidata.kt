@@ -343,6 +343,33 @@ data class GeneralResponse(
     var msg: String? = null
 )
 
+data class UserSpinnerResponse(
+    @SerializedName("status")
+    @Expose
+    var status: Int? = null,
+    @SerializedName("msg")
+    @Expose
+    var msg: String? = null,
+    @SerializedName("spinners")
+    @Expose
+    var spinners: List<UserSpinner>? = null
+)
+
+data class UserSpinner(
+    @SerializedName("auto")
+    @Expose
+    var auto: Int? = null,
+    @SerializedName("id")
+    @Expose
+    var id: Int? = null,
+    @SerializedName("name")
+    @Expose
+    var name: String? = null,
+    @SerializedName("sep")
+    @Expose
+    var sep: Int? = null
+)
+
 
 
 

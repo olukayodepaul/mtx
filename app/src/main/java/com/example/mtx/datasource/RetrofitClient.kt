@@ -48,6 +48,12 @@ interface RetrofitService {
         @Query("taskname") taskname: String
     ): GeneralResponse
 
+    @Headers("Connection:close")
+    @GET("/mtx/userspinner")
+    suspend fun fetchSpinners(): UserSpinnerResponse
+
+
+
 
 
 

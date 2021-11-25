@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.mtx.dto.BasketLimitList
 import com.example.mtx.dto.CustomersList
+import com.example.mtx.dto.UserSpinnerEntity
 
 @Dao
 interface AppDao {
@@ -42,6 +43,12 @@ interface AppDao {
 
     @Query("UPDATE  customers SET timeago = :timeago WHERE urno = :urno ")
     suspend fun setVisitTime(timeago:String, urno:Int )
+
+    @Query("SELECT * FROM spinners")
+    suspend fun fetchSpinnerFromLocalDb() : List<UserSpinnerEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addCustomer(cust: List<UserSpinnerEntity>)
 
 
 }

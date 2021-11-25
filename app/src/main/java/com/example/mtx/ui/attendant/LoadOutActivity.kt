@@ -90,8 +90,8 @@ class LoadOutActivity : AppCompatActivity() {
                 GeoFencing.currentDate!!
             )
         }
-
     }
+
     private fun isPermissionRequest() {
 
         val usesPermission = PermissionUtility.requestPermission(this)
