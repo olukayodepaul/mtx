@@ -4,13 +4,18 @@
     app:menu="@menu/attendant_menu">
 
     <item
-        android:id="@+id/resume"
-        android:title="Resume"
+        android:id="@+id/clockin"
+        android:title="ClockIn"
         />
 
     <item
-        android:id="@+id/clock_out"
-        android:title="ClockOut"
+        android:id="@+id/breaks"
+        android:title="Break"
+        />
+
+    <item
+        android:id="@+id/close"
+        android:title="Close"
         />
     
 </menu>

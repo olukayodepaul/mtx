@@ -4,6 +4,7 @@ import com.example.mtx.datasource.AppDao
 import com.example.mtx.datasource.RetrofitService
 import com.example.mtx.dto.BasketLimitList
 import com.example.mtx.dto.BasketLimitResponse
+import com.example.mtx.dto.GeneralResponse
 
 class AttendantRepoImpl(
     private val retrofitClient: RetrofitService,
@@ -29,6 +30,16 @@ class AttendantRepoImpl(
 
     override suspend fun setBasketToInitState() {
         return appdoa.setBasketToInitState()
+    }
+
+    override suspend fun task(
+        employee_id: Int,
+        task_id: Int,
+        latitude: String,
+        longitude: String,
+        taskname: String
+    ): GeneralResponse {
+        return retrofitClient.task(employee_id, task_id, latitude, longitude, taskname)
     }
 
 }

@@ -38,5 +38,17 @@ interface RetrofitService {
         @Body data: OrderPosted
     ): PostSalesResponse
 
+    @Headers("Connection:close")
+    @POST("/users/task")
+    suspend fun task(
+        @Query("employee_id") employee_id: Int,
+        @Query("task_id") task_id: Int,
+        @Query("latitude") latitude: String,
+        @Query("longitude") longitude: String,
+        @Query("taskname") taskname: String
+    ): GeneralResponse
+
+
+
 
 }

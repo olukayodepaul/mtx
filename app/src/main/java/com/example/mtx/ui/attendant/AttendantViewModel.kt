@@ -3,6 +3,8 @@ package com.example.mtx.ui.attendant
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mtx.dto.GeneralResponse
+import com.example.mtx.dto.ModulesResponse
 import com.example.mtx.dto.SalesEntryMapperInterface
 import com.example.mtx.dto.toBasketLimit
 import com.example.mtx.ui.attendant.repository.AttendantRepo
@@ -96,4 +98,20 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
                 _basketResponseState.value = NetworkResult.Error(e)
             }
         }
+
+
+    private val _taskResponseState = MutableStateFlow<NetworkResult<GeneralResponse>>(NetworkResult.Empty)
+    val taskResponseState get() = _taskResponseState
+
+    fun recordTask(  employee_id: Int, task_id: Int, latitude: String, longitude: String, taskname: String) = viewModelScope.launch {
+        _taskResponseState.value = NetworkResult.Loading
+        try {
+            val data = repo.task(employee_id, task_id, latitude, longitude, taskname)
+            _taskResponseState.value = NetworkResult.Success(data)
+        } catch (e: Throwable) {
+            _taskResponseState.value = NetworkResult.Error(e)
+        }
+    }
+
+
 }

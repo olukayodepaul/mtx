@@ -26,6 +26,7 @@ import com.example.mtx.databinding.ActivitySalesBinding
 import com.example.mtx.databinding.SalesAdapterBinding
 import com.example.mtx.dto.CustomersList
 import com.example.mtx.dto.IsParcelable
+import com.example.mtx.ui.customers.AddCustomerActivity
 import com.example.mtx.ui.order.ReOrderActivity
 import com.example.mtx.ui.orderpurchase.OrderPurchaseActivity
 import com.example.mtx.ui.outletupdate.OutletUpdateActivity
@@ -94,6 +95,12 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
         lifecycleScope.launchWhenResumed {
             binding.toolbar.subtitle = "${sessionManager.fetchEmployeeName.first()} (${sessionManager.fetchEmployeeEdcode.first()})"
+        }
+
+        binding.mapcustomers.setOnClickListener {
+            val intent = Intent(applicationContext, AddCustomerActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
         }
     }
 
@@ -188,7 +195,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                 startGoogleMapIntent(this, destination, dmode, 't')
             }
             2->{
-               // getCurrentLocation()
+                // getCurrentLocation()
             }
             3->{
                 items = item

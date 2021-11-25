@@ -334,6 +334,15 @@ data class OrderPosted(
 
 )
 
+data class GeneralResponse(
+    @SerializedName("status")
+    @Expose
+    var status: Int? = null,
+    @SerializedName("msg")
+    @Expose
+    var msg: String? = null
+)
+
 
 
 

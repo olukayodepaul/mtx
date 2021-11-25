@@ -1,3 +1,5 @@
+
+
 package dependencies
 
 object Versions {
@@ -13,8 +15,8 @@ object Versions {
     val room = "2.2.6"
     val appcompat = "1.3.1"
     val androidXLegacy = "1.0.0"
-    val constraintlayout = "2.1.1"
-    val material_design = "1.4.0"
+    val constraintlayout = "2.1.2"
+    val material_design = "1.3.0"
     val play_core = "1.7.1"
     val play_services = "4.3.2"
     val leak_canary = "2.0-alpha-3"
