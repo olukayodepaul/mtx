@@ -262,7 +262,7 @@ class AddCustomerActivity : AppCompatActivity() {
         val latitude = location!!.latitude.toString()
         val longitude = location.longitude.toString()
         val employee_id = sessionManager.fetchEmployeeId.first()
-        val divisition = "new_outlet"
+        val divisition = "new_outletc n"
 
 
     }
