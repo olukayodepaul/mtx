@@ -18,8 +18,11 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import com.example.mtx.databinding.ActivityAddCuctomerBinding
+import com.example.mtx.databinding.ActivityUpdateCustomersBinding
+import com.example.mtx.dto.Customers
+import com.example.mtx.dto.IsParcelable
 import com.example.mtx.dto.UserSpinnerEntity
 import com.example.mtx.util.NetworkResult
 import com.example.mtx.util.PermissionUtility
@@ -32,11 +35,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 
-
 @AndroidEntryPoint
-class AddCustomerActivity : AppCompatActivity() {
+class UpdateCustomersActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityAddCuctomerBinding
+    private lateinit var binding: ActivityUpdateCustomersBinding
 
     private lateinit var sessionManager: SessionManager
 
@@ -58,10 +60,12 @@ class AddCustomerActivity : AppCompatActivity() {
 
     lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
+    private var isIntentData: Customers? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAddCuctomerBinding.inflate(layoutInflater)
+        binding = ActivityUpdateCustomersBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toobar)
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
@@ -73,7 +77,18 @@ class AddCustomerActivity : AppCompatActivity() {
         languageAdapter = LanguageAdapter()
         outletClassAdapter = OutletClassAdapter()
         outletTypeAdapter = OutletTypeAdapter()
+        isIntentData = intent.extras!!.getParcelable("isParcelable")!!
+
+        binding.toobar.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
+        lifecycleScope.launchWhenResumed {
+            binding.toobar.subtitle =
+                "${sessionManager.fetchEmployeeName.first()} (${sessionManager.fetchEmployeeEdcode.first()})"
+        }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(com.example.mtx.R.menu.map_outlet, menu)
@@ -86,7 +101,6 @@ class AddCustomerActivity : AppCompatActivity() {
                 isPermissionRequest()
                 getCurrentLocation()
             }
-
         }
         return false
     }
@@ -109,13 +123,13 @@ class AddCustomerActivity : AppCompatActivity() {
                         is NetworkResult.Success -> {
 
                             val languages: List<UserSpinnerEntity> =
-                                it.data!!.data!!.filter { fil -> fil.sep == 1 }
+                                it.data!!.data!!.filter { fil -> fil.sep == 2 }
 
                             val outlettype: List<UserSpinnerEntity> =
-                                it.data.data!!.filter { fil -> fil.sep == 2 }
+                                it.data.data!!.filter { fil -> fil.sep == 3 }
 
                             val outletclass: List<UserSpinnerEntity> =
-                                it.data.data!!.filter { fil -> fil.sep == 3 }
+                                it.data.data!!.filter { fil -> fil.sep == 1 }
 
                             val outletLanguage = ArrayList<String>()
                             val outletClass = ArrayList<String>()
@@ -172,6 +186,36 @@ class AddCustomerActivity : AppCompatActivity() {
                             )
                             binding.tvFieldClass.setAdapter(arrayAdapterOutletClass)
                             binding.tvFieldClass.threshold = 1
+
+                            if (isIntentData!!.outletlanguageid!! >= 1) {
+                                binding.tvFieldLangauge.setText(
+                                    binding.tvFieldLangauge.adapter.getItem(
+                                        languageAdapter.getIndexById(isIntentData!!.outletlanguageid!!)
+                                    ).toString(), false
+                                )
+                            }
+
+                            if (isIntentData!!.outlettypeid!! >= 1) {
+                                binding.tvFieldType.setText(
+                                    binding.tvFieldType.adapter.getItem(
+                                        outletTypeAdapter.getIndexById(isIntentData!!.outlettypeid!!)
+                                    ).toString(), false
+                                )
+                            }
+
+                            if (isIntentData!!.outletclassid!! >= 1) {
+                                binding.tvFieldClass.setText(
+                                    binding.tvFieldClass.adapter.getItem(
+                                        outletClassAdapter.getIndexById(isIntentData!!.outletclassid!!)
+                                    ).toString(), false
+                                )
+                            }
+
+                            binding.tvFieldCustname.setText(isIntentData!!.outletname)
+                            binding.tvFieldContactPerson.setText(isIntentData!!.contactname)
+                            binding.tvFieldContact.setText(isIntentData!!.contactphone)
+                            binding.tvFieldAddress.setText(isIntentData!!.outletaddress)
+
                         }
                     }
                 }
@@ -257,6 +301,7 @@ class AddCustomerActivity : AppCompatActivity() {
     }
 
     private fun isCurrentLocationSetter(location: Location?) = lifecycleScope.launchWhenCreated {
+
         stopLocationUpdate()
         val outletLanguageId = languageAdapter.getValueId(binding.tvFieldLangauge.text.toString())
         val outletClassId = outletClassAdapter.getValueId(binding.tvFieldClass.text.toString())
@@ -268,12 +313,24 @@ class AddCustomerActivity : AppCompatActivity() {
         val latitude = location!!.latitude.toString()
         val longitude = location.longitude.toString()
         val employee_id = sessionManager.fetchEmployeeId.first()
-        val division = "new_outlet"
+        val division = "updated_outlet"
 
-        viewModel.createCustomers(
-            outletLanguageId, outletClassId, outletTypeId, outletName, contactPerson, mobileNumber,
-            contactAddress, latitude, longitude, employee_id, division
-        )
+
+        if (outletLanguageId.toString().isEmpty() || outletClassId.toString()
+                .isEmpty() || outletTypeId.toString().isEmpty()
+            || outletName.isEmpty() || contactPerson.isEmpty() || mobileNumber.isEmpty() || contactAddress.isEmpty()
+        ) {
+            ToastDialog(applicationContext, "Please enter all the field")
+        } else {
+
+            binding.loader.isVisible = true
+            binding.content.isVisible = false
+
+            viewModel.createCustomers(
+                outletLanguageId, outletClassId, outletTypeId, outletName, contactPerson, mobileNumber,
+                contactAddress, latitude, longitude, employee_id, division
+            )
+        }
     }
 
     private fun addCustomerCallBack() {
@@ -285,10 +342,12 @@ class AddCustomerActivity : AppCompatActivity() {
                         }
 
                         is NetworkResult.Error -> {
+                            binding.loader.isVisible = false
+                            binding.content.isVisible = true
+                            
                         }
 
                         is NetworkResult.Loading -> {
-
                         }
 
                         is NetworkResult.Success -> {
@@ -299,7 +358,6 @@ class AddCustomerActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }
-
-
-

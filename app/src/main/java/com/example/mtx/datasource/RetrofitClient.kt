@@ -52,6 +52,14 @@ interface RetrofitService {
     @GET("/mtx/userspinner")
     suspend fun fetchSpinners(): UserSpinnerResponse
 
+    @Headers("Connection:close")
+    @GET("/mtx/userspinner")
+    suspend fun createCustomers(
+        outletLanguageId: Int, outletClassId: Int, outletTypeId: Int, outletName: String,
+        contactPerson: String, mobileNumber: String,
+        contactAddress: String, latitude: String, longitude: String, employee_id: Int, division: String
+    ): GeneralResponse
+
 
 
 

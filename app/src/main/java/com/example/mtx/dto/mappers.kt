@@ -8,7 +8,15 @@ fun Customers.toSalesEntry() : CustomersList {
     return CustomersList(
         auto, dates, timeago, employee_id, urno, customerno, outletname, latitude, longitude, sort, notice, outlet_waiver,
         cust_token, defaulttoken, seq, modes, rep_id, outletclassid, outletlanguageid, outlettypeid, contactphone,
-        contactname, outlet_pic, repname, volumeclass, employee_code, customer_code, distance, depotwaivers, spec, _id
+        contactname, outlet_pic, repname, volumeclass, employee_code, customer_code, distance, outletaddress,depotwaivers, spec, _id
+    )
+}
+
+fun CustomersList.toCustomers() : Customers {
+    return Customers(
+        auto, dates, timeago, employee_id, urno, customerno, outletname, latitude, longitude, sort, notice, outlet_waiver,
+        cust_token, defaulttoken, seq, modes, rep_id, outletclassid, outletlanguageid, outlettypeid, contactphone,
+        contactname, outlet_pic, repname, volumeclass, employee_code, customer_code, distance, outletaddress,depotwaivers, spec, _id
     )
 }
 
@@ -46,20 +54,13 @@ data class SalesEntryMapperInterface(
 
 @Parcelize
 data class IsParcelable(
-    @SerializedName("latitude")
     var latitude: String? = null,
-    @SerializedName("longitude")
     var longitude: String? = null,
-    @SerializedName("entry_time")
     var entry_time: String? = null,
-    @SerializedName("entry_date")
     var entry_date: String? = null,
-    @SerializedName("userToken")
     var userToken: String? = null,
-    @SerializedName("uii")
     var uii: String? = null,
-    @SerializedName("data")
-    var data:CustomersList? = null
+    var data:Customers? = null
 ): Parcelable
 
 

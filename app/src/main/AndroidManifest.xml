@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mtx"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.customers.AddCustomerActivity"></activity>
+        <activity android:name=".ui.customers.UpdateCustomersActivity"></activity>
+        <activity android:name=".ui.customers.AddCustomerActivity" />
         <activity android:name=".ui.attendant.BankActivity" />
         <activity android:name=".ui.attendant.LoadInActivity" />
         <activity android:name=".ui.attendant.LoadOutActivity" />

@@ -1,8 +1,10 @@
 package com.example.mtx.dto
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
 data class LoginResponse(
     @SerializedName("status")
@@ -94,6 +96,7 @@ data class CustomersResponse(
     var customers: List<Customers>? = null
 )
 
+@Parcelize
 data class Customers(
     @SerializedName("auto")
     @Expose
@@ -182,6 +185,9 @@ data class Customers(
     @SerializedName("duration")
     @Expose
     var duration: String? = null,
+    @SerializedName("outletaddress")
+    @Expose
+    var outletaddress: String? = null,
     @SerializedName("depotwaivers")
     @Expose
     var depotwaivers: String? = null,
@@ -191,7 +197,7 @@ data class Customers(
     @SerializedName("_id")
     @Expose
     var _id: String? = null
-)
+): Parcelable
 
 data class BasketLimitResponse(
     @SerializedName("status")

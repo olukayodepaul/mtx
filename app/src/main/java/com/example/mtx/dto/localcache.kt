@@ -1,11 +1,9 @@
 package com.example.mtx.dto
 
-import android.os.Parcelable
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
 @Entity(tableName = "customers")
 data class CustomersList (
     @PrimaryKey(autoGenerate = false)
@@ -38,10 +36,11 @@ data class CustomersList (
     var customer_code: String? = null,
     var distance: String? = null,
     var duration: String? = null,
+    var outletaddress: String? = null,
     var depotwaivers: String? = null,
     var spec: String? = null,
     var _id: String? = null
-): Parcelable
+)
 
 @Entity(tableName = "osqty")
 data class BasketLimitList (

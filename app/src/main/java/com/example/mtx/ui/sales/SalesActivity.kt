@@ -24,9 +24,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mtx.R
 import com.example.mtx.databinding.ActivitySalesBinding
 import com.example.mtx.databinding.SalesAdapterBinding
+import com.example.mtx.dto.Customers
 import com.example.mtx.dto.CustomersList
 import com.example.mtx.dto.IsParcelable
+import com.example.mtx.dto.toCustomers
 import com.example.mtx.ui.customers.AddCustomerActivity
+import com.example.mtx.ui.customers.UpdateCustomersActivity
 import com.example.mtx.ui.order.ReOrderActivity
 import com.example.mtx.ui.orderpurchase.OrderPurchaseActivity
 import com.example.mtx.ui.outletupdate.OutletUpdateActivity
@@ -72,7 +75,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var locationRequest: LocationRequest
 
-    private var items: CustomersList? = null
+    private var items: Customers? = null
 
     private var separators: Int? = null
 
@@ -198,24 +201,24 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                 // getCurrentLocation()
             }
             3->{
-                items = item
+                items = item!!.toCustomers()
                 separators = separator
                 getCurrentLocation()
             }
             4->{
-                val intent = Intent(applicationContext, OutletUpdateActivity::class.java)
+                val intent = Intent(applicationContext, UpdateCustomersActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.putExtra("isParcelable", item)
+                intent.putExtra("isParcelable", item.toCustomers())
                 startActivity(intent)
             }
             5->{
 
             }
             6->{
-                val intent = Intent(applicationContext, OrderPurchaseActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.putExtra("isParcelable", item)
-                startActivity(intent)
+//                val intent = Intent(applicationContext, OrderPurchaseActivity::class.java)
+//                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                intent.putExtra("isParcelable", item)
+//                startActivity(intent)
             }
         }
     }

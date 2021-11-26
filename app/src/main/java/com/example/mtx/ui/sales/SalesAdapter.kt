@@ -12,6 +12,7 @@ import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.example.mtx.R
 import com.example.mtx.databinding.SalesAdapterBinding
 import com.example.mtx.dto.CustomersList
+import com.example.mtx.dto.toCustomers
 import com.example.mtx.ui.attendant.BankActivity
 import com.example.mtx.ui.attendant.LoadInActivity
 import com.example.mtx.ui.attendant.LoadOutActivity
@@ -73,19 +74,19 @@ class SalesAdapter(private var mItems: List<CustomersList>, private val context:
                 when(item.sort){
                     1->{
                         val intent = Intent(context, LoadOutActivity::class.java)
-                        intent.putExtra("customers",item)
+                        intent.putExtra("customers",item.toCustomers())
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                         context.startActivity(intent)
                     }
                     3->{
                         val intent = Intent(context, BankActivity::class.java)
-                        intent.putExtra("customers",item)
+                        intent.putExtra("customers",item.toCustomers())
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                         context.startActivity(intent)
                     }
                     4->{
                         val intent = Intent(context, LoadInActivity::class.java)
-                        intent.putExtra("customers",item)
+                        intent.putExtra("customers",item.toCustomers())
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                         context.startActivity(intent)
                     }

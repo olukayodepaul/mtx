@@ -16,7 +16,8 @@ class AddCustomerViewModel @ViewModelInject constructor(private val repo: AddCus
     ViewModel() {
 
 
-    private val _spinnerResponseState = MutableStateFlow<NetworkResult<SpinnerInterface>>(NetworkResult.Empty)
+    private val _spinnerResponseState =
+        MutableStateFlow<NetworkResult<SpinnerInterface>>(NetworkResult.Empty)
     val spinnerResponseState get() = _spinnerResponseState
 
     fun fetchAllSpinners() = viewModelScope.launch {
@@ -60,9 +61,35 @@ class AddCustomerViewModel @ViewModelInject constructor(private val repo: AddCus
             }
 
 
-
         } catch (e: Throwable) {
             _spinnerResponseState.value = NetworkResult.Error(e)
         }
     }
+
+
+    private val _isCustomerResponseState = MutableStateFlow<NetworkResult<GeneralResponse>>(NetworkResult.Empty)
+    val isCustomerResponseState get() = _isCustomerResponseState
+
+    fun createCustomers(
+        outletLanguageId: Int, outletClassId: Int, outletTypeId: Int, outletName: String,
+        contactPerson: String, mobileNumber: String,
+        contactAddress: String, latitude: String, longitude: String, employee_id: Int, division: String
+    ) = viewModelScope.launch {
+
+        _isCustomerResponseState.value = NetworkResult.Loading
+
+        try {
+            val isCustomerRepoResult = repo.createCustomers(outletLanguageId, outletClassId, outletTypeId, outletName, contactPerson, mobileNumber,
+                contactAddress, latitude, longitude, employee_id, division)
+
+            _isCustomerResponseState.value = NetworkResult.Success(isCustomerRepoResult)
+
+        }catch (e: Throwable) {
+
+            _isCustomerResponseState.value = NetworkResult.Error(e)
+
+        }
+    }
+
+
 }
