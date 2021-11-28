@@ -53,11 +53,19 @@ interface RetrofitService {
     suspend fun fetchSpinners(): UserSpinnerResponse
 
     @Headers("Connection:close")
-    @GET("/mtx/userspinner")
+    @POST("/sales/newmapoutlet")
     suspend fun createCustomers(
-        outletLanguageId: Int, outletClassId: Int, outletTypeId: Int, outletName: String,
-        contactPerson: String, mobileNumber: String,
-        contactAddress: String, latitude: String, longitude: String, employee_id: Int, division: String
+        @Query("outletLanguageId") outletLanguageId: Int,
+        @Query("outletClassId") outletClassId: Int,
+        @Query("outletTypeId") outletTypeId: Int,
+        @Query("outletName") outletName: String,
+        @Query("contactPerson") contactPerson: String,
+        @Query("mobileNumber") mobileNumber: String,
+        @Query("contactAddress") contactAddress: String,
+        @Query("latitude") latitude: String,
+        @Query("longitude") longitude: String,
+        @Query("employee_id") employee_id: Int,
+        @Query("division") division: String
     ): GeneralResponse
 
 

@@ -16,5 +16,15 @@ class LoginRepoImpl (
         return retrofitClient.login(username, password)
     }
 
+    override suspend fun deleteBasketFromLocalRep() {
+        return appdoa.deleteBasketFromLocalRep()
+    }
 
+    override suspend fun deleteFromCustomersLocalRep() {
+        return appdoa.deleteFromCustomersLocalRep()
+    }
+
+    override suspend fun deleteFromSpinnerLocalRep() {
+        return appdoa.deleteFromSpinnerLocalRep()
+    }
 }

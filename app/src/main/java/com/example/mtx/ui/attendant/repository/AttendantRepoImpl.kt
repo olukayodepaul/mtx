@@ -42,4 +42,8 @@ class AttendantRepoImpl(
         return retrofitClient.task(employee_id, task_id, latitude, longitude, taskname)
     }
 
+    override suspend fun setAttendantTime(timeago: String, sort: Int) {
+        return appdoa.setAttendantTime(timeago, sort)
+    }
+
 }

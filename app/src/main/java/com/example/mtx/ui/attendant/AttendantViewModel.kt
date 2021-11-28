@@ -12,11 +12,11 @@ import com.example.mtx.util.NetworkResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class AttendantViewModel @ViewModelInject constructor(private val repo: AttendantRepo): ViewModel() {
+class AttendantViewModel @ViewModelInject constructor(private val repo: AttendantRepo) :
+    ViewModel() {
 
-    private val _basketResponseState = MutableStateFlow<NetworkResult<SalesEntryMapperInterface>>(
-        NetworkResult.Empty
-    )
+    private val _basketResponseState =
+        MutableStateFlow<NetworkResult<SalesEntryMapperInterface>>(NetworkResult.Empty)
     val basketResponseState get() = _basketResponseState
 
     fun isUserDailyBaskets(employee_id: Int, sysdate: String, curDate: String) =
@@ -26,87 +26,64 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
 
             try {
 
-                repo.setBasketToInitState()
+                val dailyBasket = repo.fetchBasketFromLocalRep()
+
                 val mapper = SalesEntryMapperInterface()
 
-                if (sysdate == curDate) {
+                if (sysdate == curDate && dailyBasket.isNotEmpty()) {
 
-                    if (repo.fetchBasketFromLocalRep().isNotEmpty()) {
+                    mapper.status = 200
+                    mapper.message = ""
+                    mapper.data = dailyBasket
+                    _basketResponseState.value = NetworkResult.Success(mapper)
 
-                        val localData = repo.fetchBasketFromLocalRep() //send this back
-                        mapper.data = localData
-                        mapper.message = ""
-                        mapper.status = 200
-
-                    } else {
-
-                        val remoteData = repo.fetchBasketFromRemoteRep(employee_id)
-
-                        if (remoteData.status == 200) {
-
-                            repo.setBasket(remoteData.basketlimit!!.map { it.toBasketLimit() })
-                            val localData = repo.fetchBasketFromLocalRep()
-
-                            if (localData.isEmpty()) {
-                                mapper.data = emptyList()
-                                mapper.message =
-                                    "Error in persisting data, Please check your phone memory"
-                                mapper.status = 400
-                            } else {
-                                mapper.data = localData
-                                mapper.message = ""
-                                mapper.status = 200
-                            }
-
-                        } else {
-                            mapper.data = emptyList()
-                            mapper.message = "Basket is not assign to this users"
-                            mapper.status = 400
-                        }
-                    }
                 } else {
-
-                    repo.deleteBasketFromLocalRep()
 
                     val remoteData = repo.fetchBasketFromRemoteRep(employee_id)
 
-                    if (remoteData.status == 200) {
-
-                        repo.setBasket(remoteData.basketlimit!!.map { it.toBasketLimit() })
-                        val localData = repo.fetchBasketFromLocalRep()
-
-                        if (localData.isEmpty()) {
-                            mapper.data = emptyList()
-                            mapper.message =
-                                "Error in persisting data, Please check your phone memory"
-                            mapper.status = 400
-                        } else {
-                            mapper.data = localData
-                            mapper.message = ""
-                            mapper.status = 200
-                        }
-
-                    } else {
-                        mapper.data = emptyList()
-                        mapper.message = "Basket is not assign to this users"
-                        mapper.status = 400
+                    val limitToSalesEntry = remoteData.basketlimit!!.filter { filters ->
+                        filters.seperator.equals("1")
                     }
+
+                    if (remoteData.status == 200 && limitToSalesEntry.isNotEmpty()) {
+                        mapper.status = remoteData.status!!
+                        mapper.message = remoteData.msg!!
+                        mapper.data = remoteData.basketlimit!!.map { it.toBasketLimit() }
+                        repo.setBasket(remoteData.basketlimit!!.map { it.toBasketLimit() }) //set the basket
+                    } else {
+                        mapper.message = "Basket Not Assign"
+                        mapper.status = 400
+                        mapper.data = emptyList()
+                    }
+                    _basketResponseState.value = NetworkResult.Success(mapper)
                 }
 
-                _basketResponseState.value = NetworkResult.Success(mapper)
             } catch (e: Throwable) {
                 _basketResponseState.value = NetworkResult.Error(e)
             }
         }
 
-
-    private val _taskResponseState = MutableStateFlow<NetworkResult<GeneralResponse>>(NetworkResult.Empty)
+    private val _taskResponseState =
+        MutableStateFlow<NetworkResult<GeneralResponse>>(NetworkResult.Empty)
     val taskResponseState get() = _taskResponseState
 
-    fun recordTask(  employee_id: Int, task_id: Int, latitude: String, longitude: String, taskname: String) = viewModelScope.launch {
+    fun recordTask(
+        employee_id: Int,
+        task_id: Int,
+        latitude: String,
+        longitude: String,
+        taskname: String,
+        timeAgo:String,
+        sortId:Int
+    ) = viewModelScope.launch {
         _taskResponseState.value = NetworkResult.Loading
         try {
             val data = repo.task(employee_id, task_id, latitude, longitude, taskname)
+
+            if(data.status==200){
+                repo.setAttendantTime(timeAgo, sortId)
+            }
+
             _taskResponseState.value = NetworkResult.Success(data)
         } catch (e: Throwable) {
             _taskResponseState.value = NetworkResult.Error(e)

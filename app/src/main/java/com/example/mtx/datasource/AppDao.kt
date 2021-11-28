@@ -26,6 +26,12 @@ interface AppDao {
     @Query("delete from osqty")
     suspend fun deleteBasketFromLocalRep()
 
+    @Query("delete from customers")
+    suspend fun deleteFromCustomersLocalRep()
+
+    @Query("delete from spinners")
+    suspend fun deleteFromSpinnerLocalRep()
+
     @Query("UPDATE osqty SET inventory=:inventory, pricing=:pricing, orders=:order, entry_time=:entry_time, controlpricing=:controlpricing, controlinventory = :controlinventory, controlorder=:controlorder where  auto=:auto")
     suspend fun updateDailySales(inventory: Double, pricing: Int, order: Double, entry_time: String, controlpricing:Int, controlinventory:Int, controlorder:Int, auto:Int)
 
@@ -49,6 +55,9 @@ interface AppDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCustomer(cust: List<UserSpinnerEntity>)
+
+    @Query("UPDATE  customers SET timeago = :timeago WHERE sort = :sort ")
+    suspend fun setAttendantTime(timeago:String, sort:Int )
 
 
 }

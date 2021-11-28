@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mtx.databinding.LoadoutAdapterBinding
 import com.example.mtx.dto.BasketLimitList
-import dagger.hilt.android.AndroidEntryPoint
 
 
 class LoadOutAdapter(private var mItems: List<BasketLimitList>) :
@@ -32,7 +31,7 @@ class LoadOutAdapter(private var mItems: List<BasketLimitList>) :
 
         fun bind(item: BasketLimitList) {
 
-            binding.sku.text = item.product_name!!.toUpperCase().capitalize()
+            binding.sku.text = item.product_name!!.toLowerCase().capitalize()
             binding.qty.text = NumberFormat.getInstance().format(item.qty)
             binding.amount.text = NumberFormat.getInstance().format(item.price)
             binding.total.text = NumberFormat.getInstance().format(item.qty!!.toDouble()* item.price!!.toDouble())

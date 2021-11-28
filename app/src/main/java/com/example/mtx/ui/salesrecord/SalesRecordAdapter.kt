@@ -29,14 +29,11 @@ class SalesRecordAdapter(private var mItems: List<BasketLimitList>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: BasketLimitList) {
-
-
-            val sum = item.orders!!.toFloat() * item.price!!
-            binding.tvSkuss.text = item.product_name!!.toLowerCase().capitalize()
-            binding.mtInventorys.text = "${item.inventory}"
-            binding.mtPricings.text = "${item.pricing}"
-            binding.mtOrders.text = "${item.orders}"
-            binding.mtAmounts.text =  NumberFormat.getInstance().format(sum)
+            binding.tvsku.text = item.product_name!!.toLowerCase().capitalize()
+            binding.tvinventory.text = NumberFormat.getInstance().format(item.inventory)
+            binding.tvpricing.text = NumberFormat.getInstance().format(item.pricing)
+            binding.tvqtysold.text = NumberFormat.getInstance().format(item.orders)
+            binding.tvamount.text = NumberFormat.getInstance().format(item.price!! * item.orders!!)
             }
         }
 }

@@ -22,8 +22,9 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.example.mtx.databinding.ActivityUpdateCustomersBinding
 import com.example.mtx.dto.Customers
-import com.example.mtx.dto.IsParcelable
 import com.example.mtx.dto.UserSpinnerEntity
+import com.example.mtx.ui.module.ModulesActivity
+import com.example.mtx.ui.sales.SalesActivity
 import com.example.mtx.util.NetworkResult
 import com.example.mtx.util.PermissionUtility
 import com.example.mtx.util.SessionManager
@@ -62,7 +63,22 @@ class UpdateCustomersActivity : AppCompatActivity() {
 
     private var isIntentData: Customers? = null
 
+    private var outletLanguageId: Int? = null
 
+    private var outletClassId: Int? = null
+
+    private var outletTypeId: Int? = null
+
+    private var outletName: String? = null
+
+    private var contactPerson: String? = null
+
+    private var mobileNumber: String? = null
+
+    private var contactAddress: String? = null
+
+
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUpdateCustomersBinding.inflate(layoutInflater)
@@ -87,6 +103,33 @@ class UpdateCustomersActivity : AppCompatActivity() {
             binding.toobar.subtitle =
                 "${sessionManager.fetchEmployeeName.first()} (${sessionManager.fetchEmployeeEdcode.first()})"
         }
+
+        binding.includes.errorButton.setOnClickListener {
+
+            binding.widgetNotification.isVisible = true
+            binding.widgetContent.isVisible = false
+
+            binding.includes.titles.text = "Cloud Synchronisation"
+            binding.includes.subtitle.text = "Sending Data To Server"
+            binding.includes.subTitles.text = "Please do not Switch away from this screen, until the app ask you to DO SO."
+            binding.includes.progressBar.isVisible = true
+            binding.includes.completeButon.isVisible = false
+            binding.includes.errorButton.isVisible = false
+            binding.includes.passImage.isVisible = false
+            binding.includes.failImage.isVisible = false
+
+            isPermissionRequest()
+            getCurrentLocation()
+        }
+
+        binding.includes.completeButon.setOnClickListener {
+            val intent = Intent(applicationContext, SalesActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+        }
+
+        binding.includes.banner.text = "Update Outlet"
     }
 
 
@@ -97,9 +140,38 @@ class UpdateCustomersActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            com.example.mtx.R.id.map_outlet_id -> {
-                isPermissionRequest()
-                getCurrentLocation()
+            com.example.mtx.R.id.submit -> {
+
+                outletLanguageId = languageAdapter.getValueId(binding.tvFieldLangauge.text.toString())
+                outletClassId = outletClassAdapter.getValueId(binding.tvFieldClass.text.toString())
+                outletTypeId = outletTypeAdapter.getValueId(binding.tvFieldType.text.toString())
+                outletName = binding.tvFieldCustname.text.toString()
+                contactPerson = binding.tvFieldContactPerson.text.toString()
+                mobileNumber = binding.tvFieldContact.text.toString()
+                contactAddress = binding.tvFieldAddress.text.toString()
+
+                if (binding.tvFieldLangauge.text.toString() == "Select Language" ||
+                    binding.tvFieldClass.text.toString()=="Select Customer Category" || binding.tvFieldType.text.toString()=="Select Customer Type"
+                    || outletName!!.isEmpty() || contactPerson!!.isEmpty() || mobileNumber!!.isEmpty() || contactAddress!!.isEmpty()
+                ) {
+                    ToastDialog(applicationContext, "Please enter all the field")
+                } else {
+
+                    binding.widgetNotification.isVisible = true
+                    binding.widgetContent.isVisible = false
+
+                    binding.includes.titles.text = "Cloud Synchronisation"
+                    binding.includes.subtitle.text = "Sending Data To Server"
+                    binding.includes.subTitles.text = "Please do not Switch away from this screen, until the app ask you to DO SO."
+                    binding.includes.progressBar.isVisible = true
+                    binding.includes.completeButon.isVisible = false
+                    binding.includes.errorButton.isVisible = false
+                    binding.includes.passImage.isVisible = false
+                    binding.includes.failImage.isVisible = false
+
+                    isPermissionRequest()
+                    getCurrentLocation()
+                }
             }
         }
         return false
@@ -300,35 +372,19 @@ class UpdateCustomersActivity : AppCompatActivity() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
-    private fun isCurrentLocationSetter(location: Location?) = lifecycleScope.launchWhenCreated {
+    private fun isCurrentLocationSetter(location: Location?) {
 
         stopLocationUpdate()
-        val outletLanguageId = languageAdapter.getValueId(binding.tvFieldLangauge.text.toString())
-        val outletClassId = outletClassAdapter.getValueId(binding.tvFieldClass.text.toString())
-        val outletTypeId = outletTypeAdapter.getValueId(binding.tvFieldType.text.toString())
-        val outletName = binding.tvFieldCustname.text.toString()
-        val contactPerson = binding.tvFieldContactPerson.text.toString()
-        val mobileNumber = binding.tvFieldContact.text.toString()
-        val contactAddress = binding.tvFieldAddress.text.toString()
-        val latitude = location!!.latitude.toString()
-        val longitude = location.longitude.toString()
-        val employee_id = sessionManager.fetchEmployeeId.first()
-        val division = "updated_outlet"
+        lifecycleScope.launchWhenResumed {
 
-
-        if (outletLanguageId.toString().isEmpty() || outletClassId.toString()
-                .isEmpty() || outletTypeId.toString().isEmpty()
-            || outletName.isEmpty() || contactPerson.isEmpty() || mobileNumber.isEmpty() || contactAddress.isEmpty()
-        ) {
-            ToastDialog(applicationContext, "Please enter all the field")
-        } else {
-
-            binding.loader.isVisible = true
-            binding.content.isVisible = false
+            val latitude = location!!.latitude.toString()
+            val longitude = location.longitude.toString()
+            val employee_id =sessionManager.fetchEmployeeId.first()
+            val division = "update_outlet"
 
             viewModel.createCustomers(
-                outletLanguageId, outletClassId, outletTypeId, outletName, contactPerson, mobileNumber,
-                contactAddress, latitude, longitude, employee_id, division
+                outletLanguageId!!, outletClassId!!, outletTypeId!!, outletName!!, contactPerson!!, mobileNumber!!,
+                contactAddress!!, latitude, longitude, employee_id, division
             )
         }
     }
@@ -338,26 +394,61 @@ class UpdateCustomersActivity : AppCompatActivity() {
             viewModel.isCustomerResponseState.collect {
                 it.let {
                     when (it) {
+
                         is NetworkResult.Empty -> {
+
                         }
 
                         is NetworkResult.Error -> {
-                            binding.loader.isVisible = false
-                            binding.content.isVisible = true
-                            
+                            binding.includes.titles.text = "Synchronisation Error"
+                            binding.includes.subtitle.text = "Fail to send Data to Server"
+                            binding.includes.subTitles.text = it.throwable!!.message.toString()
+                            binding.includes.progressBar.isVisible = false
+                            binding.includes.completeButon.isVisible = false
+                            binding.includes.errorButton.isVisible = true
+                            binding.includes.passImage.isVisible = false
+                            binding.includes.failImage.isVisible = true
                         }
 
                         is NetworkResult.Loading -> {
+
+                            binding.widgetContent.isVisible = false
+                            binding.widgetNotification.isVisible = true
+
+                            binding.includes.titles.text = "Cloud Synchronisation"
+                            binding.includes.subtitle.text = "Sending Data To Server"
+                            binding.includes.subTitles.text = "Please do not Switch away from this screen, until the app ask you to DO SO."
+                            binding.includes.progressBar.isVisible = true
+                            binding.includes.completeButon.isVisible = false
+                            binding.includes.errorButton.isVisible = false
+                            binding.includes.passImage.isVisible = false
+                            binding.includes.failImage.isVisible = false
                         }
 
                         is NetworkResult.Success -> {
-
+                            if(it.data!!.status==200){
+                                binding.includes.titles.text = "Synchronisation Successful"
+                                binding.includes.subtitle.text = it.data.msg
+                                binding.includes.subTitles.text = "Finish By clicking the Completed Button"
+                                binding.includes.progressBar.isVisible = false
+                                binding.includes.completeButon.isVisible = true
+                                binding.includes.errorButton.isVisible = false
+                                binding.includes.passImage.isVisible = true
+                                binding.includes.failImage.isVisible = false
+                            }else{
+                                binding.includes.titles.text = "Synchronisation Error"
+                                binding.includes.subtitle.text = "Fail to send Data to Server"
+                                binding.includes.subTitles.text = it.data.msg
+                                binding.includes.progressBar.isVisible = false
+                                binding.includes.completeButon.isVisible = false
+                                binding.includes.errorButton.isVisible = true
+                                binding.includes.passImage.isVisible = false
+                                binding.includes.failImage.isVisible = true
+                            }
                         }
                     }
                 }
             }
         }
     }
-
-
 }

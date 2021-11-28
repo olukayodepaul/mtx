@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 
 @AndroidEntryPoint
-class LoginActivity : AppCompatActivity() , View.OnClickListener {
+class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private val viewModel: LoginViewModel by viewModels()
 
@@ -39,23 +39,21 @@ class LoginActivity : AppCompatActivity() , View.OnClickListener {
 
     private fun setLogin() {
 
-        val  userName: String = binding.etUsername.text.toString()
-        val  password: String = binding.etPassword.text.toString()
+        val userName: String = binding.etUsername.text.toString()
+        val password: String = binding.etPassword.text.toString()
 
-        if(userName.isEmpty() || password.isEmpty()){
+        if (userName.isEmpty() || password.isEmpty()) {
             ToastDialog(applicationContext, "Enter username and password").toast
-        }else{
+        } else {
             lifecycleScope.launchWhenResumed {
-                if (sessionManager.fetchPassword.first() ==  password
-                    && sessionManager.fetchUsername.first() == userName
-                    && sessionManager.fetchDate.first() == GeoFencing.currentDate){
 
+                if (sessionManager.fetchDate.first() == GeoFencing.currentDate) {
                     val intent = Intent(applicationContext, ModulesActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                     finish()
-
-                }else{
+                } else {
+                    binding.loader.isVisible = true
                     viewModel.fetchAllSalesEntries(userName, password)
                 }
             }
@@ -76,15 +74,16 @@ class LoginActivity : AppCompatActivity() , View.OnClickListener {
                 it.let {
                     when (it) {
 
-                        is NetworkResult.Empty->{
+                        is NetworkResult.Empty -> {
                         }
 
                         is NetworkResult.Error -> {
+                            binding.loader.isVisible = false
                             ToastDialog(applicationContext, it.throwable!!.message.toString()).toast
                         }
 
-                        is NetworkResult.Loading->{
-                            binding.loader.isVisible = true
+                        is NetworkResult.Loading -> {
+
                         }
 
                         is NetworkResult.Success -> {
@@ -92,24 +91,17 @@ class LoginActivity : AppCompatActivity() , View.OnClickListener {
                             binding.loader.isVisible = false
 
                             if (it.data!!.status == 200) {
-                                if (arrayOf(it.data.login!!).isEmpty()) {
-                                    ToastDialog(applicationContext, "Error, Critical error. User not define").toast
-                                } else {
+                                sessionManager.deleteStore()
+                                sessionManager.storeEmployeeId(it.data.login!!.employee_id!!)
+                                sessionManager.storeDate(it.data.login!!.dates!!)
+                                sessionManager.storeEmployeeName(it.data.login!!.name!!)
+                                sessionManager.storeEmployeeEdcode(it.data.login!!.employee_code!!)
 
-                                    sessionManager.deleteStore()
-                                    sessionManager.storeEmployeeId(it.data.login!!.employee_id!!)
-                                    sessionManager.storeUsername(it.data.login!!.username!!)
-                                    sessionManager.storePassword(it.data.login!!.password!!)
-                                    sessionManager.storeDate(it.data.login!!.dates!!)
-                                    sessionManager.storeEmployeeName(it.data.login!!.name!!)
-                                    sessionManager.storeEmployeeEdcode(it.data.login!!.employee_code!!)
+                                val intent = Intent(applicationContext, ModulesActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                startActivity(intent)
+                                finish()
 
-                                    val intent = Intent(applicationContext, ModulesActivity::class.java)
-                                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    startActivity(intent)
-                                    finish()
-
-                                }
                             } else {
                                 ToastDialog(applicationContext, it.data.msg!!).toast
                             }
@@ -119,7 +111,4 @@ class LoginActivity : AppCompatActivity() , View.OnClickListener {
             }
         }
     }
-
-
 }
-

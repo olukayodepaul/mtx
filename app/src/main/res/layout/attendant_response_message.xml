@@ -5,6 +5,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/baseReleaseColor">
+
+
+    <TextView
+        android:id="@+id/banner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:fontFamily="@font/roboto_bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/logo"
         android:layout_width="70dp"
@@ -23,7 +38,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/roboto_bold"
-        android:text="Cloud Synchronisation"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +52,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/roboto_bold"
-        android:text="Sending Data To Server"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:fontFamily="@font/roboto_regular"
-        android:text="Please do not Switch away from this screen, until the app ask you to DO SO."
+        android:text=""
         android:textColor="@color/white"
         android:textSize="13sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,11 +83,10 @@
         app:layout_constraintTop_toBottomOf="@+id/subTitles"
         android:outlineAmbientShadowColor="@color/white"
         android:indeterminate="true"
-        android:indeterminateTint="@color/white"
-        />
+        android:indeterminateTint="@color/white" />
 
     <ImageView
-        android:id="@+id/progressBa"
+        android:id="@+id/passImage"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="20dp"
@@ -81,10 +95,11 @@
         android:src="@drawable/ic_baseline_gpp_good_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/subTitles"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        />
 
     <ImageView
-        android:id="@+id/progressB"
+        android:id="@+id/failImage"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="20dp"
@@ -96,7 +111,7 @@
         android:visibility="gone"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/completeButon"
         android:layout_width="146dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -109,7 +124,7 @@
         android:visibility="gone"/>
 
     <Button
-        android:id="@+id/buttons"
+        android:id="@+id/errorButton"
         android:layout_width="146dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -121,5 +136,7 @@
         app:layout_constraintTop_toBottomOf="@+id/subTitles"
         android:visibility="gone"
         />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

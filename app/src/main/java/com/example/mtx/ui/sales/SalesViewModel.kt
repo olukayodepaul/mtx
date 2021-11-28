@@ -20,16 +20,13 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
             val mapper = IsAllCustomers()
 
             if(cacheDate==currentDate){
-                println("EPOLOG 2")
                 val getFromLocalReo = repo.getCustomers()
 
                 if(getFromLocalReo.isNullOrEmpty()) {
-                    println("EPOLOG 3")
                     mapper.entries = emptyList()
                     mapper.message = "Please check your phone storage"
                     mapper.status = 400
                 }else {
-                    println("EPOLOG 4")
                     mapper.entries = getFromLocalReo
                     mapper.message = ""
                     mapper.status = 200
@@ -40,16 +37,12 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
             }else {
 
                 val pullFromRemoteRepo = repo.getCustomer(employee_id)
-
-                println("EPOLOG 6")
                 if(pullFromRemoteRepo.status==200) {
                     if(pullFromRemoteRepo.customers.isNullOrEmpty()) {
-                        println("EPOLOG 7")
                         mapper.entries = emptyList()
                         mapper.message = "Customer is not assigned"
                         mapper.status = 400
                     }else{
-                        println("EPOLOG 8")
                         repo.addCustomers(repo.getCustomer(employee_id).customers!!.map { it.toSalesEntry()})
                         val getFromLocalReo = repo.getCustomers()
                         if(getFromLocalReo.isNullOrEmpty()){
@@ -57,14 +50,12 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
                             mapper.message = "Please check your phone storage"
                             mapper.status = 400
                         }else{
-                            println("EPOLOG 9")
                             mapper.entries = getFromLocalReo
                             mapper.message = ""
                             mapper.status = 200
                         }
                     }
                 }else{
-                    println("EPOLOG 10")
                     mapper.entries = emptyList()
                     mapper.message = pullFromRemoteRepo.msg!!
                     mapper.status = pullFromRemoteRepo.status!!

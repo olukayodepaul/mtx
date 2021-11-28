@@ -20,6 +20,9 @@ class LoginViewModel @ViewModelInject constructor(private val repo: LoginRepo): 
         _loginResponseState.value = NetworkResult.Loading
         try {
             val data = repo.isUserLogin(username, password)
+//            repo.deleteFromSpinnerLocalRep()
+//            repo.deleteBasketFromLocalRep()
+//            repo.deleteFromCustomersLocalRep()
             _loginResponseState.value = NetworkResult.Success(data)
 
         } catch (e: Throwable) {

@@ -12,7 +12,7 @@ android:background="@color/white">
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/baseReleaseColor"
-    app:title="Attendant"
+    app:title="Load Out"
     app:titleTextColor="@color/white"
     android:theme="@style/AppTheme.Toolbar"
     app:subtitleTextAppearance="@font/roboto_light"
@@ -47,7 +47,7 @@ android:background="@color/white">
             android:id="@+id/total"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:text="T.Price"
+            android:text="Amount"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -94,7 +94,8 @@ android:background="@color/white">
     android:layout_height="3dp"
     android:orientation="vertical"
     android:layout_below="@+id/contentHeader"
-    android:background="@color/white">
+    android:background="@color/baseReleaseColor"
+    >
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/loaders"
@@ -107,12 +108,14 @@ android:background="@color/white">
 
 
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/contentsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/progressbarHolder">
+    android:layout_below="@+id/progressbarHolder"
+    android:layout_marginBottom="40dp">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclers"
+        android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -132,7 +135,80 @@ android:background="@color/white">
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"/>
 
+    <include
+        android:id="@+id/notifications"
+        layout="@layout/attendant_response_message"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/contentsLayout"
+        android:layout_marginTop="-30dp">
+
+        <TextView
+            android:id="@+id/sku_s"
+            android:layout_width="195dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="206dp"
+            android:layout_marginBottom="2dp"
+            android:gravity="center_vertical"
+            android:text="====="
+            android:textSize="15sp"
+            android:fontFamily="@font/roboto_bold"
+            />
+
+        <TextView
+            android:id="@+id/total_s"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="5dp"
+            android:gravity="center_vertical|end"
+            android:text=""
+            android:textSize="15sp"
+            android:fontFamily="@font/roboto_bold"/>
+
+        <TextView
+            android:id="@+id/amount_s"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toStartOf="@+id/total_s"
+            android:gravity="center_vertical|end"
+            android:text=""
+            android:textSize="15sp"
+            android:fontFamily="@font/roboto_bold"/>
+
+        <TextView
+            android:id="@+id/qty_s"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="207dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_toStartOf="@+id/amount_s"
+            android:gravity="center_vertical|end"
+            android:text=""
+            android:textSize="15sp"
+            android:fontFamily="@font/roboto_bold"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>
 

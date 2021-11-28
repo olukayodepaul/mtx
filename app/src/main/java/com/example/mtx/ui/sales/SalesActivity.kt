@@ -201,7 +201,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                 // getCurrentLocation()
             }
             3->{
-                items = item!!.toCustomers()
+                items = item.toCustomers()
                 separators = separator
                 getCurrentLocation()
             }
@@ -370,7 +370,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
                     val contentFlow = IsParcelable(
-                        currentLocation!!.latitude.toString(), currentLocation!!.longitude.toString(),
+                        currentLocation.latitude.toString(), currentLocation.longitude.toString(),
                         GeoFencing.currentTime,
                         GeoFencing.currentDate,"",
                         GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID().toString()
@@ -381,7 +381,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }else{
                 val contentFlow = IsParcelable(
-                    currentLocation!!.latitude.toString(), currentLocation!!.longitude.toString(),
+                    currentLocation!!.latitude.toString(), currentLocation.longitude.toString(),
                     GeoFencing.currentTime,
                     GeoFencing.currentDate,"",
                     GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID().toString()

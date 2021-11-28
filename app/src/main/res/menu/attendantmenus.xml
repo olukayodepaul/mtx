@@ -17,5 +17,10 @@
         android:id="@+id/close"
         android:title="Close"
         />
+
+    <item
+        android:id="@+id/retry"
+        android:title="Retry"
+        />
     
 </menu>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.icu.text.NumberFormat
 import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,7 @@ import com.example.mtx.util.*
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.*
+
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
@@ -59,38 +61,78 @@ class LoadInActivity : AppCompatActivity() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         sessionManager = SessionManager(this)
         setSupportActionBar(binding.toolbar)
-        onActivityResult()
         initAdapter()
         initWidget()
+        onActivityResult()
         basketResponse()
-
-
+        postBasket()
     }
 
     private fun initAdapter() {
         val layoutManager = LinearLayoutManager(this)
-        binding.recyclers.layoutManager = layoutManager
-        binding.recyclers.setHasFixedSize(true)
+        binding.recycler.layoutManager = layoutManager
+        binding.recycler.setHasFixedSize(true)
     }
 
-    private fun initWidget() {
+    private fun initWidget() = lifecycleScope.launchWhenCreated{
+
+        binding.toolbar.subtitle = "${sessionManager.fetchEmployeeName.first()} (${sessionManager.fetchEmployeeEdcode.first()})"
 
         binding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
 
-        lifecycleScope.launchWhenResumed {
-            binding.toolbar.subtitle = "${sessionManager.fetchEmployeeName.first()} (${sessionManager.fetchEmployeeEdcode.first()})"
+        showLoaders()
 
+        binding.include.clickRefresh.setOnClickListener {
+            showLoaders()
         }
 
-        lifecycleScope.launchWhenCreated {
-            viewModel.isUserDailyBaskets( sessionManager.fetchEmployeeId.first(),
-                sessionManager.fetchDate.first(),
-                GeoFencing.currentDate!!
-            )
+        binding.notifications.completeButon.setOnClickListener {
+            binding.notifications.root.isVisible = false
+            binding.include.root.isVisible = false
+            binding.recycler.isVisible = true
         }
+    }
 
+    private fun showLoaders()= lifecycleScope.launchWhenCreated{
+        binding.notifications.root.isVisible = false
+        binding.include.root.isVisible = true
+        binding.recycler.isVisible = false
+        binding.include.imageLoader.isVisible = true
+        binding.include.tvTitle.text = "Data synchronisation"
+        binding.include.subTitles.text = "Wait, server request"
+        binding.include.clickRefresh.isVisible = false
+        viewModel.isUserDailyBaskets( sessionManager.fetchEmployeeId.first(), sessionManager.fetchDate.first(), GeoFencing.currentDate!!)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.attendantmenus, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.clockin -> {
+                isPermissionRequest()
+                task_id = 3
+                getCurrentLocation()
+            }
+            R.id.breaks -> {
+                isPermissionRequest()
+                task_id = 4
+                getCurrentLocation()
+            }
+            R.id.close -> {
+                isPermissionRequest()
+                task_id = 6
+                getCurrentLocation()
+            }
+            R.id.retry->{
+                showLoaders()
+            }
+        }
+        return false
     }
 
     private fun isPermissionRequest() {
@@ -114,6 +156,11 @@ class LoadInActivity : AppCompatActivity() {
         }
     }
 
+    private fun isGpsEnableIntent() {
+        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        activityResultLauncher.launch(intent)
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -129,18 +176,98 @@ class LoadInActivity : AppCompatActivity() {
         }
     }
 
-    private fun isGpsEnableIntent() {
-        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-        activityResultLauncher.launch(intent)
+    private fun onActivityResult() {
+        activityResultLauncher= registerForActivityResult(ActivityResultContracts.StartActivityForResult()){}
     }
 
-    private fun onActivityResult() {
-        activityResultLauncher= registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+    @SuppressLint("SetTextI18n")
+    private fun basketResponse() {
+        lifecycleScope.launchWhenResumed {
+            viewModel.basketResponseState.collect {
+                it.let {
+                    when (it) {
+
+                        is NetworkResult.Empty -> { }
+
+                        is NetworkResult.Error -> {
+                            binding.include.root.isVisible = true
+                            binding.recycler.isVisible = false
+                            binding.notifications.root.isVisible = false
+                            binding.include.imageLoader.isVisible = false
+                            binding.include.tvTitle.text = it.throwable!!.message.toString()
+                            binding.include.subTitles.text = "Tap to Retry"
+                            binding.include.clickRefresh.isVisible = true
+
+                        }
+
+                        is NetworkResult.Loading -> {}
+
+                        is NetworkResult.Success -> {
+
+                            if(it.data!!.status==200){
+
+                                binding.include.root.isVisible = false
+                                binding.recycler.isVisible = true
+                                binding.notifications.root.isVisible = false
+
+                                val limitToSalesEntry =  it.data.data!!.filter {
+                                        filters->filters.seperator.equals("1")
+                                }
+
+                                val atyInRoll = limitToSalesEntry.sumByDouble {
+                                        qty->qty.qty!!.toDouble()
+                                }
+
+                                val atyInPrice = limitToSalesEntry.sumByDouble {
+                                        price->price.qty!!- price.order_sold!!.toDouble()
+                                }
+
+                                val atyInAmount = limitToSalesEntry.sumByDouble {
+                                        price->(price.qty!!- price.order_sold!!.toDouble()) * price.price!!
+                                }
+
+                                binding.qtyS.text = NumberFormat.getInstance().format(atyInRoll)
+                                binding.amountS.text = NumberFormat.getInstance().format(atyInPrice)
+                                binding.totalS.text = NumberFormat.getInstance().format(atyInAmount)
+
+                                adapter = LoadInAdapter(limitToSalesEntry)
+                                adapter.notifyDataSetChanged()
+                                binding.recycler.setItemViewCacheSize(limitToSalesEntry.size)
+                                binding.recycler.adapter = adapter
+
+                            }else{
+
+                                binding.notifications.root.isVisible = false
+                                binding.include.root.isVisible = true
+                                binding.recycler.isVisible = false
+
+                                binding.include.imageLoader.isVisible = false
+                                binding.include.tvTitle.text = it.data.message
+                                binding.include.subTitles.text = "Tap to Retry"
+                                binding.include.clickRefresh.isVisible = true
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
     @SuppressLint("MissingPermission")
     private fun getCurrentLocation() {
+
+        binding.notifications.root.isVisible = true
+        binding.include.root.isVisible = false
+        binding.recycler.isVisible = false
+
+        binding.notifications.titles.text = "Cloud Synchronisation"
+        binding.notifications.subtitle.text = "Sending Data To Server"
+        binding.notifications.subTitles.text = "Please do not Switch away from this screen, until the app ask you to DO SO."
+        binding.notifications.progressBar.isVisible = true
+        binding.notifications.completeButon.isVisible = false
+        binding.notifications.errorButton.isVisible = false
+        binding.notifications.passImage.isVisible = false
+        binding.notifications.failImage.isVisible = false
 
         locationRequest = LocationRequest.create().apply {
             interval = 1 * 1000
@@ -164,85 +291,90 @@ class LoadInActivity : AppCompatActivity() {
         }
     }
 
-    //location settings.
     private fun stopLocationUpdate() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.clockin -> {
-                isPermissionRequest()
-                task_id = 3
-                getCurrentLocation()
-            }
-            R.id.breaks -> {
-                isPermissionRequest()
-                task_id = 4
-                getCurrentLocation()
-            }
-            R.id.close -> {
-                isPermissionRequest()
-                task_id = 6
-                getCurrentLocation()
-            }
-        }
-        return false
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.attendantmenus, menu)
-        return true
-    }
-
-    private fun basketResponse() {
-        lifecycleScope.launchWhenResumed {
-            viewModel.basketResponseState.collect {
-                it.let {
-                    when (it) {
-
-                        is NetworkResult.Empty -> { }
-
-                        is NetworkResult.Error -> {}
-
-                        is NetworkResult.Loading -> {}
-
-                        is NetworkResult.Success -> {
-
-                            binding.loaders.isVisible = false
-
-                            val limitToSalesEntry =  it.data!!.data!!.filter {
-                                    filters->filters.seperator.equals("1")
-                            }
-
-                            adapter = LoadInAdapter(limitToSalesEntry)
-                            adapter.notifyDataSetChanged()
-                            binding.recyclers.setItemViewCacheSize(limitToSalesEntry.size)
-                            binding.recyclers.adapter = adapter
-
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun isCurrentLocationSetter(currentLocation: Location?) {
+    private fun isCurrentLocationSetter(currentLocation: Location?)=lifecycleScope.launchWhenCreated {
         stopLocationUpdate()
         when(task_id){
             3->{
                 lifecycleScope.launchWhenResumed {
-                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 3, currentLocation!!.latitude.toString(),currentLocation!!.longitude.toString(), "Clockin" )
+                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 3, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Clockin" ,GeoFencing.currentTime!!, 4)
                 }
             }
             4->{
                 lifecycleScope.launchWhenResumed {
-                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 4, currentLocation!!.latitude.toString(),currentLocation!!.longitude.toString(), "Break" )
+                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 4, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Break",GeoFencing.currentTime!!, 0)
                 }
             }
             6->{
                 lifecycleScope.launchWhenResumed {
-                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 6, currentLocation!!.latitude.toString(),currentLocation!!.longitude.toString(), "Close" )
+                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 6, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Close" ,GeoFencing.currentTime!!, 0)
+                }
+            }
+        }
+    }
+
+    private fun postBasket() {
+        lifecycleScope.launchWhenResumed {
+            viewModel.taskResponseState.collect {
+                it.let {
+                    when (it) {
+
+                        is NetworkResult.Empty -> {}
+
+                        is NetworkResult.Error -> {
+
+                            binding.notifications.titles.text = "Synchronisation Error"
+                            binding.notifications.subtitle.text = "Fail to send Data to Server"
+                            binding.notifications.subTitles.text = it.throwable!!.message.toString()
+                            binding.notifications.progressBar.isVisible = false
+                            binding.notifications.completeButon.isVisible = false
+                            binding.notifications.errorButton.isVisible = true
+                            binding.notifications.passImage.isVisible = false
+                            binding.notifications.failImage.isVisible = true
+                        }
+
+                        is NetworkResult.Loading -> {
+
+                            binding.notifications.root.isVisible = true
+                            binding.include.root.isVisible = false
+                            binding.recycler.isVisible = false
+
+                            binding.notifications.titles.text = "Cloud Synchronisation"
+                            binding.notifications.subtitle.text = "Sending Data To Server"
+                            binding.notifications.subTitles.text = "Please do not Switch away from this screen, until the app ask you to DO SO."
+                            binding.notifications.progressBar.isVisible = true
+                            binding.notifications.completeButon.isVisible = false
+                            binding.notifications.errorButton.isVisible = false
+                            binding.notifications.passImage.isVisible = false
+                            binding.notifications.failImage.isVisible = false
+
+                        }
+
+                        is NetworkResult.Success -> {
+                            if(it.data!!.status==200) {
+                                binding.notifications.titles.text = "Synchronisation Successful"
+                                binding.notifications.subtitle.text = it.data.msg
+                                binding.notifications.subTitles.text = ""
+                                binding.notifications.progressBar.isVisible = false
+                                binding.notifications.completeButon.isVisible = true
+                                binding.notifications.errorButton.isVisible = false
+                                binding.notifications.passImage.isVisible = true
+                                binding.notifications.failImage.isVisible = false
+                            }else{
+                                binding.notifications.titles.text = "Synchronisation Completed"
+                                binding.notifications.subtitle.text = it.data.msg
+                                binding.notifications.subTitles.text = ""
+                                binding.notifications.progressBar.isVisible = false
+                                binding.notifications.completeButon.isVisible = true
+                                binding.notifications.errorButton.isVisible = false
+                                binding.notifications.passImage.isVisible = true
+                                binding.notifications.failImage.isVisible = false
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -12,5 +12,10 @@
         android:id="@+id/clock_out"
         android:title="ClockOut"
         />
+
+    <item
+        android:id="@+id/retry"
+        android:title="Retry"
+        />
     
 </menu>

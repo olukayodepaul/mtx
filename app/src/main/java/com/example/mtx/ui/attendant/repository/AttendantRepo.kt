@@ -11,5 +11,5 @@ interface AttendantRepo {
     suspend fun deleteBasketFromLocalRep()
     suspend fun setBasketToInitState()
     suspend fun task(employee_id: Int, task_id: Int, latitude: String, longitude: String, taskname: String): GeneralResponse
-
+    suspend fun setAttendantTime(timeago:String, sort:Int )
 }

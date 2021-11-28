@@ -18,9 +18,11 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.example.mtx.databinding.ActivityAddCuctomerBinding
 import com.example.mtx.dto.UserSpinnerEntity
+import com.example.mtx.ui.sales.SalesActivity
 import com.example.mtx.util.NetworkResult
 import com.example.mtx.util.PermissionUtility
 import com.example.mtx.util.SessionManager
@@ -31,7 +33,6 @@ import com.google.android.gms.location.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-
 
 @AndroidEntryPoint
 class AddCustomerActivity : AppCompatActivity() {
@@ -58,7 +59,22 @@ class AddCustomerActivity : AppCompatActivity() {
 
     lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
+    private var outletLanguageId: Int? = null
 
+    private var outletClassId: Int? = null
+
+    private var outletTypeId: Int? = null
+
+    private var outletName: String? = null
+
+    private var contactPerson: String? = null
+
+    private var mobileNumber: String? = null
+
+    private var contactAddress: String? = null
+
+
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddCuctomerBinding.inflate(layoutInflater)
@@ -73,7 +89,44 @@ class AddCustomerActivity : AppCompatActivity() {
         languageAdapter = LanguageAdapter()
         outletClassAdapter = OutletClassAdapter()
         outletTypeAdapter = OutletTypeAdapter()
+
+        binding.toobar.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
+        lifecycleScope.launchWhenResumed {
+            binding.toobar.subtitle =
+                "${sessionManager.fetchEmployeeName.first()} (${sessionManager.fetchEmployeeEdcode.first()})"
+        }
+
+        binding.includes.errorButton.setOnClickListener {
+
+            binding.widgetNotification.isVisible = true
+            binding.widgetContent.isVisible = false
+
+            binding.includes.titles.text = "Cloud Synchronisation"
+            binding.includes.subtitle.text = "Sending Data To Server"
+            binding.includes.subTitles.text = "Please do not Switch away from this screen, until the app ask you to DO SO."
+            binding.includes.progressBar.isVisible = true
+            binding.includes.completeButon.isVisible = false
+            binding.includes.errorButton.isVisible = false
+            binding.includes.passImage.isVisible = false
+            binding.includes.failImage.isVisible = false
+
+            isPermissionRequest()
+            getCurrentLocation()
+        }
+
+        binding.includes.completeButon.setOnClickListener {
+            val intent = Intent(applicationContext, SalesActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+        }
+
+        binding.includes.banner.text = "Map Outlet"
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(com.example.mtx.R.menu.map_outlet, menu)
@@ -82,11 +135,39 @@ class AddCustomerActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            com.example.mtx.R.id.map_outlet_id -> {
-                isPermissionRequest()
-                getCurrentLocation()
-            }
+            com.example.mtx.R.id.submit -> {
 
+                outletLanguageId = languageAdapter.getValueId(binding.tvFieldLangauge.text.toString())
+                outletClassId = outletClassAdapter.getValueId(binding.tvFieldClass.text.toString())
+                outletTypeId = outletTypeAdapter.getValueId(binding.tvFieldType.text.toString())
+                outletName = binding.tvFieldCustname.text.toString()
+                contactPerson = binding.tvFieldContactPerson.text.toString()
+                mobileNumber = binding.tvFieldContact.text.toString()
+                contactAddress = binding.tvFieldAddress.text.toString()
+
+                if (binding.tvFieldLangauge.text.toString() == "Select Language" ||
+                    binding.tvFieldClass.text.toString()=="Select Customer Category" || binding.tvFieldType.text.toString()=="Select Customer Type"
+                    || outletName!!.isEmpty() || contactPerson!!.isEmpty() || mobileNumber!!.isEmpty() || contactAddress!!.isEmpty()
+                ) {
+                    ToastDialog(applicationContext, "Please enter all the field")
+                } else {
+
+                    binding.widgetNotification.isVisible = true
+                    binding.widgetContent.isVisible = false
+
+                    binding.includes.titles.text = "Cloud Synchronisation"
+                    binding.includes.subtitle.text = "Sending Data To Server"
+                    binding.includes.subTitles.text = "Please do not Switch away from this screen, until the app ask you to DO SO."
+                    binding.includes.progressBar.isVisible = true
+                    binding.includes.completeButon.isVisible = false
+                    binding.includes.errorButton.isVisible = false
+                    binding.includes.passImage.isVisible = false
+                    binding.includes.failImage.isVisible = false
+
+                    isPermissionRequest()
+                    getCurrentLocation()
+                }
+            }
         }
         return false
     }
@@ -109,13 +190,13 @@ class AddCustomerActivity : AppCompatActivity() {
                         is NetworkResult.Success -> {
 
                             val languages: List<UserSpinnerEntity> =
-                                it.data!!.data!!.filter { fil -> fil.sep == 1 }
+                                it.data!!.data!!.filter { fil -> fil.sep == 2 }
 
                             val outlettype: List<UserSpinnerEntity> =
-                                it.data.data!!.filter { fil -> fil.sep == 2 }
+                                it.data.data!!.filter { fil -> fil.sep == 3 }
 
                             val outletclass: List<UserSpinnerEntity> =
-                                it.data.data!!.filter { fil -> fil.sep == 3 }
+                                it.data.data!!.filter { fil -> fil.sep == 1 }
 
                             val outletLanguage = ArrayList<String>()
                             val outletClass = ArrayList<String>()
@@ -172,6 +253,7 @@ class AddCustomerActivity : AppCompatActivity() {
                             )
                             binding.tvFieldClass.setAdapter(arrayAdapterOutletClass)
                             binding.tvFieldClass.threshold = 1
+
                         }
                     }
                 }
@@ -256,24 +338,21 @@ class AddCustomerActivity : AppCompatActivity() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
-    private fun isCurrentLocationSetter(location: Location?) = lifecycleScope.launchWhenCreated {
-        stopLocationUpdate()
-        val outletLanguageId = languageAdapter.getValueId(binding.tvFieldLangauge.text.toString())
-        val outletClassId = outletClassAdapter.getValueId(binding.tvFieldClass.text.toString())
-        val outletTypeId = outletTypeAdapter.getValueId(binding.tvFieldType.text.toString())
-        val outletName = binding.tvFieldCustname.text.toString()
-        val contactPerson = binding.tvFieldContactPerson.text.toString()
-        val mobileNumber = binding.tvFieldContact.text.toString()
-        val contactAddress = binding.tvFieldAddress.text.toString()
-        val latitude = location!!.latitude.toString()
-        val longitude = location.longitude.toString()
-        val employee_id = sessionManager.fetchEmployeeId.first()
-        val division = "new_outlet"
+    private fun isCurrentLocationSetter(location: Location?) {
 
-        viewModel.createCustomers(
-            outletLanguageId, outletClassId, outletTypeId, outletName, contactPerson, mobileNumber,
-            contactAddress, latitude, longitude, employee_id, division
-        )
+        stopLocationUpdate()
+        lifecycleScope.launchWhenResumed {
+
+            val latitude = location!!.latitude.toString()
+            val longitude = location.longitude.toString()
+            val employee_id =sessionManager.fetchEmployeeId.first()
+            val division = "map_outlet"
+
+            viewModel.createCustomers(
+                outletLanguageId!!, outletClassId!!, outletTypeId!!, outletName!!, contactPerson!!, mobileNumber!!,
+                contactAddress!!, latitude, longitude, employee_id, division
+            )
+        }
     }
 
     private fun addCustomerCallBack() {
@@ -281,18 +360,57 @@ class AddCustomerActivity : AppCompatActivity() {
             viewModel.isCustomerResponseState.collect {
                 it.let {
                     when (it) {
+
                         is NetworkResult.Empty -> {
+
                         }
 
                         is NetworkResult.Error -> {
+                            binding.includes.titles.text = "Synchronisation Error"
+                            binding.includes.subtitle.text = "Fail to send Data to Server"
+                            binding.includes.subTitles.text = it.throwable!!.message.toString()
+                            binding.includes.progressBar.isVisible = false
+                            binding.includes.completeButon.isVisible = false
+                            binding.includes.errorButton.isVisible = true
+                            binding.includes.passImage.isVisible = false
+                            binding.includes.failImage.isVisible = true
                         }
 
                         is NetworkResult.Loading -> {
 
+                            binding.widgetContent.isVisible = false
+                            binding.widgetNotification.isVisible = true
+
+                            binding.includes.titles.text = "Cloud Synchronisation"
+                            binding.includes.subtitle.text = "Sending Data To Server"
+                            binding.includes.subTitles.text = "Please do not Switch away from this screen, until the app ask you to DO SO."
+                            binding.includes.progressBar.isVisible = true
+                            binding.includes.completeButon.isVisible = false
+                            binding.includes.errorButton.isVisible = false
+                            binding.includes.passImage.isVisible = false
+                            binding.includes.failImage.isVisible = false
                         }
 
                         is NetworkResult.Success -> {
-
+                            if(it.data!!.status==200){
+                                binding.includes.titles.text = "Synchronisation Successful"
+                                binding.includes.subtitle.text = it.data.msg
+                                binding.includes.subTitles.text = "Finish By clicking the Completed Button"
+                                binding.includes.progressBar.isVisible = false
+                                binding.includes.completeButon.isVisible = true
+                                binding.includes.errorButton.isVisible = false
+                                binding.includes.passImage.isVisible = true
+                                binding.includes.failImage.isVisible = false
+                            }else{
+                                binding.includes.titles.text = "Synchronisation Error"
+                                binding.includes.subtitle.text = "Fail to send Data to Server"
+                                binding.includes.subTitles.text = it.data.msg
+                                binding.includes.progressBar.isVisible = false
+                                binding.includes.completeButon.isVisible = false
+                                binding.includes.errorButton.isVisible = true
+                                binding.includes.passImage.isVisible = false
+                                binding.includes.failImage.isVisible = true
+                            }
                         }
                     }
                 }
@@ -300,6 +418,3 @@ class AddCustomerActivity : AppCompatActivity() {
         }
     }
 }
-
-
-
