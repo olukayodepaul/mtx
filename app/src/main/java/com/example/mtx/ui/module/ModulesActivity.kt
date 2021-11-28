@@ -91,7 +91,7 @@ class ModulesActivity : AppCompatActivity() {
 
                             if(it.data!!.status==200){
                                 binding.loaders.isVisible = false
-                                adapters = ModuleAdapter(it.data!!.modules!!, applicationContext)
+                                adapters = ModuleAdapter(it.data.modules!!, applicationContext)
                                 adapters.notifyDataSetChanged()
                                 binding.recyclers.setItemViewCacheSize(it.data.modules!!.size)
                                 binding.recyclers.adapter = adapters

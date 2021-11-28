@@ -68,9 +68,4 @@ interface RetrofitService {
         @Query("division") division: String
     ): GeneralResponse
 
-
-
-
-
-
 }

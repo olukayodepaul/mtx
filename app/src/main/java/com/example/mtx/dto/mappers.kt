@@ -58,7 +58,6 @@ data class IsParcelable(
     var longitude: String? = null,
     var entry_time: String? = null,
     var entry_date: String? = null,
-    var userToken: String? = null,
     var uii: String? = null,
     var data:Customers? = null
 ): Parcelable

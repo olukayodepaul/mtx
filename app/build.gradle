@@ -10,7 +10,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 //apply plugin: 'androidx.navigation.safeargs.kotlin'
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android-extensions'
 
 
@@ -138,5 +138,19 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$httpinterceptor_version"
 
     implementation 'com.nex3z:notification-badge:1.0.4'
+
+    //Goodle services
+    implementation 'com.google.firebase:firebase-core:17.0.1'
+    implementation 'com.google.firebase:firebase-messaging:20.1.0'
+    implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-storage:19.1.0'
+    implementation 'com.google.firebase:firebase-database:19.2.0'
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+
+    def map_version = "17.0.0"
+    implementation "com.google.android.gms:play-services-location:$map_version"
+    implementation "com.google.android.gms:play-services-places:$map_version"
+    implementation 'com.google.maps:google-maps-services:0.9.1'
+    implementation 'com.google.maps.android:android-maps-utils:0.5+'
 
 }

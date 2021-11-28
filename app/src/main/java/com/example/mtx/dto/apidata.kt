@@ -376,6 +376,9 @@ data class UserSpinner(
     var sep: Int? = null
 )
 
+data class GetRequestToken(
+    val token: String? = null
+)
 
 
 

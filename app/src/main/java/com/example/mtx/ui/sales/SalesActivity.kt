@@ -360,7 +360,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
         if(separators==3) {
 
             if (items!!.outlet_waiver!!.toLowerCase() == "true") {
-                val ifIsValidOutlet: Boolean = setGeoFencing(currentLocation!!.latitude,currentLocation!!.longitude, items!!.latitude!!.toDouble(), items!!.longitude!!.toDouble())
+                val ifIsValidOutlet: Boolean = setGeoFencing(currentLocation!!.latitude,currentLocation.longitude, items!!.latitude!!.toDouble(), items!!.longitude!!.toDouble())
                 if(!ifIsValidOutlet){
                     binding.tvRecycler.isVisible = true
                     binding.loader.root.isVisible = false
@@ -372,7 +372,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                     val contentFlow = IsParcelable(
                         currentLocation.latitude.toString(), currentLocation.longitude.toString(),
                         GeoFencing.currentTime,
-                        GeoFencing.currentDate,"",
+                        GeoFencing.currentDate,
                         GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID().toString()
                         , items
                     )
@@ -383,7 +383,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                 val contentFlow = IsParcelable(
                     currentLocation!!.latitude.toString(), currentLocation.longitude.toString(),
                     GeoFencing.currentTime,
-                    GeoFencing.currentDate,"",
+                    GeoFencing.currentDate,
                     GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID().toString()
                     , items
                 )

@@ -2,6 +2,7 @@ package com.example.mtx.di
 
 import com.example.mtx.datasource.AppDao
 import com.example.mtx.datasource.RetrofitService
+import com.example.mtx.datasource.RetrofitServices
 import com.example.mtx.ui.attendant.repository.AttendantRepo
 import com.example.mtx.ui.attendant.repository.AttendantRepoImpl
 import com.example.mtx.ui.customers.repository.AddCustomerRep
@@ -74,10 +75,11 @@ object AppRepository {
     @Provides
     fun provideSalesRecordRepository(
         retrofitClient: RetrofitService,
-        appdoa: AppDao
+        appdoa: AppDao,
+        retrofitServices: RetrofitServices
     ): SalesRecordRepo {
         return SalesRecordRepoImpl(
-            retrofitClient, appdoa
+            retrofitClient, appdoa, retrofitServices
         )
     }
 

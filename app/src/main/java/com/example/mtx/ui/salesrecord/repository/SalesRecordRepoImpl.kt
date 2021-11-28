@@ -2,7 +2,9 @@ package com.example.mtx.ui.salesrecord.repository
 
 import com.example.mtx.datasource.AppDao
 import com.example.mtx.datasource.RetrofitService
+import com.example.mtx.datasource.RetrofitServices
 import com.example.mtx.dto.BasketLimitList
+import com.example.mtx.dto.GeneralResponse
 import com.example.mtx.dto.OrderPosted
 import com.example.mtx.dto.PostSalesResponse
 
@@ -10,7 +12,8 @@ import com.example.mtx.dto.PostSalesResponse
 class SalesRecordRepoImpl (
 
     private val retrofitClient: RetrofitService,
-    private val appdoa: AppDao
+    private val appdoa: AppDao,
+    private val retrofitServices: RetrofitServices
 
 ) : SalesRecordRepo {
 
@@ -32,6 +35,15 @@ class SalesRecordRepoImpl (
 
     override suspend fun setVisitTime(timeago: String, urno: Int) {
         return appdoa.setVisitTime(timeago, urno)
+    }
+
+    override suspend fun sendTokenToday(
+        urno: Int,
+        employee_id: Int,
+        curlocation: String,
+        region: Int
+    ): GeneralResponse {
+        return retrofitServices.sendTokenToday(urno, employee_id, curlocation, region)
     }
 
 

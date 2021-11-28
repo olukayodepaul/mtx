@@ -24,4 +24,22 @@ class SalesRecordViewModel @ViewModelInject constructor(private val repo: SalesR
             _salesRecordResponseState.value = NetworkResult.Error(e)
         }
     }
+
+
+    private val _tokenResponseState = MutableStateFlow<NetworkResult<GeneralResponse>>(
+        NetworkResult.Empty)
+    val tokenResponseState get() = _tokenResponseState
+
+    fun tokenRecordEntries( urno: Int,
+                            employee_id: Int,
+                            curlocation: String,
+                            region: Int) = viewModelScope.launch {
+        _tokenResponseState.value = NetworkResult.Loading
+        try {
+            val data = repo.sendTokenToday(urno, employee_id, curlocation, region)
+            _tokenResponseState.value = NetworkResult.Success(data)
+        } catch (e: Throwable) {
+            _tokenResponseState.value = NetworkResult.Error(e)
+        }
+    }
 }

@@ -64,7 +64,6 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         binding.toolbar.subtitle = isIntentData.data!!.outletname
-
     }
 
     private fun refreshAdapter() {
@@ -157,12 +156,12 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
                                 binding.loader.root.isVisible = false
                                 binding.tvRecycler.isVisible = true
                                 adapter = SalesEntryAdapter(
-                                    it.data!!.data!!,
+                                    it.data.data!!,
                                     applicationContext,
                                     ::handlesAdapterEvent
                                 )
                                 adapter.notifyDataSetChanged()
-                                binding.tvRecycler.setItemViewCacheSize(it.data!!.data!!.size)
+                                binding.tvRecycler.setItemViewCacheSize(it.data.data!!.size)
                                 binding.tvRecycler.adapter = adapter
                                 binding.progressbarHolder.isVisible = false
                             } else {

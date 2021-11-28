@@ -11,9 +11,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mtx.R
 import com.example.mtx.databinding.ActivitySalesRecordBinding
+import com.example.mtx.dto.GetRequestToken
+import com.example.mtx.dto.IsParcelable
 import com.example.mtx.util.NetworkResult
+import com.example.mtx.util.SessionManager
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 
 
 @AndroidEntryPoint
@@ -25,22 +33,37 @@ class SalesRecordActivity : AppCompatActivity() {
 
     private lateinit var adapter: SalesRecordAdapter
 
+    private lateinit var database: FirebaseDatabase
+
+    private lateinit var isIntentData: IsParcelable
+
+    private lateinit var sessionManager: SessionManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySalesRecordBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+        database = FirebaseDatabase.getInstance()
+        sessionManager = SessionManager(this)
+        isIntentData = intent.extras!!.getParcelable("isParcelable")!!
         initWidget()
         initRecyclerView()
         viewModel.fetchSalesRecordEntries()
+        requestToken()
         fetchSalesRecordEntriesResponse()
+        setRequestedToken()
     }
 
     private fun initWidget() = lifecycleScope.launchWhenCreated {
         binding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+    }
+
+    private fun requestToken() = lifecycleScope.launchWhenCreated{
+        viewModel.tokenRecordEntries(isIntentData.data!!.urno!!, sessionManager.fetchEmployeeId.first(), "${isIntentData.latitude},${isIntentData.longitude}", sessionManager.fetchRegion.first())
     }
 
     private fun initRecyclerView() {
@@ -101,12 +124,10 @@ class SalesRecordActivity : AppCompatActivity() {
                                 price.orders!!.toDouble() * price.price!!
                             }
 
-
                             binding.vamount.text = NumberFormat.getInstance().format(isAmount)
                             binding.vinventory.text = NumberFormat.getInstance().format(isInventory)
                             binding.vpricing.text = NumberFormat.getInstance().format(isPricing)
                             binding.vqtysold.text = NumberFormat.getInstance().format(isQtyOrdered)
-
 
                             adapter = SalesRecordAdapter(limitToSalesEntry)
                             adapter.notifyDataSetChanged()
@@ -117,6 +138,19 @@ class SalesRecordActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun setRequestedToken() {
+        val references =    database.getReference("/defaulttoken/${isIntentData.data!!.urno}}")
+        references.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    val vToken = p0.getValue(GetRequestToken::class.java)
+                    binding.tvFieldCustname.setText(vToken!!.token)
+                }
+            }
+        })
     }
 
 }
