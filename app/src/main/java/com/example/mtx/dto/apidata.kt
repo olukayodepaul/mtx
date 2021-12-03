@@ -48,7 +48,17 @@ data class Employees(
     var username: String? = null,
     @SerializedName("password")
     @Expose
-    var password: String? = null
+    var password: String? = null,
+    @SerializedName("depotlat")
+    @Expose
+    var depotlat: String? = null,
+    @SerializedName("depotlng")
+    @Expose
+    var depotlng: String? = null,
+    @SerializedName("depotwaiver")
+    @Expose
+    var depotwaiver: String? = null,
+
 )
 
 data class ModulesResponse(
@@ -100,13 +110,16 @@ data class CustomersResponse(
 data class Customers(
     @SerializedName("auto")
     @Expose
-    var auto: Int = 0,
+    var auto: Int? = null,
     @SerializedName("dates")
     @Expose
     var dates: String? = null,
     @SerializedName("timeago")
     @Expose
     var timeago: String? = null,
+    @SerializedName("_id")
+    @Expose
+    var _id: String? = null,
     @SerializedName("employee_id")
     @Expose
     var employee_id: Int? = null,
@@ -158,6 +171,9 @@ data class Customers(
     @SerializedName("outlettypeid")
     @Expose
     var outlettypeid: Int? = null,
+    @SerializedName("outletaddress")
+    @Expose
+    var outletaddress: String? = null,
     @SerializedName("contactphone")
     @Expose
     var contactphone: String? = null,
@@ -185,18 +201,15 @@ data class Customers(
     @SerializedName("duration")
     @Expose
     var duration: String? = null,
-    @SerializedName("outletaddress")
-    @Expose
-    var outletaddress: String? = null,
     @SerializedName("depotwaivers")
     @Expose
     var depotwaivers: String? = null,
     @SerializedName("spec")
     @Expose
     var spec: String? = null,
-    @SerializedName("_id")
+    @SerializedName("__v")
     @Expose
-    var _id: String? = null
+    var __v: String? = null,
 ): Parcelable
 
 data class BasketLimitResponse(
@@ -330,10 +343,13 @@ data class OrderPosted(
     @SerializedName("volumeclass")
     @Expose
     var volumeclass: String? = null,
+
     @SerializedName("token")
     @Expose
     var token: String? = null,
-
+    @SerializedName("remark")
+    @Expose
+    var remark: String? = null,
     @SerializedName("order")
     @Expose
     var order: List<BasketLimit>? = null,
@@ -377,8 +393,30 @@ data class UserSpinner(
 )
 
 data class GetRequestToken(
-    val token: String? = null
+    val token: String? = null,
+    val status: String? = null
 )
+
+
+data class CustomerPurchaseHistory(
+    @SerializedName("etime")
+    @Expose
+    var status: Int? = null,
+    @SerializedName("msg")
+    @Expose
+    var msg: String? = null
+)
+
+
+data class LoginResponseWithSpecifier(
+    @SerializedName("specifier")
+    @Expose
+    var specifier: Boolean? = null,
+    @SerializedName("res")
+    @Expose
+    var res: LoginResponse? = null
+)
+
 
 
 

@@ -13,14 +13,17 @@ class SessionManager (context: Context)  {
     private val dataStore = context.createDataStore(name = "user_session_com_mtx_005")
 
     companion object {
-        val employeeId = preferencesKey<Int>("employeeId")
-        val userName = preferencesKey<String>("username")
-        val passWord = preferencesKey<String>("password")
-        val entryDate = preferencesKey<String>("entryDate")
-        val customerEntryDate = preferencesKey<String>("customerEntryDate")
-        val employeeName = preferencesKey<String>("employeeName")
-        val employeeEdcode= preferencesKey<String>("employeeEdcode")
-        val regionId = preferencesKey<Int>("regionId")
+        private val employeeId = preferencesKey<Int>("employeeId")
+        private val userName = preferencesKey<String>("username")
+        private val passWord = preferencesKey<String>("password")
+        private val entryDate = preferencesKey<String>("entryDate")
+        private val customerEntryDate = preferencesKey<String>("customerEntryDate")
+        private val employeeName = preferencesKey<String>("employeeName")
+        private val employeeEdcode= preferencesKey<String>("employeeEdcode")
+        private val regionId = preferencesKey<Int>("regionId")
+        private val depotLat = preferencesKey<String>("depotLat")
+        private val depotLng = preferencesKey<String>("depotLng")
+        private val depotWaiver = preferencesKey<String>("depotWaiver")
     }
 
     //delete state flow
@@ -28,6 +31,42 @@ class SessionManager (context: Context)  {
         dataStore.edit {
             it.clear()
         }
+    }
+
+    //store session
+    suspend fun storeWaiver(depotwaiver: String) {
+        dataStore.edit {
+            it[depotWaiver] = depotwaiver
+        }
+    }
+
+    //retrieve session
+    val fetchDepotWaiver: Flow<String> = dataStore.data.map {
+        it[depotWaiver] ?: ""
+    }
+
+    //store session
+    suspend fun storeDepotLng(depotlng: String) {
+        dataStore.edit {
+            it[depotLng] = depotlng
+        }
+    }
+
+    //retrieve session
+    val fetchDepotLng: Flow<String> = dataStore.data.map {
+        it[depotLng] ?: "0.0"
+    }
+
+    //store session
+    suspend fun storeDepotLat(depotlat: String) {
+        dataStore.edit {
+            it[depotLat] = depotlat
+        }
+    }
+
+    //retrieve session
+    val fetchDepotLat: Flow<String> = dataStore.data.map {
+        it[depotLat] ?: "0.0"
     }
 
     //store session

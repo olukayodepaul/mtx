@@ -4,6 +4,8 @@ import com.example.mtx.datasource.AppDao
 import com.example.mtx.datasource.RetrofitService
 import com.example.mtx.dto.CustomersList
 import com.example.mtx.dto.CustomersResponse
+import com.example.mtx.dto.OrderPosted
+import com.example.mtx.dto.PostSalesResponse
 
 class SalesRepoImpl (private val retrofitClient: RetrofitService, private val appdoa: AppDao): SalesRepo {
 
@@ -17,6 +19,10 @@ class SalesRepoImpl (private val retrofitClient: RetrofitService, private val ap
 
     override suspend fun addCustomers(cust: List<CustomersList>) {
         return appdoa.addCustomers(cust)
+    }
+
+    override suspend fun postSales(order: OrderPosted): PostSalesResponse {
+        return retrofitClient.postSales(order)
     }
 
 }

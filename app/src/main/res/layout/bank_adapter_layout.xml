@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
     android:layout_marginTop="5dp"
-  >
+    >
 
 
     <TextView
@@ -33,9 +33,10 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="5dp"
-        android:fontFamily="@font/roboto_bold"
         android:gravity="center_vertical|end"
-        android:textSize="12sp" />
+        android:text="total"
+        android:textSize="12sp"
+        android:fontFamily="@font/roboto_bold"/>
 
     <TextView
         android:id="@+id/amount"
@@ -45,9 +46,10 @@
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="0dp"
         android:layout_toStartOf="@+id/total"
-        android:fontFamily="@font/roboto_regular"
         android:gravity="center_vertical|end"
-        android:textSize="12sp" />
+        android:text="amount"
+        android:textSize="12sp"
+        android:fontFamily="@font/roboto_regular"/>
 
     <TextView
         android:id="@+id/qty"
@@ -58,9 +60,10 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
         android:layout_toStartOf="@+id/amount"
-        android:fontFamily="@font/roboto_regular"
         android:gravity="center_vertical|end"
-        android:textSize="12sp" />
+        android:text="qty"
+        android:textSize="12sp"
+        android:fontFamily="@font/roboto_regular"/>
 
 
 </RelativeLayout>

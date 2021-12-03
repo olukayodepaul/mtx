@@ -6,17 +6,21 @@ import kotlinx.android.parcel.Parcelize
 
 fun Customers.toSalesEntry() : CustomersList {
     return CustomersList(
-        auto, dates, timeago, employee_id, urno, customerno, outletname, latitude, longitude, sort, notice, outlet_waiver,
-        cust_token, defaulttoken, seq, modes, rep_id, outletclassid, outletlanguageid, outlettypeid, contactphone,
-        contactname, outlet_pic, repname, volumeclass, employee_code, customer_code, distance, outletaddress,depotwaivers, spec, _id
+        auto, dates, timeago, _id, employee_id, urno, customerno, outletname, latitude, longitude, sort, notice,
+        outlet_waiver, cust_token, defaulttoken, seq, modes, rep_id, outletclassid, outletlanguageid, outlettypeid,
+        outletaddress, contactphone, contactname, outlet_pic, repname, volumeclass, employee_code,
+        customer_code, distance, duration, depotwaivers, spec, __v
+
     )
 }
 
+
 fun CustomersList.toCustomers() : Customers {
     return Customers(
-        auto, dates, timeago, employee_id, urno, customerno, outletname, latitude, longitude, sort, notice, outlet_waiver,
-        cust_token, defaulttoken, seq, modes, rep_id, outletclassid, outletlanguageid, outlettypeid, contactphone,
-        contactname, outlet_pic, repname, volumeclass, employee_code, customer_code, distance, outletaddress,depotwaivers, spec, _id
+        auto, dates, timeago, _id, employee_id, urno, customerno, outletname, latitude, longitude, sort, notice,
+        outlet_waiver, cust_token, defaulttoken, seq, modes, rep_id, outletclassid, outletlanguageid, outlettypeid,
+        outletaddress, contactphone, contactname, outlet_pic, repname, volumeclass, employee_code,
+        customer_code, distance, duration, depotwaivers, spec, __v
     )
 }
 
@@ -59,6 +63,7 @@ data class IsParcelable(
     var entry_time: String? = null,
     var entry_date: String? = null,
     var uii: String? = null,
+    var remark: String? = null,
     var data:Customers? = null
 ): Parcelable
 

@@ -17,6 +17,7 @@ import com.example.mtx.util.SessionManager
 import com.example.mtx.util.ToastDialog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
@@ -26,6 +27,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var sessionManager: SessionManager
+
+    private var userName: String? = null
+
+    private var password: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,28 +42,29 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         loginStateFlow()
     }
 
-    private fun setLogin() {
+    private fun setLogin() = lifecycleScope.launch {
 
-        val userName: String = binding.etUsername.text.toString()
-        val password: String = binding.etPassword.text.toString()
+        userName = binding.etUsername.text.toString()
+        password = binding.etPassword.text.toString()
 
-        if (userName.isEmpty() || password.isEmpty()) {
+        if (userName!!.isEmpty() || password!!.isEmpty()) {
+
             ToastDialog(applicationContext, "Enter username and password").toast
-        } else {
-            lifecycleScope.launchWhenResumed {
 
-                if (sessionManager.fetchDate.first() == GeoFencing.currentDate) {
-                    val intent = Intent(applicationContext, ModulesActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    binding.loader.isVisible = true
-                    viewModel.fetchAllSalesEntries(userName, password)
+        } else {
+
+            if (sessionManager.fetchUsername.first() == userName && sessionManager.fetchPassword.first() == password && sessionManager.fetchDate.first() == GeoFencing.currentDate) {
+                viewModel.fetchAllSalesEntries(userName!!, password!!, true) //call local data
+            } else {
+                if(sessionManager.fetchDate.first() == GeoFencing.currentDate) {
+                    viewModel.fetchAllSalesEntries(userName!!, password!!, true) //call local data
+                }else{
+                    viewModel.fetchAllSalesEntries(userName!!, password!!, false) //call remote data
                 }
             }
         }
     }
+
 
     override fun onClick(v: View?) {
         when (v!!.id) {
@@ -90,13 +96,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
                             binding.loader.isVisible = false
 
-                            if (it.data!!.status == 200) {
-                                sessionManager.deleteStore()
-                                sessionManager.storeEmployeeId(it.data.login!!.employee_id!!)
-                                sessionManager.storeDate(it.data.login!!.dates!!)
-                                sessionManager.storeEmployeeName(it.data.login!!.name!!)
-                                sessionManager.storeEmployeeEdcode(it.data.login!!.employee_code!!)
-                                sessionManager.storeRegionId(it.data.login!!.region_id!!)
+                            if (it.data!!.specifier == true) {
 
                                 val intent = Intent(applicationContext, ModulesActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -104,7 +104,31 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                                 finish()
 
                             } else {
-                                ToastDialog(applicationContext, it.data.msg!!).toast
+
+                                if (it.data.res!!.status == 200) {
+
+                                    sessionManager.deleteStore()
+                                    sessionManager.storeEmployeeId(it.data.res!!.login!!.employee_id!!)
+                                    sessionManager.storeDate(it.data.res!!.login!!.dates!!)
+                                    sessionManager.storeEmployeeName(it.data.res!!.login!!.name!!)
+                                    sessionManager.storeEmployeeEdcode(it.data.res!!.login!!.employee_code!!)
+                                    sessionManager.storeRegionId(it.data.res!!.login!!.region_id!!)
+                                    sessionManager.storeDepotLat(it.data.res!!.login!!.depotlat!!)
+                                    sessionManager.storeDepotLng(it.data.res!!.login!!.depotlng!!)
+                                    sessionManager.storeWaiver(it.data.res!!.login!!.depotwaiver!!)
+                                    sessionManager.storeUsername(userName!!)
+                                    sessionManager.storePassword(password!!)
+
+                                    val intent = Intent(applicationContext, ModulesActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivity(intent)
+                                    finish()
+
+                                } else {
+
+                                    ToastDialog(applicationContext, it.data.res!!.msg!!).toast
+
+                                }
                             }
                         }
                     }
@@ -113,3 +137,4 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 }
+

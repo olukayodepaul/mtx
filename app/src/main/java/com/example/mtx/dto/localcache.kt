@@ -7,9 +7,10 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "customers")
 data class CustomersList (
     @PrimaryKey(autoGenerate = false)
-    var auto: Int = 0,
+    var auto: Int? = null,
     var dates: String? = null,
     var timeago: String? = null,
+    var _id: String? = null,
     var employee_id: Int? = null,
     var urno: Int? = null,
     var customerno: String? = null,
@@ -27,6 +28,7 @@ data class CustomersList (
     var outletclassid: Int? = null,
     var outletlanguageid: Int? = null,
     var outlettypeid: Int? = null,
+    var outletaddress: String? = null,
     var contactphone: String? = null,
     var contactname: String? = null,
     var outlet_pic: String? = null,
@@ -36,10 +38,9 @@ data class CustomersList (
     var customer_code: String? = null,
     var distance: String? = null,
     var duration: String? = null,
-    var outletaddress: String? = null,
     var depotwaivers: String? = null,
     var spec: String? = null,
-    var _id: String? = null
+    var __v: String? = null,
 )
 
 @Entity(tableName = "osqty")

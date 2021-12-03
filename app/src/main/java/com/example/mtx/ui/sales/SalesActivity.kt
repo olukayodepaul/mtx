@@ -34,6 +34,7 @@ import com.example.mtx.ui.order.ReOrderActivity
 import com.example.mtx.ui.orderpurchase.OrderPurchaseActivity
 import com.example.mtx.ui.outletupdate.OutletUpdateActivity
 import com.example.mtx.ui.salesentry.SalesEntryActivity
+import com.example.mtx.ui.salesrecord.SalesRecordViewModel
 import com.example.mtx.util.*
 import com.example.mtx.util.GeoFencing.setGeoFencing
 import com.example.mtx.util.StartGoogleMap.startGoogleMapIntent
@@ -91,13 +92,15 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
         salesResponse()
         onActivityResult()
         binding.loader.refreshImG.setOnClickListener(this)
+        isPostSalesResponse()
 
         binding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
 
         lifecycleScope.launchWhenResumed {
-            binding.toolbar.subtitle = "${sessionManager.fetchEmployeeName.first()} (${sessionManager.fetchEmployeeEdcode.first()})"
+            binding.toolbar.subtitle =
+                "${sessionManager.fetchEmployeeName.first()} (${sessionManager.fetchEmployeeEdcode.first()})"
         }
 
         binding.mapcustomers.setOnClickListener {
@@ -115,7 +118,8 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun refreshAdapter() {
         lifecycleScope.launchWhenCreated {
-            viewModel.fetchAllSalesEntries(sessionManager.fetchEmployeeId.first(),
+            viewModel.fetchAllSalesEntries(
+                sessionManager.fetchEmployeeId.first(),
                 sessionManager.fetchCustomerEntryDate.first(),
                 GeoFencing.currentDate!!
             )
@@ -163,7 +167,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
                                 sessionManager.storeCustomerEntryDate(GeoFencing.currentDate!!)
 
-                                adapter = SalesAdapter(it.data.entries!!, applicationContext, ::handleAdapterEvent)
+                                adapter = SalesAdapter(it.data.entries!!, applicationContext,::handleAdapterEvent)
                                 adapter.notifyDataSetChanged()
                                 binding.tvRecycler.setItemViewCacheSize(it.data.entries!!.size)
                                 binding.tvRecycler.adapter = adapter
@@ -186,39 +190,39 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun handleAdapterEvent(
         item: CustomersList,
-        separator: Int,
-        adapterBinding: SalesAdapterBinding
+        separator: Int
     ) {
-        isPermissionRequest()
 
-        when(separator) {
-            1->{
+
+        when (separator) {
+            1 -> {
                 val dmode = "d".single()
                 val destination = "${item.latitude},${item.longitude}"
                 startGoogleMapIntent(this, destination, dmode, 't')
             }
-            2->{
-                // getCurrentLocation()
-            }
-            3->{
+            2 -> {
                 items = item.toCustomers()
                 separators = separator
-                getCurrentLocation()
+                isPermissionRequest()
             }
-            4->{
+            3 -> {
+                items = item.toCustomers()
+                separators = separator
+                isPermissionRequest()
+            }
+            4 -> {
                 val intent = Intent(applicationContext, UpdateCustomersActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.putExtra("isParcelable", item.toCustomers())
                 startActivity(intent)
             }
-            5->{
+            5 -> {
 
             }
-            6->{
-//                val intent = Intent(applicationContext, OrderPurchaseActivity::class.java)
-//                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                intent.putExtra("isParcelable", item)
-//                startActivity(intent)
+            6 -> {
+                val intent = Intent(applicationContext, OrderPurchaseActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
             }
         }
     }
@@ -271,15 +275,17 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
         val available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
 
-        if(usesPermission.isNotEmpty()) {
+        if (usesPermission.isNotEmpty()) {
             ActivityCompat.requestPermissions(this, usesPermission.toTypedArray(), 0)
             return
-        }else if(!hasGps){
+        } else if (!hasGps) {
             isGpsEnableIntent()
             return
-        }else if(available == ConnectionResult.API_UNAVAILABLE){
+        } else if (available == ConnectionResult.API_UNAVAILABLE) {
             ToastDialog(applicationContext, "Play Update the google play service");
             return
+        }else{
+            getCurrentLocation()
         }
     }
 
@@ -304,8 +310,9 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun onActivityResult() {
-        activityResultLauncher= registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        }
+        activityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            }
     }
 
     @SuppressLint("MissingPermission")
@@ -322,11 +329,13 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
         settingsClient.checkLocationSettings(builder.build())
 
         binding.loader.root.isVisible = true
+        binding.tvRecycler.isVisible = false
+
         binding.loader.tvTitle.text = "Location Request"
         binding.loader.refreshImG.isVisible = false
         binding.loader.subTitles.text = "Please Wait"
         binding.loader.imageLoader.isVisible = true
-        binding.tvRecycler.isVisible = false
+
 
         fusedLocationProviderClient.requestLocationUpdates(
             locationRequest, locationCallback, Looper.getMainLooper()
@@ -344,53 +353,165 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
     //location settings.
     private fun stopLocationUpdate() {
+        binding.tvRecycler.isVisible = true
+        binding.loader.root.isVisible = false
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     override fun onResume() {
         super.onResume()
-        binding.tvRecycler.isVisible = true
-        binding.loader.root.isVisible = false
     }
 
     private fun isCurrentLocationSetter(currentLocation: Location?) {
 
         stopLocationUpdate()
 
-        if(separators==3) {
+        when (separators) {
 
-            if (items!!.outlet_waiver!!.toLowerCase() == "true") {
-                val ifIsValidOutlet: Boolean = setGeoFencing(currentLocation!!.latitude,currentLocation.longitude, items!!.latitude!!.toDouble(), items!!.longitude!!.toDouble())
-                if(!ifIsValidOutlet){
-                    binding.tvRecycler.isVisible = true
-                    binding.loader.root.isVisible = false
-                    ToastDialog(applicationContext, "You are not at the corresponding outlet")
-                }else{
-                    val intent = Intent(applicationContext, SalesEntryActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            3 -> {
+                if (items!!.outlet_waiver!!.toLowerCase() == "true") {
+                    val ifIsValidOutlet: Boolean = setGeoFencing(
+                        currentLocation!!.latitude,
+                        currentLocation.longitude,
+                        items!!.latitude!!.toDouble(),
+                        items!!.longitude!!.toDouble()
+                    )
+                    if (!ifIsValidOutlet) {
+                        ToastDialog(applicationContext, "You are not at the corresponding outlet")
+                    } else {
+
+                        val intent = Intent(applicationContext, SalesEntryActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+                        val contentFlow = IsParcelable(
+                            currentLocation.latitude.toString(),
+                            currentLocation.longitude.toString(),
+                            GeoFencing.currentTime,
+                            GeoFencing.currentDate,
+                            GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID()
+                                .toString(),
+                            "Open Outlet",
+                            items
+                        )
+                        intent.putExtra("isParcelable", contentFlow)
+                        startActivity(intent)
+                    }
+                } else {
 
                     val contentFlow = IsParcelable(
-                        currentLocation.latitude.toString(), currentLocation.longitude.toString(),
+                        currentLocation!!.latitude.toString(),
+                        currentLocation.longitude.toString(),
                         GeoFencing.currentTime,
                         GeoFencing.currentDate,
-                        GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID().toString()
-                        , items
+                        GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID().toString(),
+                        "Open Outlet",
+                        items
                     )
+                    val intent = Intent(applicationContext, SalesEntryActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     intent.putExtra("isParcelable", contentFlow)
                     startActivity(intent)
                 }
-            }else{
-                val contentFlow = IsParcelable(
-                    currentLocation!!.latitude.toString(), currentLocation.longitude.toString(),
-                    GeoFencing.currentTime,
-                    GeoFencing.currentDate,
-                    GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID().toString()
-                    , items
+            }
+
+            2->{
+                isCloseOutlet(items,  currentLocation!!.latitude, currentLocation.longitude)
+            }
+        }
+    }
+
+
+    private fun isCloseOutlet( items: Customers? = null, lat:Double? = null, lng: Double? = null){
+
+        binding.contentsLayout.isVisible = false
+        binding.closeRequestType.isVisible = true
+        binding.imageGoods.isVisible = false
+
+            val contentFlow = IsParcelable(
+                lat.toString(),
+                lng.toString(),
+                GeoFencing.currentTime,
+                GeoFencing.currentDate,
+                GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID()
+                    .toString(),
+                "Close Outlet",
+                items
+            )
+
+            if (items.outlet_waiver!!.toLowerCase() == "true") {
+                val ifIsValidOutlet: Boolean = setGeoFencing(
+                    lat!!,
+                    lng!!,
+                    items.latitude!!.toDouble(),
+                    items.longitude!!.toDouble()
                 )
-                val intent = Intent(applicationContext, SalesEntryActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.putExtra("isParcelable", contentFlow)
-                startActivity(intent)
+                if (!ifIsValidOutlet) {
+
+                    binding.contentsLayout.isVisible = false
+                    binding.closeRequestType.isVisible = true
+                    binding.cloudIcons.isVisible = true
+                    binding.allAppTitles.text = "You are not at the corresponding outlet"
+                    binding.imageGoods.isVisible = false
+                    binding.progressBars.isVisible= false
+
+                } else {
+                    viewModel.fetchAllSalesEntries(contentFlow)
+                }
+            } else {
+                viewModel.fetchAllSalesEntries(contentFlow)
+            }
+
+        binding.closeIcon.setOnClickListener {
+            binding.contentsLayout.isVisible = true
+            binding.closeRequestType.isVisible = false
+        }
+
+    }
+
+    private fun isPostSalesResponse() {
+        lifecycleScope.launchWhenResumed {
+            viewModel.closeOutletResponseState.collect {
+                it.let {
+                    when (it) {
+                        is NetworkResult.Empty -> {
+                        }
+
+                        is NetworkResult.Error -> {
+                            binding.contentsLayout.isVisible = false
+                            binding.closeRequestType.isVisible = true
+                            binding.cloudIcons.isVisible = false
+                            binding.allAppTitles.text = it.throwable!!.message.toString()
+                            binding.imageGoods.isVisible = true
+                            binding.progressBars.isVisible= false
+                        }
+                        is NetworkResult.Loading -> {
+
+                        }
+
+                        is NetworkResult.Success -> {
+
+                            if(it.data!!.status==200) {
+
+                                binding.contentsLayout.isVisible = false
+                                binding.closeRequestType.isVisible = true
+                                binding.cloudIcons.isVisible = false
+                                binding.allAppTitles.text = it.data.msg
+                                binding.imageGoods.isVisible = true
+                                binding.progressBars.isVisible= false
+
+                            }else{
+
+                                binding.contentsLayout.isVisible = false
+                                binding.closeRequestType.isVisible = true
+                                binding.cloudIcons.isVisible = true
+                                binding.allAppTitles.text = it.data.msg
+                                binding.imageGoods.isVisible = false
+                                binding.progressBars.isVisible= false
+
+                            }
+                        }
+                    }
+                }
             }
         }
     }

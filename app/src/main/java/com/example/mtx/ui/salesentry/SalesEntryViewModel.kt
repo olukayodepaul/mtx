@@ -26,74 +26,38 @@ class SalesEntryViewModel @ViewModelInject constructor(private val repo: SalesEn
 
             try {
 
-                repo.setBasketToInitState()
+                val dailyBasket = repo.fetchBasketFromLocalRep()
+
                 val mapper = SalesEntryMapperInterface()
 
-                if (sysdate == curDate) {
+                if (sysdate == curDate && dailyBasket.isNotEmpty()) {
 
-                    if (repo.fetchBasketFromLocalRep().isNotEmpty()) {
+                    mapper.status = 200
+                    mapper.message = ""
+                    mapper.data = dailyBasket
+                    _basketResponseState.value = NetworkResult.Success(mapper)
 
-                        val localData = repo.fetchBasketFromLocalRep() //send this back
-                        mapper.data = localData
-                        mapper.message = ""
-                        mapper.status = 200
-
-                    } else {
-
-                        val remoteData = repo.fetchBasketFromRemoteRep(employee_id)
-
-                        if (remoteData.status == 200) {
-
-                            repo.setBasket(remoteData.basketlimit!!.map { it.toBasketLimit() })
-                            val localData = repo.fetchBasketFromLocalRep()
-
-                            if (localData.isEmpty()) {
-                                mapper.data = emptyList()
-                                mapper.message =
-                                    "Error in persisting data, Please check your phone memory"
-                                mapper.status = 400
-                            } else {
-                                mapper.data = localData
-                                mapper.message = ""
-                                mapper.status = 200
-                            }
-
-                        } else {
-                            mapper.data = emptyList()
-                            mapper.message = "Basket is not assign to this users"
-                            mapper.status = 400
-                        }
-                    }
                 } else {
-
-                    repo.deleteBasketFromLocalRep()
 
                     val remoteData = repo.fetchBasketFromRemoteRep(employee_id)
 
-                    if (remoteData.status == 200) {
-
-                        repo.setBasket(remoteData.basketlimit!!.map { it.toBasketLimit() })
-                        val localData = repo.fetchBasketFromLocalRep()
-
-                        if (localData.isEmpty()) {
-                            mapper.data = emptyList()
-                            mapper.message =
-                                "Error in persisting data, Please check your phone memory"
-                            mapper.status = 400
-                        } else {
-                            mapper.data = localData
-                            mapper.message = ""
-                            mapper.status = 200
-                        }
-
-                    } else {
-                        mapper.data = emptyList()
-                        mapper.message = "Basket is not assign to this users"
-                        mapper.status = 400
+                    val limitToSalesEntry = remoteData.basketlimit!!.filter { filters ->
+                        filters.seperator.equals("1")
                     }
+
+                    if (remoteData.status == 200 && limitToSalesEntry.isNotEmpty()) {
+                        mapper.status = remoteData.status!!
+                        mapper.message = remoteData.msg!!
+                        mapper.data = remoteData.basketlimit!!.map { it.toBasketLimit() }
+                        repo.setBasket(remoteData.basketlimit!!.map { it.toBasketLimit() }) //set the basket
+                    } else {
+                        mapper.message = "Basket Not Assign"
+                        mapper.status = 400
+                        mapper.data = emptyList()
+                    }
+                    _basketResponseState.value = NetworkResult.Success(mapper)
                 }
 
-                _basketResponseState.value = NetworkResult.Success(mapper)
             } catch (e: Throwable) {
                 _basketResponseState.value = NetworkResult.Error(e)
             }

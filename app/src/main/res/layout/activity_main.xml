@@ -30,10 +30,10 @@ android:background="@color/btm_regis_color"
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/logi_widget"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:padding="10dp"
-                android:src="@drawable/logos"
+                android:src="@drawable/xlogo"
                 android:transitionName="logo_image" />
 
         </RelativeLayout>
@@ -126,7 +126,7 @@ android:background="@color/btm_regis_color"
         android:textSize="9sp"
         android:layout_gravity="bottom"
         android:textColor="@color/baseReleaseColor"
-        android:layout_marginBottom="10dp"
-        />
+        android:layout_marginBottom="10dp" />
+
 
 </RelativeLayout>

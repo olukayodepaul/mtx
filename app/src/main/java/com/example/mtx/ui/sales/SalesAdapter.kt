@@ -16,10 +16,10 @@ import com.example.mtx.dto.toCustomers
 import com.example.mtx.ui.attendant.BankActivity
 import com.example.mtx.ui.attendant.LoadInActivity
 import com.example.mtx.ui.attendant.LoadOutActivity
-import kotlin.reflect.KFunction3
+import kotlin.reflect.KFunction2
 
 class SalesAdapter(private var mItems: List<CustomersList>, private val context: Context,
-                   private val isReturnFunction: KFunction3<CustomersList, Int,SalesAdapterBinding,  Unit>) :
+                   private val isReturnFunction: KFunction2<CustomersList, Int,  Unit>) :
     RecyclerView.Adapter<SalesAdapter.ViewHolder>() {
 
 
@@ -40,7 +40,7 @@ class SalesAdapter(private var mItems: List<CustomersList>, private val context:
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            item: CustomersList, clickListener: KFunction3<CustomersList, Int, SalesAdapterBinding,  Unit>
+            item: CustomersList, clickListener: KFunction2<CustomersList, Int,  Unit>
         ) {
 
             val letter: String = item.outletname!!.substring(0, 1).toUpperCase()
@@ -101,7 +101,7 @@ class SalesAdapter(private var mItems: List<CustomersList>, private val context:
         private fun showPopup(
             binding: SalesAdapterBinding,
             item: CustomersList,
-            clickItems: KFunction3<CustomersList, Int, SalesAdapterBinding, Unit>
+            clickItems: KFunction2<CustomersList, Int, Unit>
         ){
             val popupMenu = PopupMenu(context, binding.iconsImages)
             val inflater = popupMenu.menuInflater
@@ -110,22 +110,22 @@ class SalesAdapter(private var mItems: List<CustomersList>, private val context:
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.googleLocations -> {
-                        clickItems(item, 1, binding)
+                        clickItems(item, 1)
                     }
                     R.id.outletClose -> {
-                        clickItems(item, 2, binding)
+                        clickItems(item, 2)
                     }
                     R.id.outletOpen -> {
-                        clickItems(item, 3, binding)
+                        clickItems(item, 3)
                     }
                     R.id.outletUpdate -> {
-                        clickItems(item, 4, binding)
+                        clickItems(item, 4)
                     }
                     R.id.async -> {
-                        clickItems(item, 5, binding)
+                        clickItems(item, 5)
                     }
                     R.id.salesRecord -> {
-                        clickItems(item, 6, binding)
+                        clickItems(item, 6)
                     }
                 }
                 true

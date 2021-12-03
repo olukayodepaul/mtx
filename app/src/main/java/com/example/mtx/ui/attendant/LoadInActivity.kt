@@ -93,6 +93,12 @@ class LoadInActivity : AppCompatActivity() {
             binding.include.root.isVisible = false
             binding.recycler.isVisible = true
         }
+
+        binding.notifications.errorButton.setOnClickListener {
+            binding.notifications.root.isVisible = false
+            binding.include.root.isVisible = false
+            binding.recycler.isVisible = true
+        }
     }
 
     private fun showLoaders()= lifecycleScope.launchWhenCreated{
@@ -116,11 +122,6 @@ class LoadInActivity : AppCompatActivity() {
             R.id.clockin -> {
                 isPermissionRequest()
                 task_id = 3
-                getCurrentLocation()
-            }
-            R.id.breaks -> {
-                isPermissionRequest()
-                task_id = 4
                 getCurrentLocation()
             }
             R.id.close -> {
@@ -222,8 +223,9 @@ class LoadInActivity : AppCompatActivity() {
                                         price->price.qty!!- price.order_sold!!.toDouble()
                                 }
 
+
                                 val atyInAmount = limitToSalesEntry.sumByDouble {
-                                        price->(price.qty!!- price.order_sold!!.toDouble()) * price.price!!
+                                        price->price.order_sold!!.toDouble()
                                 }
 
                                 binding.qtyS.text = NumberFormat.getInstance().format(atyInRoll)
@@ -297,20 +299,52 @@ class LoadInActivity : AppCompatActivity() {
 
     private fun isCurrentLocationSetter(currentLocation: Location?)=lifecycleScope.launchWhenCreated {
         stopLocationUpdate()
-        when(task_id){
-            3->{
-                lifecycleScope.launchWhenResumed {
-                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 3, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Clockin" ,GeoFencing.currentTime!!, 4)
+
+
+        if(sessionManager.fetchDepotWaiver.first().toString()=="true") {
+
+            val isDepotWaiver: Boolean = GeoFencing.setGeoFencing(currentLocation!!.latitude, currentLocation.longitude, sessionManager.fetchDepotLat.first().toDouble(), sessionManager.fetchDepotLng.first().toDouble())
+
+            if (!isDepotWaiver) {
+
+                binding.notifications.root.isVisible = true
+                binding.include.root.isVisible = false
+                binding.recycler.isVisible = false
+
+                binding.notifications.titles.text = "Outlet Visit Verification"
+                binding.notifications.subtitle.text = "GPS Dis-Matches"
+                binding.notifications.subTitles.text = "You are not at the corresponding depot"
+                binding.notifications.progressBar.isVisible = false
+                binding.notifications.completeButon.isVisible = false
+                binding.notifications.errorButton.isVisible = true
+                binding.notifications.passImage.isVisible = false
+                binding.notifications.failImage.isVisible = true
+
+            }else{
+                when(task_id) {
+                    3->{
+                        lifecycleScope.launchWhenResumed {
+                            viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 3, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Clockin" ,GeoFencing.currentTime!!, 4)
+                        }
+                    }
+                    6->{
+                        lifecycleScope.launchWhenResumed {
+                            viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 6, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Close" ,GeoFencing.currentTime!!, 0)
+                        }
+                    }
                 }
             }
-            4->{
-                lifecycleScope.launchWhenResumed {
-                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 4, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Break",GeoFencing.currentTime!!, 0)
+        }else{
+            when(task_id) {
+                3->{
+                    lifecycleScope.launchWhenResumed {
+                        viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 3, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Clockin" ,GeoFencing.currentTime!!, 4)
+                    }
                 }
-            }
-            6->{
-                lifecycleScope.launchWhenResumed {
-                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 6, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Close" ,GeoFencing.currentTime!!, 0)
+                6->{
+                    lifecycleScope.launchWhenResumed {
+                        viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 6, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Close" ,GeoFencing.currentTime!!, 0)
+                    }
                 }
             }
         }

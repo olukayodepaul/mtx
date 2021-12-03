@@ -1,5 +1,6 @@
 package com.example.mtx.di
 
+import android.os.Build
 import com.example.mtx.BuildConfig
 import com.example.mtx.datasource.RetrofitService
 import com.example.mtx.datasource.RetrofitServices
@@ -8,13 +9,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Named
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(ApplicationComponent::class)
@@ -24,10 +26,17 @@ object RetrofitModule {
     @Provides
     fun provideNetworkService(): RetrofitService {
 
+        var tlsSpecs = listOf(ConnectionSpec.CLEARTEXT, ConnectionSpec.MODERN_TLS)
+
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            tlsSpecs = listOf(ConnectionSpec.COMPATIBLE_TLS);
+        }
+
         val okHttpClientBuilder = OkHttpClient.Builder()
-            .readTimeout(2*30, TimeUnit.SECONDS)
-            .connectTimeout(2*30, TimeUnit.SECONDS)
-            .writeTimeout(2*30, TimeUnit.SECONDS)
+            .readTimeout(2 * 30, TimeUnit.SECONDS)
+            .connectTimeout(2 * 30, TimeUnit.SECONDS)
+            .writeTimeout(2 * 30, TimeUnit.SECONDS)
+            .connectionSpecs(tlsSpecs)
             .retryOnConnectionFailure(true)
 
         if (BuildConfig.DEBUG) {
@@ -49,9 +58,9 @@ object RetrofitModule {
     fun provideApiService(): RetrofitServices {
 
         val okHttpClientBuilder = OkHttpClient.Builder()
-            .readTimeout(2*30, TimeUnit.SECONDS)
-            .connectTimeout(2*30, TimeUnit.SECONDS)
-            .writeTimeout(2*30, TimeUnit.SECONDS)
+            .readTimeout(2 * 30, TimeUnit.SECONDS)
+            .connectTimeout(2 * 30, TimeUnit.SECONDS)
+            .writeTimeout(2 * 30, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
 
         if (BuildConfig.DEBUG) {

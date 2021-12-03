@@ -94,6 +94,12 @@ class LoadOutActivity : AppCompatActivity() {
             binding.include.root.isVisible = false
             binding.recycler.isVisible = true
         }
+
+        binding.notifications.errorButton.setOnClickListener {
+            binding.notifications.root.isVisible = false
+            binding.include.root.isVisible = false
+            binding.recycler.isVisible = true
+        }
     }
 
     private fun showLoaders()= lifecycleScope.launchWhenCreated{
@@ -117,12 +123,10 @@ class LoadOutActivity : AppCompatActivity() {
             R.id.resume -> {
                 isPermissionRequest()
                 task_id = 1
-                getCurrentLocation()
             }
             R.id.clock_out -> {
                 isPermissionRequest()
                 task_id = 2
-                getCurrentLocation()
             }
             R.id.retry->{
                 showLoaders()
@@ -149,6 +153,8 @@ class LoadOutActivity : AppCompatActivity() {
         }else if(available == ConnectionResult.API_UNAVAILABLE){
             ToastDialog(applicationContext, "Play Update the google play service");
             return
+        }else{
+            getCurrentLocation()
         }
     }
 
@@ -186,14 +192,14 @@ class LoadOutActivity : AppCompatActivity() {
                         is NetworkResult.Empty -> { }
 
                         is NetworkResult.Error -> {
+                            println("EPOKHAI STAGE 1")
                             binding.include.root.isVisible = true
                             binding.recycler.isVisible = false
                             binding.notifications.root.isVisible = false
                             binding.include.imageLoader.isVisible = false
-                            binding.include.tvTitle.text = it.throwable!!.message.toString()
+                            binding.include.tvTitle.text = "Fail, No Basket assign"
                             binding.include.subTitles.text = "Tap to Retry"
                             binding.include.clickRefresh.isVisible = true
-
                         }
 
                         is NetworkResult.Loading -> {}
@@ -201,7 +207,7 @@ class LoadOutActivity : AppCompatActivity() {
                         is NetworkResult.Success -> {
 
                             if(it.data!!.status==200){
-
+                                println("EPOKHAI STAGE 2")
                                 binding.include.root.isVisible = false
                                 binding.recycler.isVisible = true
                                 binding.notifications.root.isVisible = false
@@ -210,20 +216,20 @@ class LoadOutActivity : AppCompatActivity() {
                                         filters->filters.seperator.equals("1")
                                 }
 
-                                val atyInRoll = limitToSalesEntry.sumByDouble {
+//                                val atyInRoll = limitToSalesEntry.sumByDouble {
+//                                        qty->qty.qty!!.toDouble()
+//                                }
+//
+//                                val atyInPrice = limitToSalesEntry.sumByDouble {
+//                                        price->price.price!!.toDouble()
+//                                }
+
+                                val atyInAmount = limitToSalesEntry.sumByDouble {
                                         qty->qty.qty!!.toDouble()
                                 }
 
-                                val atyInPrice = limitToSalesEntry.sumByDouble {
-                                        price->price.price!!.toDouble()
-                                }
-
-                                val atyInAmount = limitToSalesEntry.sumByDouble {
-                                        price->price.price!!.toDouble()*price.qty!!.toDouble()
-                                }
-
-                                binding.qtyS.text = NumberFormat.getInstance().format(atyInRoll)
-                                binding.amountS.text = NumberFormat.getInstance().format(atyInPrice)
+//                                binding.qtyS.text = NumberFormat.getInstance().format(atyInRoll)
+//                                binding.amountS.text = NumberFormat.getInstance().format(atyInPrice)
                                 binding.totalS.text = NumberFormat.getInstance().format(atyInAmount)
 
                                 adapter = LoadOutAdapter(limitToSalesEntry)
@@ -232,7 +238,7 @@ class LoadOutActivity : AppCompatActivity() {
                                 binding.recycler.adapter = adapter
 
                             }else{
-
+                                println("EPOKHAI STAGE 3")
                                 binding.notifications.root.isVisible = false
                                 binding.include.root.isVisible = true
                                 binding.recycler.isVisible = false
@@ -291,12 +297,44 @@ class LoadOutActivity : AppCompatActivity() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun isCurrentLocationSetter(currentLocation: Location?)=lifecycleScope.launchWhenCreated {
         stopLocationUpdate()
-        if(task_id==1) {
-                viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 1, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Resume" , GeoFencing.currentTime!!, 1)
+        if(sessionManager.fetchDepotWaiver.first().toString()=="true") {
+
+            val isDepotWaiver: Boolean = GeoFencing.setGeoFencing(currentLocation!!.latitude, currentLocation.longitude, sessionManager.fetchDepotLat.first().toDouble(), sessionManager.fetchDepotLng.first().toDouble())
+
+            if (!isDepotWaiver) {
+
+                binding.notifications.root.isVisible = true
+                binding.include.root.isVisible = false
+                binding.recycler.isVisible = false
+
+                binding.notifications.titles.text = "Outlet Visit Verification"
+                binding.notifications.subtitle.text = "GPS Dis-Matches"
+                binding.notifications.subTitles.text = "You are not at the corresponding depot"
+                binding.notifications.progressBar.isVisible = false
+                binding.notifications.completeButon.isVisible = false
+                binding.notifications.errorButton.isVisible = true
+                binding.notifications.passImage.isVisible = false
+                binding.notifications.failImage.isVisible = true
+
+            }else{
+
+                if(task_id==1) {
+                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 1, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Resume" , GeoFencing.currentTime!!, 1)
+                }else{
+                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 2, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Clock Out", GeoFencing.currentTime!!, 0)
+                }
+            }
+
         }else{
+
+            if(task_id==1) {
+                viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 1, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Resume" , GeoFencing.currentTime!!, 1)
+            }else{
                 viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 2, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Clock Out", GeoFencing.currentTime!!, 0)
+            }
         }
     }
 

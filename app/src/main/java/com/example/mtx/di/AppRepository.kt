@@ -11,6 +11,8 @@ import com.example.mtx.ui.login.repository.LoginRepo
 import com.example.mtx.ui.login.repository.LoginRepoImpl
 import com.example.mtx.ui.module.repository.ModulesRepo
 import com.example.mtx.ui.module.repository.ModulesRepoImpl
+import com.example.mtx.ui.orderpurchase.repository.OrderPurchaseRepo
+import com.example.mtx.ui.orderpurchase.repository.OrderPurchaseRepoImpl
 import com.example.mtx.ui.sales.repository.SalesRepo
 import com.example.mtx.ui.sales.repository.SalesRepoImpl
 import com.example.mtx.ui.salesentry.repository.SalesEntryRepo
@@ -101,6 +103,17 @@ object AppRepository {
         appdoa: AppDao
     ): AddCustomerRep {
         return AddCustomerRepoImpl(
+            retrofitClient, appdoa
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideOrderPurchaseRepository(
+        retrofitClient: RetrofitService,
+        appdoa: AppDao
+    ): OrderPurchaseRepo {
+        return OrderPurchaseRepoImpl(
             retrofitClient, appdoa
         )
     }

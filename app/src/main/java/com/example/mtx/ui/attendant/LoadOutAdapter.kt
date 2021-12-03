@@ -32,11 +32,9 @@ class LoadOutAdapter(private var mItems: List<BasketLimitList>) :
         fun bind(item: BasketLimitList) {
 
             binding.sku.text = item.product_name!!.toLowerCase().capitalize()
-            binding.qty.text = NumberFormat.getInstance().format(item.qty)
-            binding.amount.text = NumberFormat.getInstance().format(item.price)
-            binding.total.text = NumberFormat.getInstance().format(item.qty!!.toDouble()* item.price!!.toDouble())
-
-
+            //binding.qty.text = NumberFormat.getInstance().format(item.qty)
+            //binding.amount.text = NumberFormat.getInstance().format(item.price)
+            binding.total.text = NumberFormat.getInstance().format(item.qty)
         }
     }
 }

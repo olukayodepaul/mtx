@@ -22,9 +22,9 @@
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="15dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="120dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -35,7 +35,7 @@
         android:id="@+id/titles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/roboto_bold"
         android:text=""
@@ -49,9 +49,9 @@
         android:id="@+id/subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="10dp"
-        android:fontFamily="@font/roboto_bold"
+        android:fontFamily="@font/roboto_regular"
         android:text=""
         android:textColor="@color/white"
         android:textSize="16sp"
@@ -62,7 +62,7 @@
         android:id="@+id/subTitles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
         android:fontFamily="@font/roboto_regular"
         android:text=""
         android:textColor="@color/white"
@@ -87,8 +87,8 @@
 
     <ImageView
         android:id="@+id/passImage"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:outlineAmbientShadowColor="@color/white"
@@ -100,8 +100,8 @@
 
     <ImageView
         android:id="@+id/failImage"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:outlineAmbientShadowColor="@color/white"
@@ -115,12 +115,12 @@
         android:layout_width="146dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="108dp"
+        android:layout_marginTop="76dp"
         android:text="Completed"
+        android:textColor="@color/white"
         app:backgroundTint="@color/green_status"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/subTitles"
-        android:textColor="@color/white"
         android:visibility="gone"/>
 
     <Button
@@ -128,15 +128,13 @@
         android:layout_width="146dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="108dp"
+        android:layout_marginTop="76dp"
         android:text="Try Again"
-        app:layout_constraintStart_toStartOf="parent"
-        app:backgroundTint="@color/purple_700"
         android:textColor="@color/white"
+        app:backgroundTint="@color/purple_700"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/subTitles"
-        android:visibility="gone"
-        />
-
+        android:visibility="gone"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

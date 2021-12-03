@@ -47,6 +47,8 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var isIntentData: IsParcelable
 
+    var limit = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySalesEntryBinding.inflate(layoutInflater)
@@ -137,6 +139,7 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
                             binding.loader.imageLoader.isVisible = true
                             binding.tvRecycler.isVisible = false
                             binding.progressbarHolder.isVisible = false
+                            limit = 0
                         }
 
                         is NetworkResult.Loading -> {
@@ -147,7 +150,7 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
                             binding.loader.imageLoader.isVisible = true
                             binding.tvRecycler.isVisible = false
                             binding.progressbarHolder.isVisible = true
-
+                            limit = 0
                         }
 
                         is NetworkResult.Success -> {
@@ -164,6 +167,7 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
                                 binding.tvRecycler.setItemViewCacheSize(it.data.data!!.size)
                                 binding.tvRecycler.adapter = adapter
                                 binding.progressbarHolder.isVisible = false
+                                limit = 1
                             } else {
                                 binding.loader.root.isVisible = true
                                 binding.loader.tvTitle.text = it.data.message
@@ -172,6 +176,7 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
                                 binding.loader.imageLoader.isVisible = false
                                 binding.tvRecycler.isVisible = false
                                 binding.progressbarHolder.isVisible = false
+                                limit = 0
                             }
 
                         }
@@ -254,25 +259,24 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
 
                     is NetworkResult.Success -> {
 
-                        val intent = Intent(applicationContext, SalesRecordActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        intent.putExtra("isParcelable", isIntentData)
-                        startActivity(intent)
+//                        val intent = Intent(applicationContext, SalesRecordActivity::class.java)
+//                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                        intent.putExtra("isParcelable", isIntentData)
+//                        startActivity(intent)
 
-//                        if (it.data!! == 0) {
-//                            val intent = Intent(applicationContext, SalesRecordActivity::class.java)
-//                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                            intent.putExtra("isParcelable", isIntentData)
-//                            startActivity(intent)
-//                        }else{
-//                            ToastDialog(applicationContext, "Enter all the field").toast
-//                            return@collect
-//                        }
+                        if (it.data!! == 0 && limit == 1) {
+                            val intent = Intent(applicationContext, SalesRecordActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            intent.putExtra("isParcelable", isIntentData)
+                            startActivity(intent)
+                        }else{
+                            ToastDialog(applicationContext, "Enter all the field").toast
+                            return@collect
+                        }
+
                     }
                 }
             }
         }
     }
-
-
 }

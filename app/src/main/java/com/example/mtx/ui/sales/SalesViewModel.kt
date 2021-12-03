@@ -67,4 +67,39 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
             _salesResponseState.value = NetworkResult.Error(e)
         }
     }
+
+    private val _closeOutletResponseState = MutableStateFlow<NetworkResult<PostSalesResponse>>(NetworkResult.Empty)
+    val closeOutletResponseState get() = _closeOutletResponseState
+
+    fun fetchAllSalesEntries(salesRecord: IsParcelable) = viewModelScope.launch {
+        _closeOutletResponseState.value = NetworkResult.Loading
+        try {
+            val isResponseModel = OrderPosted()
+
+            isResponseModel.uiid = salesRecord.uii
+            isResponseModel.clat = salesRecord.latitude!!.toString()
+            isResponseModel.clng = salesRecord.longitude!!.toString()
+            isResponseModel.etime = salesRecord.entry_time
+            isResponseModel.edate = salesRecord.entry_date
+            isResponseModel.customerno = salesRecord.data!!.customerno
+            isResponseModel.employee_id = salesRecord.data!!.employee_id
+            isResponseModel.urno = salesRecord.data!!.urno
+            isResponseModel.outletlatitude = salesRecord.data!!.latitude
+            isResponseModel.outletlongitude = salesRecord.data!!.longitude
+            isResponseModel.outletname = salesRecord.data!!.outletname
+            isResponseModel.volumeclass = salesRecord.data!!.volumeclass
+            isResponseModel.remark = salesRecord.remark
+            isResponseModel.order = emptyList()
+
+
+            val data = repo.postSales(isResponseModel)
+            _closeOutletResponseState.value = NetworkResult.Success(data)
+
+        } catch (e: Throwable) {
+
+            _closeOutletResponseState.value = NetworkResult.Error(e)
+
+        }
+    }
+
 }
