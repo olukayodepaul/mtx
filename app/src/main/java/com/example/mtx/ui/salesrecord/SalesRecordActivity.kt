@@ -82,7 +82,8 @@ class SalesRecordActivity : AppCompatActivity() {
         binding.recycler.setHasFixedSize(true)
 
         binding.tokenImage.setOnClickListener {
-            requestToken()
+            //requestToken()
+            binding.tvFieldCustname.setText(isIntentData.data!!.cust_token)
         }
 
         binding.closeIcon.setOnClickListener {
@@ -180,6 +181,7 @@ class SalesRecordActivity : AppCompatActivity() {
 
     private fun setRequestedToken() {
         val references =    database.getReference("/defaulttoken/"+isIntentData.data!!.urno)
+
         references.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(p0: DataSnapshot) {
@@ -193,7 +195,7 @@ class SalesRecordActivity : AppCompatActivity() {
                         binding.resMessage.text = "Token Approve"
                         binding.imagePass.isVisible = true
                         binding.imageFail.isVisible = false
-                        binding.tvFieldCustname.setText(vToken.token)
+                        //binding.tvFieldCustname.setText(vToken.token)
                     }else {
                         binding.resMessage.text = "Token Decline"
                         binding.imagePass.isVisible = false

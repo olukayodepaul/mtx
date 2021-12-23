@@ -20,14 +20,31 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mtx"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.customers.UpdateCustomersActivity" android:configChanges="orientation|screenSize|screenLayout" />
-        <activity android:name=".ui.customers.AddCustomerActivity" android:configChanges="orientation|screenSize|screenLayout" />
-        <activity android:name=".ui.attendant.BankActivity" android:configChanges="orientation|screenSize|screenLayout" />
-        <activity android:name=".ui.attendant.LoadInActivity" android:configChanges="orientation|screenSize|screenLayout" />
-        <activity android:name=".ui.attendant.LoadOutActivity" android:configChanges="orientation|screenSize|screenLayout" />
-        <activity android:name=".ui.orderpurchase.OrderPurchaseActivity" android:configChanges="orientation|screenSize|screenLayout" />
-        <activity android:name=".ui.outletupdate.OutletUpdateActivity" android:configChanges="orientation|screenSize|screenLayout" />
-        <activity android:name=".ui.salesrecord.SalesRecordActivity" android:configChanges="orientation|screenSize|screenLayout" />
+        <activity android:name=".ui.order.OrderSummary"></activity>
+        <activity
+            android:name=".ui.customers.UpdateCustomersActivity"
+            android:configChanges="orientation|screenSize|screenLayout" />
+        <activity
+            android:name=".ui.customers.AddCustomerActivity"
+            android:configChanges="orientation|screenSize|screenLayout" />
+        <activity
+            android:name=".ui.attendant.BankActivity"
+            android:configChanges="orientation|screenSize|screenLayout" />
+        <activity
+            android:name=".ui.attendant.LoadInActivity"
+            android:configChanges="orientation|screenSize|screenLayout" />
+        <activity
+            android:name=".ui.attendant.LoadOutActivity"
+            android:configChanges="orientation|screenSize|screenLayout" />
+        <activity
+            android:name=".ui.orderpurchase.OrderPurchaseActivity"
+            android:configChanges="orientation|screenSize|screenLayout" />
+        <activity
+            android:name=".ui.outletupdate.OutletUpdateActivity"
+            android:configChanges="orientation|screenSize|screenLayout" />
+        <activity
+            android:name=".ui.salesrecord.SalesRecordActivity"
+            android:configChanges="orientation|screenSize|screenLayout" />
         <activity
             android:name=".ui.messages.MessageActivity"
             android:configChanges="orientation|screenSize|screenLayout" />

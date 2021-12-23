@@ -2,12 +2,10 @@ package com.example.mtx.ui.sales.repository
 
 import com.example.mtx.datasource.AppDao
 import com.example.mtx.datasource.RetrofitService
-import com.example.mtx.dto.CustomersList
-import com.example.mtx.dto.CustomersResponse
-import com.example.mtx.dto.OrderPosted
-import com.example.mtx.dto.PostSalesResponse
+import com.example.mtx.datasource.RetrofitServices
+import com.example.mtx.dto.*
 
-class SalesRepoImpl (private val retrofitClient: RetrofitService, private val appdoa: AppDao): SalesRepo {
+class SalesRepoImpl (private val retrofitClient: RetrofitService, private val appdoa: AppDao, private val retrofitService: RetrofitServices): SalesRepo {
 
     override suspend fun getCustomer(employee_id: Int): CustomersResponse {
         return retrofitClient.getCustomers(employee_id)
@@ -23,6 +21,10 @@ class SalesRepoImpl (private val retrofitClient: RetrofitService, private val ap
 
     override suspend fun postSales(order: OrderPosted): PostSalesResponse {
         return retrofitClient.postSales(order)
+    }
+
+    override suspend fun sendTokenToday(unro: Int): sendTokenToIndividualCustomer {
+        return  retrofitService.sendTokenToday(unro)
     }
 
 }

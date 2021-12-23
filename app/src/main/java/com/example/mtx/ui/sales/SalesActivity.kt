@@ -23,7 +23,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mtx.R
 import com.example.mtx.databinding.ActivitySalesBinding
-import com.example.mtx.databinding.SalesAdapterBinding
 import com.example.mtx.dto.Customers
 import com.example.mtx.dto.CustomersList
 import com.example.mtx.dto.IsParcelable
@@ -32,9 +31,7 @@ import com.example.mtx.ui.customers.AddCustomerActivity
 import com.example.mtx.ui.customers.UpdateCustomersActivity
 import com.example.mtx.ui.order.ReOrderActivity
 import com.example.mtx.ui.orderpurchase.OrderPurchaseActivity
-import com.example.mtx.ui.outletupdate.OutletUpdateActivity
 import com.example.mtx.ui.salesentry.SalesEntryActivity
-import com.example.mtx.ui.salesrecord.SalesRecordViewModel
 import com.example.mtx.util.*
 import com.example.mtx.util.GeoFencing.setGeoFencing
 import com.example.mtx.util.StartGoogleMap.startGoogleMapIntent
@@ -377,12 +374,29 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                         items!!.longitude!!.toDouble()
                     )
                     if (!ifIsValidOutlet) {
-                        ToastDialog(applicationContext, "You are not at the corresponding outlet")
-                    } else {
 
+                        //ToastDialog(applicationContext, "You are not at the corresponding outlet")
+                        viewModel.sentToken(items!!.urno!!)
                         val intent = Intent(applicationContext, SalesEntryActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        val contentFlow = IsParcelable(
+                            currentLocation.latitude.toString(),
+                            currentLocation.longitude.toString(),
+                            GeoFencing.currentTime,
+                            GeoFencing.currentDate,
+                            GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID()
+                                .toString(),
+                            "Open Outlet",
+                            items
+                        )
+                        intent.putExtra("isParcelable", contentFlow)
+                        startActivity(intent)
 
+                    } else {
+
+                        viewModel.sentToken(items!!.urno!!)
+                        val intent = Intent(applicationContext, SalesEntryActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         val contentFlow = IsParcelable(
                             currentLocation.latitude.toString(),
                             currentLocation.longitude.toString(),
@@ -398,6 +412,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 } else {
 
+                    viewModel.sentToken(items!!.urno!!)
                     val contentFlow = IsParcelable(
                         currentLocation!!.latitude.toString(),
                         currentLocation.longitude.toString(),

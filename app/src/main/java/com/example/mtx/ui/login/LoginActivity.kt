@@ -10,11 +10,13 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.example.mtx.R
 import com.example.mtx.databinding.ActivityMainBinding
+import com.example.mtx.dto.User
 import com.example.mtx.ui.module.ModulesActivity
 import com.example.mtx.util.GeoFencing
 import com.example.mtx.util.NetworkResult
 import com.example.mtx.util.SessionManager
 import com.example.mtx.util.ToastDialog
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -32,14 +34,18 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private var password: String? = null
 
+    private lateinit var database: FirebaseDatabase
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         sessionManager = SessionManager(this)
+        database = FirebaseDatabase.getInstance()
         binding.loginid.setOnClickListener(this)
         loginStateFlow()
+        //setRequestedToken()
     }
 
     private fun setLogin() = lifecycleScope.launch {
@@ -136,5 +142,13 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+//
+//    private fun setRequestedToken() {
+//        val user = User("paul", "email@paul")
+//        val references =    database.getReference("/defaulttoken/")
+//        references.child("shbshbshbsq").setValue(user)
+//    }
+
+
 }
 

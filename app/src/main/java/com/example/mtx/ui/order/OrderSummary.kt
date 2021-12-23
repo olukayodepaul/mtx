@@ -2,20 +2,17 @@ package com.example.mtx.ui.order
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.mtx.databinding.ActivityReOrderBinding
+import com.example.mtx.databinding.ActivityOrderSummaryBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
-class ReOrderActivity : AppCompatActivity() {
+class OrderSummary : AppCompatActivity() {
 
-    private lateinit var binding: ActivityReOrderBinding
+    private lateinit var binding: ActivityOrderSummaryBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityReOrderBinding.inflate(layoutInflater)
+        binding = ActivityOrderSummaryBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
-
-    
 }

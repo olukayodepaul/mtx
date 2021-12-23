@@ -2,6 +2,7 @@ package com.example.mtx.dto
 
 
 import android.os.Parcelable
+import com.google.firebase.database.IgnoreExtraProperties
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
@@ -407,7 +408,14 @@ data class CustomerPurchaseHistory(
     var msg: String? = null
 )
 
-
+data class RealOrder(
+    @SerializedName("status")
+    @Expose
+    var status: Int = 0,
+    @SerializedName("msg")
+    @Expose
+    var msg: String = ""
+)
 data class LoginResponseWithSpecifier(
     @SerializedName("specifier")
     @Expose
@@ -416,6 +424,98 @@ data class LoginResponseWithSpecifier(
     @Expose
     var res: LoginResponse? = null
 )
+
+data class sendTokenToIndividualCustomer(
+    @SerializedName("status")
+    @Expose
+    var status: String = ""
+)
+
+@IgnoreExtraProperties
+data class User(val username: String? = null, val email: String? = null)
+
+data class CustomerProductOrder(
+    @SerializedName("order")
+    @Expose
+    var order: List<AllCustomerProductOrder>?  = null
+)
+
+
+data class AllCustomerProductOrder(
+    @SerializedName("orderid")
+    @Expose
+    var orderid: Int = 0,
+    @SerializedName("outletname")
+    @Expose
+    var outletname: String = "",
+    @SerializedName("urno")
+    @Expose
+    var urno: Int = 0,
+    @SerializedName("customerno")
+    @Expose
+    var customerno: String = "",
+    @SerializedName("latitude")
+    @Expose
+    var latitude: String = "",
+    @SerializedName("longitude")
+    @Expose
+    var longitude: String = "",
+    @SerializedName("employeeid")
+    @Expose
+    var employeeid: Int = 0,
+    @SerializedName("contactphone")
+    @Expose
+    var contactphone: String = "",
+    @SerializedName("outletaddress")
+    @Expose
+    var outletaddress: String = "",
+    @SerializedName("uid")
+    @Expose
+    var uid: String = "",
+    @SerializedName("token")
+    @Expose
+    var token: Int = 0,
+    @SerializedName("dates")
+    @Expose
+    var dates: String = "",
+    @SerializedName("trantime")
+    @Expose
+    var trantime: String = ""
+)
+
+data class SkuOrdered(
+    @SerializedName("skuorder")
+    @Expose
+    var skuorder: List<AllSkuOrdered>?  = null,
+    @SerializedName("totalqty")
+    @Expose
+    var totalqty: Double = 0.0,
+    @SerializedName("totalamount")
+    @Expose
+    var totalamount: Double = 0.0
+)
+
+data class AllSkuOrdered(
+    @SerializedName("id")
+    @Expose
+    var id: Int = 0,
+    @SerializedName("customerinfo")
+    @Expose
+    var customerinfo: Int = 0,
+    @SerializedName("qtyordered")
+    @Expose
+    var qtyordered: Int = 0,
+    @SerializedName("skuname")
+    @Expose
+    var skuname: String = "",
+    @SerializedName("productcode")
+    @Expose
+    var productcode: String = "",
+    @SerializedName("amount")
+    @Expose
+    var amount: Double = 0.0
+)
+
 
 
 

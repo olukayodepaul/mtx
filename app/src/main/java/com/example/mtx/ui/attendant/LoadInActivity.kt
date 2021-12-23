@@ -320,6 +320,7 @@ class LoadInActivity : AppCompatActivity() {
                 binding.notifications.passImage.isVisible = false
                 binding.notifications.failImage.isVisible = true
 
+
             }else{
                 when(task_id) {
                     3->{

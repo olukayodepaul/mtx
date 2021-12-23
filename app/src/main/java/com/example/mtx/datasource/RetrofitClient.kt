@@ -8,7 +8,7 @@ import retrofit2.http.*
 interface RetrofitService {
 
     @Headers("Connection:close")
-    @GET("/mtx/fetchusers")
+    @GET("/mtx/login")
     suspend fun login(
         @Query("username") username: String,
         @Query("password") password: String

@@ -96,10 +96,12 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
             _closeOutletResponseState.value = NetworkResult.Success(data)
 
         } catch (e: Throwable) {
-
             _closeOutletResponseState.value = NetworkResult.Error(e)
-
         }
+    }
+
+    fun sentToken(urno:Int) = viewModelScope.launch {
+        try { val data = repo.sendTokenToday(urno) } catch (e: Throwable) {}
     }
 
 }
