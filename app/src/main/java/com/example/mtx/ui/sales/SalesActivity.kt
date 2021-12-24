@@ -381,22 +381,22 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                     )
                     if (!ifIsValidOutlet) {
 
-                        //ToastDialog(applicationContext, "You are not at the corresponding outlet")
-                        viewModel.sentToken(items!!.urno!!)
-                        val intent = Intent(applicationContext, SalesEntryActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        val contentFlow = IsParcelable(
-                            currentLocation.latitude.toString(),
-                            currentLocation.longitude.toString(),
-                            GeoFencing.currentTime,
-                            GeoFencing.currentDate,
-                            GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID()
-                                .toString(),
-                            "Open Outlet",
-                            items
-                        )
-                        intent.putExtra("isParcelable", contentFlow)
-                        startActivity(intent)
+                        ToastDialog(applicationContext, "You are not at the corresponding outlet")
+//                        viewModel.sentToken(items!!.urno!!)
+//                        val intent = Intent(applicationContext, SalesEntryActivity::class.java)
+//                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                        val contentFlow = IsParcelable(
+//                            currentLocation.latitude.toString(),
+//                            currentLocation.longitude.toString(),
+//                            GeoFencing.currentTime,
+//                            GeoFencing.currentDate,
+//                            GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID()
+//                                .toString(),
+//                            "Open Outlet",
+//                            items
+//                        )
+//                        intent.putExtra("isParcelable", contentFlow)
+//                        startActivity(intent)
 
                     } else {
 
