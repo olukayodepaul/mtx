@@ -40,7 +40,7 @@ class OrderViewModel @ViewModelInject constructor(private val repo: OrderRepo): 
         }
     }
 
-    //post order
+    //post item ordered for
     private val _makeAnOrderResponseState = MutableStateFlow<NetworkResult<RealOrder>>(NetworkResult.Empty)
     val makeAnOrderResponseState get() = _makeAnOrderResponseState
 
@@ -52,6 +52,4 @@ class OrderViewModel @ViewModelInject constructor(private val repo: OrderRepo): 
             _makeAnOrderResponseState.value = NetworkResult.Error(e)
         }
     }
-
-
 }

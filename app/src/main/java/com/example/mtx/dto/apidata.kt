@@ -440,7 +440,7 @@ data class CustomerProductOrder(
     var order: List<AllCustomerProductOrder>?  = null
 )
 
-
+@Parcelize
 data class AllCustomerProductOrder(
     @SerializedName("orderid")
     @Expose
@@ -481,7 +481,7 @@ data class AllCustomerProductOrder(
     @SerializedName("trantime")
     @Expose
     var trantime: String = ""
-)
+):Parcelable
 
 data class SkuOrdered(
     @SerializedName("skuorder")

@@ -20,9 +20,9 @@ tools:context=".ui.order.ReOrderActivity">
         android:background="@color/baseReleaseColor"
         android:theme="@style/AppTheme.Toolbar"
         app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
-        app:subtitleTextAppearance="@font/roboto_light"
         app:subtitleTextColor="@color/white"
-        app:title="Customers Order"
+        app:title="Order"
+        app:subtitleTextAppearance="@font/roboto_light"
         app:titleTextColor="@color/white" />
 
     <LinearLayout
@@ -63,7 +63,8 @@ tools:context=".ui.order.ReOrderActivity">
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

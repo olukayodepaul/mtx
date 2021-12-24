@@ -7,21 +7,19 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mtx.R
 import com.example.mtx.databinding.ActivityModulesBinding
 import com.example.mtx.ui.order.ReOrderActivity
-import com.example.mtx.util.GeoFencing
-import com.example.mtx.util.NetworkResult
-import com.example.mtx.util.SessionManager
-import com.example.mtx.util.ToastDialog
+import com.example.mtx.util.*
+import com.example.mtx.util.FirebaseDatabases.setOrderBadge
 import com.nex3z.notificationbadge.NotificationBadge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import com.google.firebase.database.FirebaseDatabase
 
 @AndroidEntryPoint
 class ModulesActivity : AppCompatActivity() {
@@ -40,12 +38,14 @@ class ModulesActivity : AppCompatActivity() {
 
     var item_Notification: MenuItem? = null
 
+    private lateinit var database: FirebaseDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityModulesBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+        database = FirebaseDatabase.getInstance()
         sessionManager = SessionManager(this)
         initAdapter()
         refreshAdapter()
@@ -127,14 +127,13 @@ class ModulesActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }
+
         setupBadge()
         return true
     }
 
-    private fun setupBadge() {
-        notificationBadge!!.isVisible = true
-        notificationBadge!!.setText("10")
+    private fun setupBadge() = lifecycleScope.launchWhenResumed{
+        setOrderBadge(193, database, notificationBadge)
     }
-
 
 }

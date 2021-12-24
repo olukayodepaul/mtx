@@ -15,4 +15,5 @@ class OrderSummary : AppCompatActivity() {
         binding = ActivityOrderSummaryBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
+
 }

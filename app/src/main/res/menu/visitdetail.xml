@@ -5,18 +5,16 @@
 
     <item
         android:id="@+id/action_notifications"
-        android:title="Search"
+        android:title="Notification"
         android:icon="@drawable/ic_baseline_accessible_24"
         app:showAsAction="always"
         app:actionLayout="@layout/action_bar_notification" />
 
     <item
         android:id="@+id/action_filter_search"
-        android:title="Search"
+        android:title="Refresh"
         android:icon="@drawable/ic_baseline_search_24"
         app:showAsAction="always"
         />
 
-
-    
 </menu>
