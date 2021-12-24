@@ -132,8 +132,8 @@ class ModulesActivity : AppCompatActivity() {
         return true
     }
 
-    private fun setupBadge() = lifecycleScope.launchWhenResumed{
-        setOrderBadge(193, database, notificationBadge)
+    private fun setupBadge()= lifecycleScope.launchWhenCreated {
+        setOrderBadge(sessionManager.fetchEmployeeId.first(), database, notificationBadge)
     }
 
 }

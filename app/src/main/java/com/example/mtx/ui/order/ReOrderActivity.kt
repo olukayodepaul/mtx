@@ -16,11 +16,13 @@ import com.example.mtx.databinding.OrderAdapterBinding
 import com.example.mtx.dto.AllCustomerProductOrder
 import com.example.mtx.util.FirebaseDatabases.setOrderBadge
 import com.example.mtx.util.NetworkResult
+import com.example.mtx.util.SessionManager
 import com.example.mtx.util.StartGoogleMap.startGoogleMapIntent
 import com.google.firebase.database.FirebaseDatabase
 import com.nex3z.notificationbadge.NotificationBadge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 
 
 @AndroidEntryPoint
@@ -40,11 +42,14 @@ class ReOrderActivity : AppCompatActivity() {
 
     var item_Notification: MenuItem? = null
 
+    private lateinit var sessionManager: SessionManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityReOrderBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+        sessionManager = SessionManager(this)
         database = FirebaseDatabase.getInstance()
 
         binding.toolbar.setNavigationOnClickListener {
@@ -127,8 +132,12 @@ class ReOrderActivity : AppCompatActivity() {
         item_Notification = menu!!.findItem(R.id.action_notifications)
         notificationBadgeView = item_Notification!!.actionView
         notificationBadge = notificationBadgeView!!.findViewById(R.id.badge) as NotificationBadge
-        setOrderBadge(193, database, notificationBadge)
+        addBadge()
         return true
+    }
+
+    private fun addBadge()=lifecycleScope.launchWhenResumed {
+        setOrderBadge(sessionManager.fetchEmployeeId.first(), database, notificationBadge)
     }
 
 }

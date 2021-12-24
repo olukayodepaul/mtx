@@ -18,10 +18,8 @@ import com.example.mtx.dto.BasketLimitList
 import com.example.mtx.dto.IsParcelable
 import com.example.mtx.ui.order.ReOrderActivity
 import com.example.mtx.ui.salesrecord.SalesRecordActivity
-import com.example.mtx.util.GeoFencing
-import com.example.mtx.util.NetworkResult
-import com.example.mtx.util.SessionManager
-import com.example.mtx.util.ToastDialog
+import com.example.mtx.util.*
+import com.google.firebase.database.FirebaseDatabase
 import com.nex3z.notificationbadge.NotificationBadge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -47,6 +45,8 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var isIntentData: IsParcelable
 
+    private lateinit var database: FirebaseDatabase
+
     var limit = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +55,7 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         sessionManager = SessionManager(this)
+        database = FirebaseDatabase.getInstance()
         initAdapter()
         refreshAdapter()
         basketResponse()
@@ -116,9 +117,8 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
         return true
     }
 
-    private fun setupBadge() {
-        notificationBadge!!.isVisible = true
-        notificationBadge!!.setText("10")
+    private fun setupBadge()= lifecycleScope.launchWhenCreated {
+        FirebaseDatabases.setOrderBadge(sessionManager.fetchEmployeeId.first(), database, notificationBadge)
     }
 
     @SuppressLint("SetTextI18n")

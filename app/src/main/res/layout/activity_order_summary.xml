@@ -25,7 +25,7 @@ tools:context=".ui.order.OrderSummary">
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/clr_otp_bg"
+    android:background="@color/baseReleaseColor"
     android:orientation="vertical"
     android:paddingBottom="5dp">
 
@@ -142,7 +142,7 @@ tools:context=".ui.order.OrderSummary">
 
     <TextView
         android:id="@+id/sku_tv"
-        android:layout_width="255dp"
+        android:layout_width="205dp"
         android:layout_height="30dp"
         android:layout_marginStart="5dp"
         android:layout_marginBottom="5dp"
@@ -164,7 +164,7 @@ tools:context=".ui.order.OrderSummary">
         android:textColor="@color/clr_otp_bg"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/price_tv"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.232"
         app:layout_constraintStart_toEndOf="@+id/sku_tv"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlCompat" />
@@ -215,7 +215,7 @@ tools:context=".ui.order.OrderSummary">
 
             <TextView
                 android:id="@+id/sku_tvs"
-                android:layout_width="255dp"
+                android:layout_width="205dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginBottom="5dp"
@@ -235,10 +235,12 @@ tools:context=".ui.order.OrderSummary">
                 android:textAlignment="textEnd"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@+id/price_tvs"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="0.232"
                 app:layout_constraintStart_toEndOf="@+id/sku_tvs"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="RtlCompat" />
+
+
 
             <TextView
                 android:id="@+id/price_tvs"

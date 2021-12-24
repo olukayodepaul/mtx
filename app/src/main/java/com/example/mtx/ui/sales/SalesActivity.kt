@@ -33,11 +33,13 @@ import com.example.mtx.ui.order.ReOrderActivity
 import com.example.mtx.ui.orderpurchase.OrderPurchaseActivity
 import com.example.mtx.ui.salesentry.SalesEntryActivity
 import com.example.mtx.util.*
+import com.example.mtx.util.FirebaseDatabases.setOrderBadge
 import com.example.mtx.util.GeoFencing.setGeoFencing
 import com.example.mtx.util.StartGoogleMap.startGoogleMapIntent
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.*
+import com.google.firebase.database.FirebaseDatabase
 import com.nex3z.notificationbadge.NotificationBadge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -77,6 +79,8 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
     private var separators: Int? = null
 
+    private lateinit var database: FirebaseDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySalesBinding.inflate(layoutInflater)
@@ -84,6 +88,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
         sessionManager = SessionManager(this)
         setSupportActionBar(binding.toolbar)
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        database = FirebaseDatabase.getInstance()
         initAdapter()
         refreshAdapter()
         salesResponse()
@@ -250,10 +255,11 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
         return true
     }
 
-    private fun setupBadge() {
-        notificationBadge!!.isVisible = true
-        notificationBadge!!.setText("10")
+    private fun setupBadge()= lifecycleScope.launchWhenCreated {
+        setOrderBadge(sessionManager.fetchEmployeeId.first(), database, notificationBadge)
     }
+
+
 
     override fun onClick(v: View?) {
         when (v!!.id) {
