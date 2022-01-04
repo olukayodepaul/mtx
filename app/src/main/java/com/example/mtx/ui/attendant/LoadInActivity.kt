@@ -320,17 +320,16 @@ class LoadInActivity : AppCompatActivity() {
                 binding.notifications.passImage.isVisible = false
                 binding.notifications.failImage.isVisible = true
 
-
             }else{
                 when(task_id) {
                     3->{
                         lifecycleScope.launchWhenResumed {
-                            viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 3, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Clockin" ,GeoFencing.currentTime!!, 4)
+                            viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 3, currentLocation.latitude.toString(),currentLocation.longitude.toString(), "Clockin" ,GeoFencing.currentTime!!, 4)
                         }
                     }
                     6->{
                         lifecycleScope.launchWhenResumed {
-                            viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 6, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Close" ,GeoFencing.currentTime!!, 0)
+                            viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 6, currentLocation.latitude.toString(),currentLocation.longitude.toString(), "Close" ,GeoFencing.currentTime!!, 0)
                         }
                     }
                 }

@@ -319,12 +319,13 @@ class LoadOutActivity : AppCompatActivity() {
                 binding.notifications.passImage.isVisible = false
                 binding.notifications.failImage.isVisible = true
 
+
             }else{
 
                 if(task_id==1) {
-                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 1, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Resume" , GeoFencing.currentTime!!, 1)
+                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 1, currentLocation.latitude.toString(),currentLocation.longitude.toString(), "Resume" , GeoFencing.currentTime!!, 1)
                 }else{
-                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 2, currentLocation!!.latitude.toString(),currentLocation.longitude.toString(), "Clock Out", GeoFencing.currentTime!!, 0)
+                    viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 2, currentLocation.latitude.toString(),currentLocation.longitude.toString(), "Clock Out", GeoFencing.currentTime!!, 0)
                 }
             }
 

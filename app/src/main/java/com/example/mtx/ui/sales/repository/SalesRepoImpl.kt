@@ -27,4 +27,23 @@ class SalesRepoImpl (private val retrofitClient: RetrofitService, private val ap
         return  retrofitService.sendTokenToday(unro)
     }
 
+    override suspend fun CustomerInfoAsync(urno: Int): OutletAsyn {
+        return retrofitService.isCustomerInfoAsync(urno)
+    }
+
+    override suspend fun updateIndividualCustomer(
+        outletclassid: Int,
+        outletlanguageid: Int,
+        outlettypeid: Int,
+        outletname: String,
+        outletaddress: String,
+        contactname: String,
+        contactphone: String,
+        latitude: Double,
+        longitude: Double,
+        urno: Int
+    ) {
+        return appdoa.updateIndividualCustomer(outletclassid, outletlanguageid, outlettypeid, outletname, outletaddress, contactname, contactphone, latitude, longitude, urno)
+    }
+
 }

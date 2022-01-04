@@ -110,6 +110,8 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }
+
+        isOutletUpdateAsync()
     }
 
     private fun initAdapter() {
@@ -169,7 +171,11 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
                                 sessionManager.storeCustomerEntryDate(GeoFencing.currentDate!!)
 
-                                adapter = SalesAdapter(it.data.entries!!, applicationContext,::handleAdapterEvent)
+                                adapter = SalesAdapter(
+                                    it.data.entries!!,
+                                    applicationContext,
+                                    ::handleAdapterEvent
+                                )
                                 adapter.notifyDataSetChanged()
                                 binding.tvRecycler.setItemViewCacheSize(it.data.entries!!.size)
                                 binding.tvRecycler.adapter = adapter
@@ -219,7 +225,11 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(intent)
             }
             5 -> {
-
+                binding.loader.root.isVisible = true
+                binding.tvRecycler.isVisible = false
+                binding.loader.tvTitle.text = "Outlet Synchronisation"
+                binding.loader.subTitles.text = "Please wait...."
+                viewModel.localOutletUpdate(item.urno!!)
             }
             6 -> {
                 val intent = Intent(applicationContext, OrderPurchaseActivity::class.java)
@@ -255,10 +265,9 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
         return true
     }
 
-    private fun setupBadge()= lifecycleScope.launchWhenCreated {
+    private fun setupBadge() = lifecycleScope.launchWhenCreated {
         setOrderBadge(sessionManager.fetchEmployeeId.first(), database, notificationBadge)
     }
-
 
 
     override fun onClick(v: View?) {
@@ -287,7 +296,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
         } else if (available == ConnectionResult.API_UNAVAILABLE) {
             ToastDialog(applicationContext, "Play Update the google play service");
             return
-        }else{
+        } else {
             getCurrentLocation()
         }
     }
@@ -381,22 +390,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                     )
                     if (!ifIsValidOutlet) {
 
-                        ToastDialog(applicationContext, "You are not at the corresponding outlet")
-//                        viewModel.sentToken(items!!.urno!!)
-//                        val intent = Intent(applicationContext, SalesEntryActivity::class.java)
-//                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                        val contentFlow = IsParcelable(
-//                            currentLocation.latitude.toString(),
-//                            currentLocation.longitude.toString(),
-//                            GeoFencing.currentTime,
-//                            GeoFencing.currentDate,
-//                            GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID()
-//                                .toString(),
-//                            "Open Outlet",
-//                            items
-//                        )
-//                        intent.putExtra("isParcelable", contentFlow)
-//                        startActivity(intent)
+                       ToastDialog(applicationContext, "You are not at the corresponding outlet")
 
                     } else {
 
@@ -435,52 +429,52 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
 
-            2->{
-                isCloseOutlet(items,  currentLocation!!.latitude, currentLocation.longitude)
+            2 -> {
+                isCloseOutlet(items, currentLocation!!.latitude, currentLocation.longitude)
             }
         }
     }
 
 
-    private fun isCloseOutlet( items: Customers? = null, lat:Double? = null, lng: Double? = null){
+    private fun isCloseOutlet(items: Customers? = null, lat: Double? = null, lng: Double? = null) {
 
         binding.contentsLayout.isVisible = false
         binding.closeRequestType.isVisible = true
         binding.imageGoods.isVisible = false
 
-            val contentFlow = IsParcelable(
-                lat.toString(),
-                lng.toString(),
-                GeoFencing.currentTime,
-                GeoFencing.currentDate,
-                GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID()
-                    .toString(),
-                "Close Outlet",
-                items
+        val contentFlow = IsParcelable(
+            lat.toString(),
+            lng.toString(),
+            GeoFencing.currentTime,
+            GeoFencing.currentDate,
+            GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID()
+                .toString(),
+            "Close Outlet",
+            items
+        )
+
+        if (items.outlet_waiver!!.toLowerCase() == "true") {
+            val ifIsValidOutlet: Boolean = setGeoFencing(
+                lat!!,
+                lng!!,
+                items.latitude!!.toDouble(),
+                items.longitude!!.toDouble()
             )
+            if (!ifIsValidOutlet) {
 
-            if (items.outlet_waiver!!.toLowerCase() == "true") {
-                val ifIsValidOutlet: Boolean = setGeoFencing(
-                    lat!!,
-                    lng!!,
-                    items.latitude!!.toDouble(),
-                    items.longitude!!.toDouble()
-                )
-                if (!ifIsValidOutlet) {
+                binding.contentsLayout.isVisible = false
+                binding.closeRequestType.isVisible = true
+                binding.cloudIcons.isVisible = true
+                binding.allAppTitles.text = "You are not at the corresponding outlet"
+                binding.imageGoods.isVisible = false
+                binding.progressBars.isVisible = false
 
-                    binding.contentsLayout.isVisible = false
-                    binding.closeRequestType.isVisible = true
-                    binding.cloudIcons.isVisible = true
-                    binding.allAppTitles.text = "You are not at the corresponding outlet"
-                    binding.imageGoods.isVisible = false
-                    binding.progressBars.isVisible= false
-
-                } else {
-                    viewModel.fetchAllSalesEntries(contentFlow)
-                }
             } else {
                 viewModel.fetchAllSalesEntries(contentFlow)
             }
+        } else {
+            viewModel.fetchAllSalesEntries(contentFlow)
+        }
 
         binding.closeIcon.setOnClickListener {
             binding.contentsLayout.isVisible = true
@@ -503,7 +497,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                             binding.cloudIcons.isVisible = false
                             binding.allAppTitles.text = it.throwable!!.message.toString()
                             binding.imageGoods.isVisible = true
-                            binding.progressBars.isVisible= false
+                            binding.progressBars.isVisible = false
                         }
                         is NetworkResult.Loading -> {
 
@@ -511,23 +505,23 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
                         is NetworkResult.Success -> {
 
-                            if(it.data!!.status==200) {
+                            if (it.data!!.status == 200) {
 
                                 binding.contentsLayout.isVisible = false
                                 binding.closeRequestType.isVisible = true
                                 binding.cloudIcons.isVisible = false
                                 binding.allAppTitles.text = it.data.msg
                                 binding.imageGoods.isVisible = true
-                                binding.progressBars.isVisible= false
+                                binding.progressBars.isVisible = false
 
-                            }else{
+                            } else {
 
                                 binding.contentsLayout.isVisible = false
                                 binding.closeRequestType.isVisible = true
                                 binding.cloudIcons.isVisible = true
                                 binding.allAppTitles.text = it.data.msg
                                 binding.imageGoods.isVisible = false
-                                binding.progressBars.isVisible= false
+                                binding.progressBars.isVisible = false
 
                             }
                         }
@@ -536,4 +530,43 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
+    private fun isOutletUpdateAsync() {
+        lifecycleScope.launchWhenResumed {
+            viewModel.localOutletUpdateState.collect {
+                it.let {
+                    when (it) {
+
+                        is NetworkResult.Empty -> {
+                        }
+
+                        is NetworkResult.Error -> {
+                            binding.loader.root.isVisible = false
+                            binding.tvRecycler.isVisible = true
+                            ToastDialog(applicationContext, it.throwable!!.message.toString())
+                        }
+
+                        is NetworkResult.Loading -> {
+                        }
+
+                        is NetworkResult.Success -> {
+
+                            if (it.data!!.status == 200) {
+                                binding.loader.root.isVisible = false
+                                binding.tvRecycler.isVisible = true
+                                ToastDialog(applicationContext, "Successfully Synchronise")
+
+                            }else{
+                                binding.loader.root.isVisible = false
+                                binding.tvRecycler.isVisible = true
+                                ToastDialog(applicationContext, "Synchronisation Error")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 }

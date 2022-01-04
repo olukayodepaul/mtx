@@ -59,6 +59,8 @@ interface AppDao {
     @Query("UPDATE  customers SET timeago = :timeago WHERE sort = :sort ")
     suspend fun setAttendantTime(timeago:String, sort:Int )
 
+    @Query("UPDATE customers SET outletclassid=:outletclassid, outletlanguageid=:outletlanguageid, outlettypeid=:outlettypeid, outletname=:outletname, outletaddress=:outletaddress, contactname=:contactname, contactphone=:contactphone, latitude=:latitude, longitude=:longitude where urno=:urno and sort = 2")
+    suspend fun updateIndividualCustomer(outletclassid:Int, outletlanguageid:Int, outlettypeid:Int, outletname:String, outletaddress:String, contactname:String, contactphone:String, latitude:Double, longitude:Double,urno:Int)
 
 }
 

@@ -104,4 +104,24 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
         try { val data = repo.sendTokenToday(urno) } catch (e: Throwable) {}
     }
 
+    //local outlet update
+    private val _localOutletUpdateState = MutableStateFlow<NetworkResult<OutletAsyn>>(NetworkResult.Empty)
+    val localOutletUpdateState get() = _localOutletUpdateState
+
+    fun localOutletUpdate(urno: Int) = viewModelScope.launch {
+        _localOutletUpdateState.value = NetworkResult.Loading
+        try {
+
+            val iscustomer = repo.CustomerInfoAsync(urno)
+            repo.updateIndividualCustomer(iscustomer.outletclassid, iscustomer.outletlanguageid, iscustomer.outlettypeid, iscustomer.outletname, iscustomer.outletaddress,
+                iscustomer.contactname, iscustomer.contactphone, iscustomer.latitude.toDouble(), iscustomer.longitude.toDouble(), urno )
+
+        _localOutletUpdateState.value = NetworkResult.Success(iscustomer)
+
+        }catch (e: Throwable) {
+            _localOutletUpdateState.value = NetworkResult.Error(e)
+        }
+    }
+
+
 }

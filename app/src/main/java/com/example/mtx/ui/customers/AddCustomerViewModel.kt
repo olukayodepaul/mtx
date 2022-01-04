@@ -3,10 +3,7 @@ package com.example.mtx.ui.customers
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mtx.dto.GeneralResponse
-import com.example.mtx.dto.SpinnerInterface
-import com.example.mtx.dto.UserSpinnerEntity
-import com.example.mtx.dto.toSpinners
+import com.example.mtx.dto.*
 import com.example.mtx.ui.customers.repository.AddCustomerRep
 import com.example.mtx.util.NetworkResult
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -82,6 +79,24 @@ class AddCustomerViewModel @ViewModelInject constructor(private val repo: AddCus
             _isCustomerResponseState.value = NetworkResult.Success(isCustomerRepoResult)
         }catch (e: Throwable) {
             _isCustomerResponseState.value = NetworkResult.Error(e)
+        }
+    }
+
+    //Update on outlets
+    private val _isCustomerUpdateResponseState = MutableStateFlow<NetworkResult<OutletUpdateResponse>>(NetworkResult.Empty)
+    val isCustomerUpdateResponseState get() = _isCustomerUpdateResponseState
+
+    fun updateCustomers(
+        tmid: Int, urno: Int, latitude: Double, longitude: Double, outletname: String, contactname: String,
+        outletaddress: String, contactphone: String, outletclassid: Int, outletlanguage: Int,
+        outlettypeid: Int
+    ) = viewModelScope.launch {
+        _isCustomerUpdateResponseState.value = NetworkResult.Loading
+        try {
+            val isCustomerRepoResult = repo.updateOutlet(tmid,urno,latitude,longitude,outletname,contactname,outletaddress,contactphone,outletclassid,outletlanguage,outlettypeid)
+            _isCustomerUpdateResponseState.value = NetworkResult.Success(isCustomerRepoResult)
+        }catch (e: Throwable) {
+            _isCustomerUpdateResponseState.value = NetworkResult.Error(e)
         }
     }
 

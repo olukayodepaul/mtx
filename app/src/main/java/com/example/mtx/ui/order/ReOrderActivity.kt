@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mtx.R
@@ -18,6 +19,7 @@ import com.example.mtx.util.FirebaseDatabases.setOrderBadge
 import com.example.mtx.util.NetworkResult
 import com.example.mtx.util.SessionManager
 import com.example.mtx.util.StartGoogleMap.startGoogleMapIntent
+import com.example.mtx.util.ToastDialog
 import com.google.firebase.database.FirebaseDatabase
 import com.nex3z.notificationbadge.NotificationBadge
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,8 +59,12 @@ class ReOrderActivity : AppCompatActivity() {
         }
 
         initAdapter()
-        viewModel.fetchAllSalesEntries(193)
+        isInitialise()
         isAllOrderRequest()
+    }
+
+    private fun isInitialise()=lifecycleScope.launchWhenResumed{
+        viewModel.fetchAllSalesEntries(sessionManager.fetchEmployeeId.first())
     }
 
     private fun initAdapter() {
@@ -81,13 +87,15 @@ class ReOrderActivity : AppCompatActivity() {
                     }
 
                     is NetworkResult.Error -> {
-                        //the error message
+                        ToastDialog(applicationContext,it.throwable!!.message.toString())
                     }
 
                     is NetworkResult.Success -> {
                         //check empty list
+                        binding.progressCust.isVisible = false
+
                         if(it.data!!.order.isNullOrEmpty()){
-                            //is empty message....No Order Assign for this rep
+                            ToastDialog(applicationContext,"No Order is place")
                         }else{
                             adapter = OrderAdapter(it.data.order!!, ::handleAdapterEvent)
                             adapter.notifyDataSetChanged()
@@ -138,6 +146,16 @@ class ReOrderActivity : AppCompatActivity() {
 
     private fun addBadge()=lifecycleScope.launchWhenResumed {
         setOrderBadge(sessionManager.fetchEmployeeId.first(), database, notificationBadge)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_filter_search -> {
+                binding.progressCust.isVisible = true
+                isInitialise()
+            }
+        }
+        return false
     }
 
 }

@@ -36,5 +36,24 @@ interface RetrofitServices {
         @Query("orderid") orderid: Int
     ): RealOrder
 
+    @POST("/api/tm_update_outlet")
+    suspend fun updateOutlet(
+        @Query("tmid") tmid: Int,
+        @Query("urno") urno: Int,
+        @Query("latitude") latitude: Double,
+        @Query("longitude") longitude: Double,
+        @Query("outletname") outletname: String,
+        @Query("contactname") contactname: String,
+        @Query("outletaddress") outletaddress: String,
+        @Query("contactphone") contactphone: String,
+        @Query("outletclassid") outletclassid: Int,
+        @Query("outletlanguageid") outletlanguageid: Int,
+        @Query("outlettypeid") outlettypeid: Int
+    ): OutletUpdateResponse
+
+    @POST("/api/tm_outlet_info_async")
+    suspend fun isCustomerInfoAsync(
+        @Query("urno") urno: Int
+    ): OutletAsyn
 
 }

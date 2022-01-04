@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mtx"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.order.OrderSummary"></activity>
+        <activity android:name=".ui.order.OrderSummary"
+            android:configChanges="orientation|screenSize|screenLayout"/>
         <activity
             android:name=".ui.customers.UpdateCustomersActivity"
             android:configChanges="orientation|screenSize|screenLayout" />
