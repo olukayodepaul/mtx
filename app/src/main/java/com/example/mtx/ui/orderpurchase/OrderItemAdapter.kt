@@ -4,7 +4,7 @@ package com.example.mtx.ui.orderpurchase
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mtx.databinding.UserModulesAdapterBinding
+import com.example.mtx.databinding.ItemRowChildBinding
 import com.example.mtx.dto.Orders
 
 open class OrderItemAdapter(items: List<Orders.OrderItems>): RecyclerView.Adapter<OrderItemAdapter.ViewHolder>() {
@@ -17,7 +17,7 @@ open class OrderItemAdapter(items: List<Orders.OrderItems>): RecyclerView.Adapte
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflaters = LayoutInflater.from(parent.context)
-        val binding = UserModulesAdapterBinding.inflate(layoutInflaters)
+        val binding = ItemRowChildBinding.inflate(layoutInflaters)
         return ViewHolder(binding)
     }
 
@@ -27,10 +27,10 @@ open class OrderItemAdapter(items: List<Orders.OrderItems>): RecyclerView.Adapte
 
     override fun getItemCount(): Int = itemsList.size
 
-    inner class ViewHolder(private val binding: UserModulesAdapterBinding) :
+    inner class ViewHolder(private val binding: ItemRowChildBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Orders.OrderItems) {
-
+            binding.name.text = item.dates
         }
     }
 

@@ -1,8 +1,8 @@
 package com.example.mtx.ui.orderpurchase
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mtx.databinding.ActivityOrderPurchaseBinding
 import com.example.mtx.dto.Orders
@@ -26,7 +26,7 @@ class OrderPurchaseActivity : AppCompatActivity() {
     }
 
     private fun initAdapter() {
-        val layoutManager = LinearLayoutManager(this,  LinearLayoutManager.HORIZONTAL,false)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.parentRecyclerView.layoutManager = layoutManager
         adapter = OrderAdapter()
         binding.parentRecyclerView.adapter = adapter
@@ -38,4 +38,5 @@ class OrderPurchaseActivity : AppCompatActivity() {
         adapter.addData(gameOfThrones)
         adapter.notifyDataSetChanged()
     }
+
 }
