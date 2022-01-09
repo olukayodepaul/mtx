@@ -538,6 +538,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                     when (it) {
 
                         is NetworkResult.Empty -> {
+
                         }
 
                         is NetworkResult.Error -> {

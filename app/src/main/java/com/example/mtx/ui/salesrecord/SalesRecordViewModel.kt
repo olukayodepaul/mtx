@@ -64,6 +64,8 @@ class SalesRecordViewModel @ViewModelInject constructor(private val repo: SalesR
             isResponseModel.outletname = salesRecord.data!!.outletname
             isResponseModel.volumeclass = salesRecord.data!!.volumeclass
             isResponseModel.remark = salesRecord.remark
+            isResponseModel.distance = salesRecord.data!!.distance
+            isResponseModel.duration = salesRecord.data!!.duration
             isResponseModel.order = isLocalOrder.map { it.toBasketToApi() }
 
             val httpResponse = repo.postSales(isResponseModel)

@@ -68,4 +68,11 @@ interface RetrofitService {
         @Query("division") division: String
     ): GeneralResponse
 
+    @GET("/sales/orderpurchase")
+    suspend fun orderPurchase(
+        @Query("employee_id") employee_id: Int,
+        @Query("urno") urno: Int,
+        @Query("edate") edate: String
+    ): OrderParentList
+
 }

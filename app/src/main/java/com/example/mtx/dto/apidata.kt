@@ -354,7 +354,12 @@ data class OrderPosted(
     @SerializedName("order")
     @Expose
     var order: List<BasketLimit>? = null,
-
+    @SerializedName("distance")
+    @Expose
+    var distance: String? = null,
+    @SerializedName("duration")
+    @Expose
+    var duration: String? = null
 )
 
 data class GeneralResponse(
@@ -557,6 +562,100 @@ data class OutletAsyn(
     @Expose
     var latitude: String = ""
 )
+
+data class OrderParentList(
+    @SerializedName("orderitems")
+    @Expose
+    var orderitems: List<Orders>?  = null
+)
+data class Orders(
+    @SerializedName("_id")
+    @Expose
+    var _id: String = "",
+    @SerializedName("edate")
+    @Expose
+    var edate: String = "",
+    @SerializedName("employee_id")
+    @Expose
+    var employee_id: Int? = null,
+    @SerializedName("etime")
+    @Expose
+    var etime: String? = null,
+    @SerializedName("clat")
+    @Expose
+    var clat: String? = null,
+    @SerializedName("clng")
+    @Expose
+    var clng: String? = null,
+    @SerializedName("customerno")
+    @Expose
+    var customerno: String? = null,
+    @SerializedName("outletlatitude")
+    @Expose
+    var outletlatitude: String? = null,
+    @SerializedName("outletlongitude")
+    @Expose
+    var outletlongitude: String? = null,
+    @SerializedName("outletname")
+    @Expose
+    var outletname: String? = null,
+    @SerializedName("remark")
+    @Expose
+    var remark: String? = null,
+    @SerializedName("uiid")
+    @Expose
+    var uiid: String? = null,
+    @SerializedName("urno")
+    @Expose
+    var urno: String? = null,
+    @SerializedName("volumeclass")
+    @Expose
+    var volumeclass: String? = null,
+    @SerializedName("orderitems")
+    @Expose
+    var orderitems: List<OrderItems>?  = null
+){
+    data class OrderItems(
+        @SerializedName("auto")
+        @Expose
+        var auto: Int? = null,
+        @SerializedName("dates")
+        @Expose
+        var dates: String? = null,
+        @SerializedName("employee_id")
+        @Expose
+        var employee_id: Int? = null,
+        @SerializedName("entry_time")
+        @Expose
+        var entry_time: String? = null,
+        @SerializedName("inventory")
+        @Expose
+        var inventory: Double? = null,
+        @SerializedName("orders")
+        @Expose
+        var orders: Double? = null,
+        @SerializedName("price")
+        @Expose
+        var price: Double? = null,
+        @SerializedName("pricing")
+        @Expose
+        var pricing: Double? = null,
+        @SerializedName("product_code")
+        @Expose
+        var product_code: String? = null,
+        @SerializedName("product_id")
+        @Expose
+        var product_id: String? = null,
+        @SerializedName("product_name")
+        @Expose
+        var product_name: String? = null,
+        @SerializedName("seperatorname")
+        @Expose
+        var seperatorname: String? = null,
+    )
+}
+
+
 
 
 
