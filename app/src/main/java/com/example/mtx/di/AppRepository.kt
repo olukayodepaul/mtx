@@ -115,10 +115,11 @@ object AppRepository {
     @Provides
     fun provideOrderPurchaseRepository(
         retrofitClient: RetrofitService,
-        appdoa: AppDao
+        appdoa: AppDao,
+        networkHelper: NetworkHelper
     ): OrderPurchaseRepo {
         return OrderPurchaseRepoImpl(
-            retrofitClient, appdoa
+            retrofitClient, appdoa, networkHelper
         )
     }
 

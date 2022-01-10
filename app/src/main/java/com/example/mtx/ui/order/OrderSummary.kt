@@ -97,7 +97,7 @@ class OrderSummary : AppCompatActivity() {
                         }
 
                         val df = DecimalFormat("#.#")
-                        adapter = OrderSummaryAdapter(it.data!!.skuorder!!)
+                        adapter = OrderSummaryAdapter(it.data.skuorder!!)
                         adapter.notifyDataSetChanged()
                         binding.recycleOrderHistory.setItemViewCacheSize(it.data.skuorder!!.size)
                         binding.recycleOrderHistory.adapter = adapter

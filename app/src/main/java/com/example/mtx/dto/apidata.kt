@@ -564,68 +564,35 @@ data class OutletAsyn(
 )
 
 data class OrderParentList(
-    @SerializedName("orderitems")
+    @SerializedName("msg")
     @Expose
-    var orderitems: List<Orders>?  = null
+    var msg: String? = null,
+    @SerializedName("status")
+    @Expose
+    var status: Int? = null,
+    @SerializedName("orderlist")
+    @Expose
+    var orderlist: List<Orders>?  = null
 )
 
 data class Orders(
-    @SerializedName("_id")
-    @Expose
-    var _id: String = "",
-    @SerializedName("edate")
-    @Expose
-    var edate: String = "",
-    @SerializedName("employee_id")
-    @Expose
-    var employee_id: Int? = null,
-    @SerializedName("etime")
-    @Expose
-    var etime: String? = null,
-    @SerializedName("clat")
-    @Expose
-    var clat: String? = null,
-    @SerializedName("clng")
-    @Expose
-    var clng: String? = null,
-    @SerializedName("customerno")
-    @Expose
-    var customerno: String? = null,
-    @SerializedName("outletlatitude")
-    @Expose
-    var outletlatitude: String? = null,
-    @SerializedName("outletlongitude")
-    @Expose
-    var outletlongitude: String? = null,
-    @SerializedName("outletname")
-    @Expose
-    var outletname: String? = null,
     @SerializedName("remark")
     @Expose
     var remark: String? = null,
-    @SerializedName("uiid")
+    @SerializedName("etime")
     @Expose
-    var uiid: String? = null,
-    @SerializedName("urno")
-    @Expose
-    var urno: String? = null,
+    var etime: String? = null,
     @SerializedName("volumeclass")
     @Expose
     var volumeclass: String? = null,
-    @SerializedName("orderitems")
+    @SerializedName("expandable")
     @Expose
-    var orderitems: List<OrderItems>?  = null
+    var expandable: Boolean? = false,
+    @SerializedName("order")
+    @Expose
+    var order: List<OrderItems>?  = null
 ){
     data class OrderItems(
-        @SerializedName("auto")
-        @Expose
-        var auto: Int? = null,
-        @SerializedName("dates")
-        @Expose
-        var dates: String? = null,
-        @SerializedName("employee_id")
-        @Expose
-        var employee_id: Int? = null,
         @SerializedName("entry_time")
         @Expose
         var entry_time: String? = null,

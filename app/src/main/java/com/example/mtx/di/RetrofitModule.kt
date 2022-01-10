@@ -4,6 +4,7 @@ import android.os.Build
 import com.example.mtx.BuildConfig
 import com.example.mtx.datasource.RetrofitService
 import com.example.mtx.datasource.RetrofitServices
+import com.example.mtx.util.SupportInterceptor
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -26,22 +27,18 @@ object RetrofitModule {
     @Provides
     fun provideNetworkService(): RetrofitService {
 
-        var tlsSpecs = listOf(ConnectionSpec.CLEARTEXT, ConnectionSpec.MODERN_TLS)
-
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            tlsSpecs = listOf(ConnectionSpec.COMPATIBLE_TLS);
-        }
+        val supportInterceptor = SupportInterceptor()
 
         val okHttpClientBuilder = OkHttpClient.Builder()
-            .readTimeout(2 * 30, TimeUnit.SECONDS)
-            .connectTimeout(2 * 30, TimeUnit.SECONDS)
-            .writeTimeout(2 * 30, TimeUnit.SECONDS)
-            .connectionSpecs(tlsSpecs)
-            .retryOnConnectionFailure(true)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .followRedirects(true)
+            .followSslRedirects(true)
+            .addInterceptor(supportInterceptor)
 
         if (BuildConfig.DEBUG) {
             val logging = HttpLoggingInterceptor()
-            logging.level = HttpLoggingInterceptor.Level.BASIC
+            logging.level = HttpLoggingInterceptor.Level.BODY
             okHttpClientBuilder.addInterceptor(logging)
         }
 
@@ -57,15 +54,18 @@ object RetrofitModule {
     @Provides
     fun provideApiService(): RetrofitServices {
 
+        val supportInterceptor = SupportInterceptor()
+
         val okHttpClientBuilder = OkHttpClient.Builder()
-            .readTimeout(2 * 30, TimeUnit.SECONDS)
-            .connectTimeout(2 * 30, TimeUnit.SECONDS)
-            .writeTimeout(2 * 30, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .followRedirects(true)
+            .followSslRedirects(true)
+            .addInterceptor(supportInterceptor)
 
         if (BuildConfig.DEBUG) {
             val logging = HttpLoggingInterceptor()
-            logging.level = HttpLoggingInterceptor.Level.BASIC
+            logging.level = HttpLoggingInterceptor.Level.BODY
             okHttpClientBuilder.addInterceptor(logging)
         }
 
