@@ -1,16 +1,26 @@
 package com.example.mtx.ui.orderpurchase
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mtx.R
 import com.example.mtx.databinding.ActivityOrderPurchaseBinding
+import com.example.mtx.dto.Customers
 import com.example.mtx.dto.Orders
-import com.example.mtx.ui.module.ModuleAdapter
+import com.example.mtx.ui.order.ReOrderActivity
+import com.example.mtx.util.FirebaseDatabases
 import com.example.mtx.util.NetworkResult
+import com.example.mtx.util.SessionManager
 import com.example.mtx.util.ToastDialog
+import com.google.firebase.database.FirebaseDatabase
+import com.nex3z.notificationbadge.NotificationBadge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
@@ -25,25 +35,50 @@ class OrderPurchaseActivity : AppCompatActivity() {
 
     private lateinit var adapter: OrderAdapter
 
+    private var isIntentData: Customers? = null
+
+    private lateinit var database: FirebaseDatabase
+
+    var notificationBadgeView: View? = null
+
+    var notificationBadge: NotificationBadge? = null
+
+    var item_Notification: MenuItem? = null
+
+    private lateinit var sessionManager: SessionManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityOrderPurchaseBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        isIntentData = intent.extras!!.getParcelable("isParcelable")!!
         initAdapter()
         refreshAdapter()
         customerOrderResponse()
+
+        database = FirebaseDatabase.getInstance()
+
+        sessionManager = SessionManager(this)
+
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
+        binding.toolbar.subtitle = isIntentData!!.outletname
+
     }
 
     private fun initAdapter() {
         val layoutManager = LinearLayoutManager(this)
         binding.parentRecyclerView.layoutManager = layoutManager
-        adapter = OrderAdapter()
+        adapter = OrderAdapter(applicationContext)
         binding.parentRecyclerView.adapter = adapter
     }
 
     private fun refreshAdapter() {
         lifecycleScope.launchWhenCreated {
-            viewModel.isSalesEntries(2472, 467937)
+            viewModel.isSalesEntries(isIntentData!!.employee_id!!, isIntentData!!.urno!!)
         }
     }
 
@@ -68,7 +103,6 @@ class OrderPurchaseActivity : AppCompatActivity() {
                         is NetworkResult.Success -> {
                             if(it.data!!.status==200) {
                                 binding.loaders.isVisible = false
-                                adapter = OrderAdapter()
                                 adapter.notifyDataSetChanged()
                                 binding.parentRecyclerView.setItemViewCacheSize(it.data.orderlist!!.size)
                                 binding.parentRecyclerView.adapter = adapter
@@ -77,7 +111,6 @@ class OrderPurchaseActivity : AppCompatActivity() {
                                 binding.loaders.isVisible = false
                                 ToastDialog(applicationContext, it.data.msg!!)
                             }
-
                         }
                     }
                 }
@@ -89,5 +122,41 @@ class OrderPurchaseActivity : AppCompatActivity() {
         adapter.addData(list)
         adapter.notifyDataSetChanged()
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_filter_search -> {
+                refreshAdapter()
+            }
+
+        }
+        return false
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.visitdetail, menu)
+        item_Notification = menu!!.findItem(R.id.action_notifications)
+        notificationBadgeView = item_Notification!!.actionView
+        notificationBadge = notificationBadgeView!!.findViewById(R.id.badge) as NotificationBadge
+
+        notificationBadgeView!!.setOnClickListener {
+            val intent = Intent(applicationContext, ReOrderActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
+
+        setupBadge()
+        return true
+    }
+
+    private fun setupBadge() = lifecycleScope.launchWhenCreated {
+        FirebaseDatabases.setOrderBadge(
+            sessionManager.fetchEmployeeId.first(),
+            database,
+            notificationBadge
+        )
+    }
+
+
 
 }

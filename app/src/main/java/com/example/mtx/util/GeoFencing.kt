@@ -20,6 +20,6 @@ object GeoFencing {
         return sqrt(dx * dx + dy * dy) <= 1.000 // 100 meters//->0.050 is 50meters..using two kilometer 1 for one kilometer
     }
 
-    val currentDate: String? = SimpleDateFormat("yyyy-M-dd").format(Date())
+    val currentDate: String? = SimpleDateFormat("yyyy-MM-dd").format(Date())
     val currentTime: String? = SimpleDateFormat("HH:mm:ss").format(Date())
 }

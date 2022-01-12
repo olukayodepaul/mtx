@@ -42,7 +42,7 @@ class SalesRecordViewModel @ViewModelInject constructor(private val repo: SalesR
     private val _postSalesResponseState = MutableStateFlow<NetworkResult<PostSalesResponse>>(NetworkResult.Empty)
     val postSalesResponseState get() = _postSalesResponseState
 
-    fun postSalesToServer(salesRecord: IsParcelable) = viewModelScope.launch {
+    fun postSalesToServer(salesRecord: IsParcelable,tokeUsed: String ) = viewModelScope.launch {
 
         _postSalesResponseState.value = NetworkResult.Loading
 
@@ -66,6 +66,7 @@ class SalesRecordViewModel @ViewModelInject constructor(private val repo: SalesR
             isResponseModel.remark = salesRecord.remark
             isResponseModel.distance = salesRecord.data!!.distance
             isResponseModel.duration = salesRecord.data!!.duration
+            isResponseModel.token = tokeUsed
             isResponseModel.order = isLocalOrder.map { it.toBasketToApi() }
 
             val httpResponse = repo.postSales(isResponseModel)

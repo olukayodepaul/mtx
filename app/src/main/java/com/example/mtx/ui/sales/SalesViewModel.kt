@@ -20,6 +20,7 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
             val mapper = IsAllCustomers()
 
             if(cacheDate==currentDate){
+                println("EPOKHAI 1-a")
                 val getFromLocalReo = repo.getCustomers()
 
                 if(getFromLocalReo.isNullOrEmpty()) {
@@ -35,6 +36,8 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
                 _salesResponseState.value = NetworkResult.Success(mapper)
 
             }else {
+
+                println("EPOKHAI 2-b")
 
                 val pullFromRemoteRepo = repo.getCustomer(employee_id)
                 if(pullFromRemoteRepo.status==200) {
@@ -88,6 +91,9 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
             isResponseModel.outletlongitude = salesRecord.data!!.longitude
             isResponseModel.outletname = salesRecord.data!!.outletname
             isResponseModel.volumeclass = salesRecord.data!!.volumeclass
+            isResponseModel.distance = salesRecord.data!!.distance
+            isResponseModel.duration = salesRecord.data!!.duration
+            isResponseModel.token = "000000"
             isResponseModel.remark = salesRecord.remark
             isResponseModel.order = emptyList()
 

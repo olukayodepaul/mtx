@@ -234,6 +234,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
             6 -> {
                 val intent = Intent(applicationContext, OrderPurchaseActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra("isParcelable", item.toCustomers())
                 startActivity(intent)
             }
         }
@@ -382,6 +383,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
 
             3 -> {
                 if (items!!.outlet_waiver!!.toLowerCase() == "true") {
+
                     val ifIsValidOutlet: Boolean = setGeoFencing(
                         currentLocation!!.latitude,
                         currentLocation.longitude,

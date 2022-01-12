@@ -180,7 +180,7 @@ class SalesRecordActivity : AppCompatActivity() {
     }
 
     private fun setRequestedToken() {
-        val references =    database.getReference("/defaulttoken/"+isIntentData.data!!.urno)
+        val references = database.getReference("/defaulttoken/"+isIntentData.data!!.urno)
 
         references.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
@@ -253,11 +253,11 @@ class SalesRecordActivity : AppCompatActivity() {
         when{
             isIntentData.data!!.cust_token==binding.tvFieldCustname.text.toString().trim()->{
                 initialLoader()
-                viewModel.postSalesToServer(isIntentData)
+                viewModel.postSalesToServer(isIntentData, binding.tvFieldCustname.text.toString().trim())
             }
             isIntentData.data!!.defaulttoken==binding.tvFieldCustname.text.toString().trim()->{
                 initialLoader()
-                viewModel.postSalesToServer(isIntentData)
+                viewModel.postSalesToServer(isIntentData,binding.tvFieldCustname.text.toString().trim())
             }
             else->{
                 ToastDialog(applicationContext, "Invalid Customer Verification code").toast

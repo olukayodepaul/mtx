@@ -348,6 +348,7 @@ data class OrderPosted(
     @SerializedName("token")
     @Expose
     var token: String? = null,
+
     @SerializedName("remark")
     @Expose
     var remark: String? = null,

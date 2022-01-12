@@ -216,20 +216,10 @@ class LoadOutActivity : AppCompatActivity() {
                                         filters->filters.seperator.equals("1")
                                 }
 
-//                                val atyInRoll = limitToSalesEntry.sumByDouble {
-//                                        qty->qty.qty!!.toDouble()
-//                                }
-//
-//                                val atyInPrice = limitToSalesEntry.sumByDouble {
-//                                        price->price.price!!.toDouble()
-//                                }
-
                                 val atyInAmount = limitToSalesEntry.sumByDouble {
                                         qty->qty.qty!!.toDouble()
                                 }
 
-//                                binding.qtyS.text = NumberFormat.getInstance().format(atyInRoll)
-//                                binding.amountS.text = NumberFormat.getInstance().format(atyInPrice)
                                 binding.totalS.text = NumberFormat.getInstance().format(atyInAmount)
 
                                 adapter = LoadOutAdapter(limitToSalesEntry)
@@ -321,7 +311,6 @@ class LoadOutActivity : AppCompatActivity() {
 
 
             }else{
-
                 if(task_id==1) {
                     viewModel.recordTask(sessionManager.fetchEmployeeId.first(), 1, currentLocation.latitude.toString(),currentLocation.longitude.toString(), "Resume" , GeoFencing.currentTime!!, 1)
                 }else{

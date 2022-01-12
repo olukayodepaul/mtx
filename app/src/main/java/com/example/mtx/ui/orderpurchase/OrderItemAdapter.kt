@@ -30,7 +30,10 @@ open class OrderItemAdapter(items: List<Orders.OrderItems>): RecyclerView.Adapte
     inner class ViewHolder(private val binding: ItemRowChildBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Orders.OrderItems) {
-            binding.name.text = item.product_code
+            binding.sku.text = item.product_name
+            binding.qty.text = item.pricing.toString()
+            binding.amount.text = item.inventory.toString()
+            binding.total.text = item.orders.toString()
         }
     }
 

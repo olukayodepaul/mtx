@@ -24,6 +24,8 @@ import com.nex3z.notificationbadge.NotificationBadge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 @AndroidEntryPoint
@@ -231,7 +233,7 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
             trasformInventory,
             trasformPricing,
             trasformOrder,
-            GeoFencing.currentTime!!,
+            SimpleDateFormat("HH:mm:ss").format(Date()),
             controltrasformPricing,
             controltrasformInventory,
             controltrasformOrder,
@@ -258,12 +260,6 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
                     }
 
                     is NetworkResult.Success -> {
-
-//                        val intent = Intent(applicationContext, SalesRecordActivity::class.java)
-//                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                        intent.putExtra("isParcelable", isIntentData)
-//                        startActivity(intent)
-
                         if (it.data!! == 0 && limit == 1) {
                             val intent = Intent(applicationContext, SalesRecordActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -273,7 +269,6 @@ class SalesEntryActivity : AppCompatActivity(), View.OnClickListener {
                             ToastDialog(applicationContext, "Enter all the field").toast
                             return@collect
                         }
-
                     }
                 }
             }

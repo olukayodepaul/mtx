@@ -59,14 +59,17 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
         } else {
 
-            if (sessionManager.fetchUsername.first() == userName && sessionManager.fetchPassword.first() == password && sessionManager.fetchDate.first() == GeoFencing.currentDate) {
-                viewModel.fetchAllSalesEntries(userName!!, password!!, true) //call local data
-            } else {
-                if(sessionManager.fetchDate.first() == GeoFencing.currentDate) {
-                    viewModel.fetchAllSalesEntries(userName!!, password!!, true) //call local data
-                }else{
-                    viewModel.fetchAllSalesEntries(userName!!, password!!, false) //call remote data
-                }
+            if(sessionManager.fetchDate.first() == GeoFencing.currentDate){
+
+                println("EPOKHAI 1")
+                val intent = Intent(applicationContext, ModulesActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
+
+            }else{
+                println("EPOKHAI 2")
+               viewModel.fetchAllSalesEntries(userName!!, password!!)
             }
         }
     }
@@ -95,46 +98,34 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                         }
 
                         is NetworkResult.Loading -> {
-
+                            binding.loader.isVisible = true
                         }
 
                         is NetworkResult.Success -> {
 
                             binding.loader.isVisible = false
 
-                            if (it.data!!.specifier == true) {
+                            if(it.data!!.status==200){
+
+                                sessionManager.deleteStore()
+                                sessionManager.storeEmployeeId(it.data.login!!.employee_id!!)
+                                sessionManager.storeDate(it.data.login!!.dates!!)
+                                sessionManager.storeEmployeeName(it.data.login!!.name!!)
+                                sessionManager.storeEmployeeEdcode(it.data.login!!.employee_code!!)
+                                sessionManager.storeRegionId(it.data.login!!.region_id!!)
+                                sessionManager.storeDepotLat(it.data.login!!.depotlat!!)
+                                sessionManager.storeDepotLng(it.data.login!!.depotlng!!)
+                                sessionManager.storeWaiver(it.data.login!!.depotwaiver!!)
+                                sessionManager.storeUsername(userName!!)
+                                sessionManager.storePassword(password!!)
 
                                 val intent = Intent(applicationContext, ModulesActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 startActivity(intent)
                                 finish()
 
-                            } else {
-
-                                if (it.data.res!!.status == 200) {
-
-                                    sessionManager.deleteStore()
-                                    sessionManager.storeEmployeeId(it.data.res!!.login!!.employee_id!!)
-                                    sessionManager.storeDate(it.data.res!!.login!!.dates!!)
-                                    sessionManager.storeEmployeeName(it.data.res!!.login!!.name!!)
-                                    sessionManager.storeEmployeeEdcode(it.data.res!!.login!!.employee_code!!)
-                                    sessionManager.storeRegionId(it.data.res!!.login!!.region_id!!)
-                                    sessionManager.storeDepotLat(it.data.res!!.login!!.depotlat!!)
-                                    sessionManager.storeDepotLng(it.data.res!!.login!!.depotlng!!)
-                                    sessionManager.storeWaiver(it.data.res!!.login!!.depotwaiver!!)
-                                    sessionManager.storeUsername(userName!!)
-                                    sessionManager.storePassword(password!!)
-
-                                    val intent = Intent(applicationContext, ModulesActivity::class.java)
-                                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    startActivity(intent)
-
-
-                                } else {
-
-                                    ToastDialog(applicationContext, it.data.res!!.msg!!).toast
-
-                                }
+                            }else{
+                                ToastDialog(applicationContext, it.data.msg!!).toast
                             }
                         }
                     }
