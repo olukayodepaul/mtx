@@ -191,7 +191,7 @@ class SalesRecordActivity : AppCompatActivity() {
                     binding.imageCloud.isVisible = false
                     binding.progressBar.isVisible = false
 
-                    if(vToken!!.status=="1"){
+                    if(vToken!!.status=="1") {
                         binding.resMessage.text = "Token Approve"
                         binding.imagePass.isVisible = true
                         binding.imageFail.isVisible = false
@@ -201,6 +201,7 @@ class SalesRecordActivity : AppCompatActivity() {
                         binding.imagePass.isVisible = false
                         binding.imageFail.isVisible = true
                     }
+
                 }
             }
         })
@@ -249,7 +250,7 @@ class SalesRecordActivity : AppCompatActivity() {
         }
     }
 
-    private fun postSalesToServer()= lifecycleScope.launchWhenCreated{
+    private fun postSalesToServer() = lifecycleScope.launchWhenCreated{
         when{
             isIntentData.data!!.cust_token==binding.tvFieldCustname.text.toString().trim()->{
                 initialLoader()
@@ -265,7 +266,7 @@ class SalesRecordActivity : AppCompatActivity() {
         }
     }
 
-    private fun initialLoader(){
+    private fun initialLoader() {
 
         binding.content.isVisible = false
         binding.tokenNotification.isVisible = false

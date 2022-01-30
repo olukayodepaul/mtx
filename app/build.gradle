@@ -151,6 +151,6 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:$map_version"
     implementation "com.google.android.gms:play-services-places:$map_version"
     implementation 'com.google.maps:google-maps-services:0.9.1'
-    implementation 'com.google.maps.android:android-maps-utils:0.5+'
+
 
 }
