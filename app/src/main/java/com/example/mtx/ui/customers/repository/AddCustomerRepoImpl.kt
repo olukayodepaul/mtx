@@ -28,20 +28,11 @@ class AddCustomerRepoImpl(
     }
 
     override suspend fun createCustomers(
-        outletLanguageId: Int,
-        outletClassId: Int,
-        outletTypeId: Int,
-        outletName: String,
-        contactPerson: String,
-        mobileNumber: String,
-        contactAddress: String,
-        latitude: String,
-        longitude: String,
-        employee_id: Int,
-        division: String
-    ) : GeneralResponse{
-        return retrofitClient.createCustomers( outletLanguageId, outletClassId, outletTypeId, outletName, contactPerson, mobileNumber,
-            contactAddress, latitude, longitude, employee_id, division)
+        tmid:Int, rep:Int, latitude:Double, longitude:Double, outletname:String, contactname:String, outletaddress:String, contactphone:String,
+        outletclassid:Int, outletlanguage:Int, outlettypeid:Int
+    ) : GeneralResponse {
+        return retrofitServices.mapOutlet(tmid, 0, latitude, longitude, outletname, contactname, outletaddress, contactphone,
+            outletclassid, outletlanguage, outlettypeid)
     }
 
     override suspend fun updateOutlet(
@@ -51,6 +42,5 @@ class AddCustomerRepoImpl(
     ): OutletUpdateResponse {
         return retrofitServices.updateOutlet(tmid,urno,latitude,longitude,outletname,contactname,outletaddress,contactphone,outletclassid,outletlanguage,outlettypeid)
     }
-
 
 }

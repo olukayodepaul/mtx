@@ -349,8 +349,8 @@ class AddCustomerActivity : AppCompatActivity() {
             val division = "map_outlet"
 
             viewModel.createCustomers(
-                outletLanguageId!!, outletClassId!!, outletTypeId!!, outletName!!, contactPerson!!, mobileNumber!!,
-                contactAddress!!, latitude, longitude, employee_id, division
+                employee_id, latitude.toDouble(), longitude.toDouble(),  outletName!!,
+                contactPerson!!, contactAddress!!,  mobileNumber!!, outletClassId!!, outletLanguageId!!, outletTypeId!!,
             )
         }
     }

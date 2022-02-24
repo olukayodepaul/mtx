@@ -10,9 +10,8 @@ interface AddCustomerRep {
     suspend fun fetchSpinnerFromLocalDb() : List<UserSpinnerEntity>
     suspend fun addCustomer(cust: List<UserSpinnerEntity>)
     suspend fun createCustomers(
-        outletLanguageId: Int, outletClassId: Int, outletTypeId: Int, outletName: String,
-        contactPerson: String, mobileNumber: String,
-        contactAddress: String, latitude: String, longitude: String, employee_id: Int, division: String
+        tmid:Int, rep:Int, latitude:Double, longitude:Double, outletname:String, contactname:String, outletaddress:String, contactphone:String,
+        outletclassid:Int, outletlanguage:Int, outlettypeid:Int
     ): GeneralResponse
 
     suspend fun updateOutlet(tmid: Int, urno: Int, latitude: Double, longitude: Double, outletname: String, contactname: String,

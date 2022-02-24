@@ -68,14 +68,16 @@ class AddCustomerViewModel @ViewModelInject constructor(private val repo: AddCus
     val isCustomerResponseState get() = _isCustomerResponseState
 
     fun createCustomers(
-        outletLanguageId: Int, outletClassId: Int, outletTypeId: Int, outletName: String,
-        contactPerson: String, mobileNumber: String,
-        contactAddress: String, latitude: String, longitude: String, employee_id: Int, division: String
+        tmid: Int,  latitude: Double, longitude: Double, outletname: String, contactname: String,
+        outletaddress: String, contactphone: String, outletclassid: Int, outletlanguage: Int,
+        outlettypeid: Int
     ) = viewModelScope.launch {
         _isCustomerResponseState.value = NetworkResult.Loading
         try {
-            val isCustomerRepoResult = repo.createCustomers(outletLanguageId, outletClassId, outletTypeId, outletName, contactPerson, mobileNumber,
-                contactAddress, latitude, longitude, employee_id, division)
+            val isCustomerRepoResult = repo.createCustomers(
+                tmid, tmid, latitude, longitude, outletname, contactname, outletaddress, contactphone,
+                outletclassid, outletlanguage, outlettypeid
+            )
             _isCustomerResponseState.value = NetworkResult.Success(isCustomerRepoResult)
         }catch (e: Throwable) {
             _isCustomerResponseState.value = NetworkResult.Error(e)
