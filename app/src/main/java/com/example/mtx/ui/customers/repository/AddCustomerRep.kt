@@ -12,7 +12,7 @@ interface AddCustomerRep {
     suspend fun createCustomers(
         tmid:Int, rep:Int, latitude:Double, longitude:Double, outletname:String, contactname:String, outletaddress:String, contactphone:String,
         outletclassid:Int, outletlanguage:Int, outlettypeid:Int
-    ): GeneralResponse
+    ): OutletUpdateResponse
 
     suspend fun updateOutlet(tmid: Int, urno: Int, latitude: Double, longitude: Double, outletname: String, contactname: String,
                  outletaddress: String, contactphone: String, outletclassid: Int, outletlanguage: Int,

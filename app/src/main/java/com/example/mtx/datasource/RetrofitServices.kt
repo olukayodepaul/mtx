@@ -52,7 +52,7 @@ interface RetrofitServices {
     ): OutletUpdateResponse
 
     @POST("/api/tm_map_outlet")
-    fun mapOutlet(
+    suspend fun mapOutlet(
         @Query("repid") repid: Int,
         @Query("tmid") tmid: Int,
         @Query("latitude") latitude: Double,

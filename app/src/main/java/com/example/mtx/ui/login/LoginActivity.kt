@@ -1,21 +1,27 @@
 package com.example.mtx.ui.login
 
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.activity.viewModels
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.example.mtx.R
 import com.example.mtx.databinding.ActivityMainBinding
 import com.example.mtx.dto.User
 import com.example.mtx.ui.module.ModulesActivity
-import com.example.mtx.util.GeoFencing
-import com.example.mtx.util.NetworkResult
-import com.example.mtx.util.SessionManager
-import com.example.mtx.util.ToastDialog
+import com.example.mtx.util.*
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
@@ -36,6 +42,12 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var database: FirebaseDatabase
 
+    private var hasGps = false
+
+    lateinit var mLocationManager: LocationManager
+
+    lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +57,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         database = FirebaseDatabase.getInstance()
         binding.loginid.setOnClickListener(this)
         loginStateFlow()
+        onActivityResult()
         //setRequestedToken()
     }
 
@@ -60,15 +73,12 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         } else {
 
             if(sessionManager.fetchDate.first() == GeoFencing.currentDate){
-
-                println("EPOKHAI 1")
                 val intent = Intent(applicationContext, ModulesActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
                 finish()
 
             }else{
-                println("EPOKHAI 2")
                viewModel.fetchAllSalesEntries(userName!!, password!!)
             }
         }
@@ -78,7 +88,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.loginid -> {
-                setLogin()
+                isPermissionRequest()
             }
         }
     }
@@ -132,6 +142,55 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         }
+    }
+
+    private fun isPermissionRequest() {
+
+        val usesPermission = PermissionUtility.requestPermission(this)
+
+        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        hasGps = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+        val available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
+
+        if (usesPermission.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, usesPermission.toTypedArray(), 0)
+            return
+        } else if (!hasGps) {
+            isGpsEnableIntent()
+            return
+        } else if (available == ConnectionResult.API_UNAVAILABLE) {
+            ToastDialog(applicationContext, "Play Update the google play service");
+            return
+        } else {
+            setLogin()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 0 && grantResults.isNotEmpty()) {
+            for (i in grantResults.indices) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    println("permissionRequest  Granted")
+                }
+            }
+        }
+    }
+
+    private fun isGpsEnableIntent() {
+        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        activityResultLauncher.launch(intent)
+    }
+
+    private fun onActivityResult() {
+        activityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            }
     }
 //
 //    private fun setRequestedToken() {

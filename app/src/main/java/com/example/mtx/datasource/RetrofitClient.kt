@@ -7,7 +7,7 @@ import retrofit2.http.*
 
 interface RetrofitService {
 
-    @GET("/mtx/users/logins")
+    @GET("/mtx/users/userslogins")
     suspend fun login(
         @Query("username") username: String,
         @Query("password") password: String
@@ -66,4 +66,10 @@ interface RetrofitService {
         @Query("urno") urno: Int
     ): OrderParentList
 
+    @GET("/sales/errorcorrection")
+    suspend fun resetError(
+        @Query("employee_id") employee_id: Int,
+        @Query("product_code") product_code: String,
+        @Query("qty") qty: Double
+    ): OrderError
 }

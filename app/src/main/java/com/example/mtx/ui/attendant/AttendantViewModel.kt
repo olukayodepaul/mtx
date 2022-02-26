@@ -3,10 +3,7 @@ package com.example.mtx.ui.attendant
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mtx.dto.GeneralResponse
-import com.example.mtx.dto.ModulesResponse
-import com.example.mtx.dto.SalesEntryMapperInterface
-import com.example.mtx.dto.toBasketLimit
+import com.example.mtx.dto.*
 import com.example.mtx.ui.attendant.repository.AttendantRepo
 import com.example.mtx.util.NetworkResult
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -90,5 +87,20 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
         }
     }
 
+
+    private val _errorCorrectionResponseState = MutableStateFlow<NetworkResult<OrderError>>(
+        NetworkResult.Empty)
+    val errorCorrectionResponseState get() = _errorCorrectionResponseState
+
+    fun fetchError(employee_id: Int, product_code: String, auto:Int, qty:Double) = viewModelScope.launch {
+        _errorCorrectionResponseState.value = NetworkResult.Loading
+        try {
+            val data = repo.resetError(employee_id, product_code, qty)
+            repo.resetPostEntry(auto, data.sum!!)
+            _errorCorrectionResponseState.value = NetworkResult.Success(data)
+        } catch (e: Throwable) {
+            _errorCorrectionResponseState.value = NetworkResult.Error(e)
+        }
+    }
 
 }

@@ -7,6 +7,8 @@ import com.example.mtx.dto.GeneralResponse
 import com.example.mtx.dto.OutletUpdateResponse
 import com.example.mtx.dto.UserSpinnerEntity
 import com.example.mtx.dto.UserSpinnerResponse
+import retrofit2.http.POST
+import retrofit2.http.Query
 
 class AddCustomerRepoImpl(
     private val retrofitClient: RetrofitService,
@@ -30,9 +32,8 @@ class AddCustomerRepoImpl(
     override suspend fun createCustomers(
         tmid:Int, rep:Int, latitude:Double, longitude:Double, outletname:String, contactname:String, outletaddress:String, contactphone:String,
         outletclassid:Int, outletlanguage:Int, outlettypeid:Int
-    ) : GeneralResponse {
-        return retrofitServices.mapOutlet(tmid, 0, latitude, longitude, outletname, contactname, outletaddress, contactphone,
-            outletclassid, outletlanguage, outlettypeid)
+    ) : OutletUpdateResponse {
+        return retrofitServices.mapOutlet(tmid, tmid, latitude, longitude, outletname, contactname, outletaddress, contactphone, outletclassid, outletlanguage, outlettypeid)
     }
 
     override suspend fun updateOutlet(

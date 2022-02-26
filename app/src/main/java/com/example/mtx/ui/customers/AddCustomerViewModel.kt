@@ -64,7 +64,7 @@ class AddCustomerViewModel @ViewModelInject constructor(private val repo: AddCus
     }
 
 
-    private val _isCustomerResponseState = MutableStateFlow<NetworkResult<GeneralResponse>>(NetworkResult.Empty)
+    private val _isCustomerResponseState = MutableStateFlow<NetworkResult<OutletUpdateResponse>>(NetworkResult.Empty)
     val isCustomerResponseState get() = _isCustomerResponseState
 
     fun createCustomers(

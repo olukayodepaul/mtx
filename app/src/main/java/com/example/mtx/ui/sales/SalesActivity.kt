@@ -44,6 +44,7 @@ import com.nex3z.notificationbadge.NotificationBadge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
@@ -407,7 +408,8 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                             GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID()
                                 .toString(),
                             "Open Outlet",
-                            items
+                            items,
+                            SimpleDateFormat("HH:mm:ss").format(Date())
                         )
                         intent.putExtra("isParcelable", contentFlow)
                         startActivity(intent)
@@ -422,7 +424,8 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
                         GeoFencing.currentDate,
                         GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID().toString(),
                         "Open Outlet",
-                        items
+                        items,
+                        SimpleDateFormat("HH:mm:ss").format(Date())
                     )
                     val intent = Intent(applicationContext, SalesEntryActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -452,7 +455,8 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
             GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID()
                 .toString(),
             "Close Outlet",
-            items
+            items,
+            SimpleDateFormat("HH:mm:ss").format(Date())
         )
 
         if (items.outlet_waiver!!.toLowerCase() == "true") {

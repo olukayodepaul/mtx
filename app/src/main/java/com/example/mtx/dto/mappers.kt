@@ -64,7 +64,8 @@ data class IsParcelable(
     var entry_date: String? = null,
     var uii: String? = null,
     var remark: String? = null,
-    var data:Customers? = null
+    var data:Customers? = null,
+    var atime:String? = null
 ): Parcelable
 
 

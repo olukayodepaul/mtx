@@ -45,11 +45,11 @@ android:background="@color/white">
 
         <TextView
             android:id="@+id/total"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginEnd="5dp"
             android:fontFamily="@font/roboto_bold"
-            android:text="QTY"
+            android:text=""
             android:textAlignment="textEnd"
             android:textColor="@color/white"
             android:textSize="16sp"
@@ -59,9 +59,10 @@ android:background="@color/white">
 
         <TextView
             android:id="@+id/amount"
+            android:text="QTY"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="20dp"
             android:fontFamily="@font/roboto_bold"
             android:textAlignment="textEnd"
             android:textColor="@color/white"
@@ -170,8 +171,8 @@ android:background="@color/white">
 
         <TextView
             android:id="@+id/total_s"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="0dp"
@@ -186,7 +187,7 @@ android:background="@color/white">
             android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="0dp"
             android:layout_toStartOf="@+id/total_s"
             android:gravity="center_vertical|end"

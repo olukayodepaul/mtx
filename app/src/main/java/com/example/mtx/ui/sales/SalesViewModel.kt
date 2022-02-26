@@ -1,5 +1,6 @@
 package com.example.mtx.ui.sales
 
+import android.annotation.SuppressLint
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,8 @@ import com.example.mtx.ui.sales.repository.SalesRepo
 import com.example.mtx.util.NetworkResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): ViewModel() {
 
@@ -20,7 +23,6 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
             val mapper = IsAllCustomers()
 
             if(cacheDate==currentDate){
-                println("EPOKHAI 1-a")
                 val getFromLocalReo = repo.getCustomers()
 
                 if(getFromLocalReo.isNullOrEmpty()) {
@@ -36,8 +38,6 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
                 _salesResponseState.value = NetworkResult.Success(mapper)
 
             }else {
-
-                println("EPOKHAI 2-b")
 
                 val pullFromRemoteRepo = repo.getCustomer(employee_id)
                 if(pullFromRemoteRepo.status==200) {
@@ -74,6 +74,7 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
     private val _closeOutletResponseState = MutableStateFlow<NetworkResult<PostSalesResponse>>(NetworkResult.Empty)
     val closeOutletResponseState get() = _closeOutletResponseState
 
+    @SuppressLint("SimpleDateFormat")
     fun fetchAllSalesEntries(salesRecord: IsParcelable) = viewModelScope.launch {
         _closeOutletResponseState.value = NetworkResult.Loading
         try {
@@ -82,7 +83,7 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
             isResponseModel.uiid = salesRecord.uii
             isResponseModel.clat = salesRecord.latitude!!.toString()
             isResponseModel.clng = salesRecord.longitude!!.toString()
-            isResponseModel.etime = salesRecord.entry_time
+            isResponseModel.etime = SimpleDateFormat("HH:mm:ss").format(Date())
             isResponseModel.edate = salesRecord.entry_date
             isResponseModel.customerno = salesRecord.data!!.customerno
             isResponseModel.employee_id = salesRecord.data!!.employee_id
@@ -95,8 +96,8 @@ class SalesViewModel @ViewModelInject constructor(private val repo: SalesRepo): 
             isResponseModel.duration = salesRecord.data!!.duration
             isResponseModel.token = "000000"
             isResponseModel.remark = salesRecord.remark
+            isResponseModel.atime = salesRecord.atime
             isResponseModel.order = emptyList()
-
 
             val data = repo.postSales(isResponseModel)
             _closeOutletResponseState.value = NetworkResult.Success(data)

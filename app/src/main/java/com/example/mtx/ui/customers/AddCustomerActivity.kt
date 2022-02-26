@@ -361,9 +361,7 @@ class AddCustomerActivity : AppCompatActivity() {
                 it.let {
                     when (it) {
 
-                        is NetworkResult.Empty -> {
-
-                        }
+                        is NetworkResult.Empty -> {}
 
                         is NetworkResult.Error -> {
                             binding.includes.titles.text = "Synchronisation Error"
@@ -394,7 +392,7 @@ class AddCustomerActivity : AppCompatActivity() {
                         is NetworkResult.Success -> {
                             if(it.data!!.status==200){
                                 binding.includes.titles.text = "Synchronisation Successful"
-                                binding.includes.subtitle.text = it.data.msg
+                                binding.includes.subtitle.text = it.data.notis
                                 binding.includes.subTitles.text = "Finish By clicking the Completed Button"
                                 binding.includes.progressBar.isVisible = false
                                 binding.includes.completeButon.isVisible = true
@@ -404,7 +402,7 @@ class AddCustomerActivity : AppCompatActivity() {
                             }else{
                                 binding.includes.titles.text = "Synchronisation Error"
                                 binding.includes.subtitle.text = "Fail to send Data to Server"
-                                binding.includes.subTitles.text = it.data.msg
+                                binding.includes.subTitles.text = it.data.notis
                                 binding.includes.progressBar.isVisible = false
                                 binding.includes.completeButon.isVisible = false
                                 binding.includes.errorButton.isVisible = true

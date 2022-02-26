@@ -22,6 +22,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mtx.R
 import com.example.mtx.databinding.ActivityLoadouttBinding
+import com.example.mtx.dto.AllCustomerProductOrder
+import com.example.mtx.dto.BasketLimitList
 import com.example.mtx.ui.module.ModuleAdapter
 import com.example.mtx.util.*
 import com.google.android.gms.common.ConnectionResult
@@ -67,6 +69,7 @@ class LoadOutActivity : AppCompatActivity() {
         onActivityResult()
         basketResponse()
         postBasket()
+        handleErrorCorrectionResponse()
     }
 
     private fun initAdapter() {
@@ -220,9 +223,9 @@ class LoadOutActivity : AppCompatActivity() {
                                         qty->qty.qty!!.toDouble()
                                 }
 
-                                binding.totalS.text = NumberFormat.getInstance().format(atyInAmount)
+                                binding.amountS.text = NumberFormat.getInstance().format(atyInAmount)
 
-                                adapter = LoadOutAdapter(limitToSalesEntry)
+                                adapter = LoadOutAdapter(limitToSalesEntry, ::handleAdapterEvent)
                                 adapter.notifyDataSetChanged()
                                 binding.recycler.setItemViewCacheSize(limitToSalesEntry.size)
                                 binding.recycler.adapter = adapter
@@ -391,4 +394,59 @@ class LoadOutActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun handleAdapterEvent(item: BasketLimitList){
+        viewModel.fetchError(item.employee_id!!, item.product_code!!, item.auto, item.qty!!.toDouble())
+    }
+
+    private fun handleErrorCorrectionResponse() {
+        lifecycleScope.launchWhenResumed {
+            viewModel.errorCorrectionResponseState.collect {
+                it.let {
+                    when (it) {
+
+                        is NetworkResult.Empty -> {
+
+                        }
+                        is NetworkResult.Success -> {
+                            binding.notifications.titles.text = "Cloud Synchronisation"
+                            binding.notifications.subtitle.text = "Data Successfully Updated"
+                            binding.notifications.subTitles.text = "Kindly click completed to continue"
+                            binding.notifications.progressBar.isVisible = false
+                            binding.notifications.completeButon.isVisible = true
+                            binding.notifications.errorButton.isVisible = false
+                            binding.notifications.passImage.isVisible = true
+                            binding.notifications.failImage.isVisible = false
+                        }
+                        is NetworkResult.Loading -> {
+                            binding.notifications.root.isVisible = true
+                            binding.include.root.isVisible = false
+                            binding.recycler.isVisible = false
+
+                            binding.notifications.titles.text = "Cloud Synchronisation"
+                            binding.notifications.subtitle.text = "Waiting to error correction"
+                            binding.notifications.subTitles.text = "Please do not Switch away from this screen, until the app ask you to DO SO."
+                            binding.notifications.progressBar.isVisible = true
+                            binding.notifications.completeButon.isVisible = false
+                            binding.notifications.errorButton.isVisible = false
+                            binding.notifications.passImage.isVisible = false
+                            binding.notifications.failImage.isVisible = false
+                        }
+
+                        is NetworkResult.Error -> {
+                            binding.notifications.titles.text = "Synchronisation Error"
+                            binding.notifications.subtitle.text = "Fail to update"
+                            binding.notifications.subTitles.text = it.throwable!!.message.toString()
+                            binding.notifications.progressBar.isVisible = false
+                            binding.notifications.completeButon.isVisible = false
+                            binding.notifications.errorButton.isVisible = true
+                            binding.notifications.passImage.isVisible = false
+                            binding.notifications.failImage.isVisible = true
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

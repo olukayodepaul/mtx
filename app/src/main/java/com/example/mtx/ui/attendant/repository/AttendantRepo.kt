@@ -3,6 +3,7 @@ package com.example.mtx.ui.attendant.repository
 import com.example.mtx.dto.BasketLimitList
 import com.example.mtx.dto.BasketLimitResponse
 import com.example.mtx.dto.GeneralResponse
+import com.example.mtx.dto.OrderError
 
 interface AttendantRepo {
     suspend fun fetchBasketFromRemoteRep(employee_id: Int): BasketLimitResponse
@@ -12,4 +13,6 @@ interface AttendantRepo {
     suspend fun setBasketToInitState()
     suspend fun task(employee_id: Int, task_id: Int, latitude: String, longitude: String, taskname: String): GeneralResponse
     suspend fun setAttendantTime(timeago:String, sort:Int )
+    suspend fun resetError(employee_id:Int, product_code:String, qty:Double ): OrderError
+    suspend fun resetPostEntry(auto:Int, total:Double )
 }

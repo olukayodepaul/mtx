@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mtx.databinding.LoadoutAdapterBinding
 import com.example.mtx.dto.BasketLimitList
+import kotlin.reflect.KFunction1
 
 
-class LoadOutAdapter(private var mItems: List<BasketLimitList>) :
+class LoadOutAdapter(private var mItems: List<BasketLimitList>,  private val isReturnFunction: KFunction1<BasketLimitList, Unit>) :
     RecyclerView.Adapter<LoadOutAdapter.ViewHolder>() {
 
 
@@ -21,7 +22,7 @@ class LoadOutAdapter(private var mItems: List<BasketLimitList>) :
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         val item = mItems[p1]
-        p0.bind(item)
+        p0.bind(item, isReturnFunction)
     }
 
     override fun getItemCount() = mItems.size
@@ -29,12 +30,15 @@ class LoadOutAdapter(private var mItems: List<BasketLimitList>) :
     inner class ViewHolder(private val binding: LoadoutAdapterBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: BasketLimitList) {
+        fun bind(item: BasketLimitList, isClickRefresh: KFunction1<BasketLimitList, Unit>) {
 
             binding.sku.text = item.product_name!!.toLowerCase().capitalize()
-            //binding.qty.text = NumberFormat.getInstance().format(item.qty)
-            //binding.amount.text = NumberFormat.getInstance().format(item.price)
-            binding.total.text = NumberFormat.getInstance().format(item.qty)
+            binding.amount.text = NumberFormat.getInstance().format(item.qty)
+
+            binding.total.setOnClickListener {
+                isClickRefresh(item)
+            }
         }
     }
+    
 }

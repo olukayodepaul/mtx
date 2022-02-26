@@ -5,6 +5,7 @@ import com.example.mtx.datasource.RetrofitService
 import com.example.mtx.dto.BasketLimitList
 import com.example.mtx.dto.BasketLimitResponse
 import com.example.mtx.dto.GeneralResponse
+import com.example.mtx.dto.OrderError
 
 class AttendantRepoImpl(
     private val retrofitClient: RetrofitService,
@@ -44,6 +45,14 @@ class AttendantRepoImpl(
 
     override suspend fun setAttendantTime(timeago: String, sort: Int) {
         return appdoa.setAttendantTime(timeago, sort)
+    }
+
+    override suspend fun resetError(employee_id: Int, product_code: String, qty:Double ): OrderError {
+        return retrofitClient.resetError(employee_id,product_code, qty)
+    }
+
+    override suspend fun resetPostEntry(auto: Int, total: Double) {
+        return appdoa.resetPostEntry(auto, total)
     }
 
 }

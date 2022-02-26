@@ -1,5 +1,6 @@
 package com.example.mtx.ui.salesrecord
 
+import android.annotation.SuppressLint
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,8 @@ import com.example.mtx.ui.salesrecord.repository.SalesRecordRepo
 import com.example.mtx.util.NetworkResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SalesRecordViewModel @ViewModelInject constructor(private val repo: SalesRecordRepo) :ViewModel() {
 
@@ -42,7 +45,8 @@ class SalesRecordViewModel @ViewModelInject constructor(private val repo: SalesR
     private val _postSalesResponseState = MutableStateFlow<NetworkResult<PostSalesResponse>>(NetworkResult.Empty)
     val postSalesResponseState get() = _postSalesResponseState
 
-    fun postSalesToServer(salesRecord: IsParcelable,tokeUsed: String ) = viewModelScope.launch {
+    @SuppressLint("SimpleDateFormat")
+    fun postSalesToServer(salesRecord: IsParcelable, tokeUsed: String ) = viewModelScope.launch {
 
         _postSalesResponseState.value = NetworkResult.Loading
 
@@ -54,7 +58,7 @@ class SalesRecordViewModel @ViewModelInject constructor(private val repo: SalesR
             isResponseModel.uiid = salesRecord.uii
             isResponseModel.clat = salesRecord.latitude!!.toString()
             isResponseModel.clng = salesRecord.longitude!!.toString()
-            isResponseModel.etime = salesRecord.entry_time
+            isResponseModel.etime = SimpleDateFormat("HH:mm:ss").format(Date())
             isResponseModel.edate = salesRecord.entry_date
             isResponseModel.customerno = salesRecord.data!!.customerno
             isResponseModel.employee_id = salesRecord.data!!.employee_id
@@ -67,6 +71,7 @@ class SalesRecordViewModel @ViewModelInject constructor(private val repo: SalesR
             isResponseModel.distance = salesRecord.data!!.distance
             isResponseModel.duration = salesRecord.data!!.duration
             isResponseModel.token = tokeUsed
+            isResponseModel.atime = salesRecord.atime
             isResponseModel.order = isLocalOrder.map { it.toBasketToApi() }
 
             val httpResponse = repo.postSales(isResponseModel)

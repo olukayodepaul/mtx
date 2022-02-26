@@ -360,7 +360,10 @@ data class OrderPosted(
     var distance: String? = null,
     @SerializedName("duration")
     @Expose
-    var duration: String? = null
+    var duration: String? = null,
+    @SerializedName("atime")
+    @Expose
+    var atime: String? = null
 )
 
 data class GeneralResponse(
@@ -623,6 +626,19 @@ data class Orders(
         var seperatorname: String? = null,
     )
 }
+
+data class OrderError(
+    @SerializedName("status")
+    @Expose
+    var status: Int? = null,
+    @SerializedName("msg")
+    @Expose
+    var msg: String? = null,
+    @SerializedName("sum")
+    @Expose
+    var sum: Double? = null
+)
+
 
 
 
