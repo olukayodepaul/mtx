@@ -454,7 +454,7 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
             GeoFencing.currentDate,
             GeoFencing.currentDate + "${items!!.rep_id}" + UUID.randomUUID()
                 .toString(),
-            "Close Outlet",
+            " ",
             items,
             SimpleDateFormat("HH:mm:ss").format(Date())
         )
