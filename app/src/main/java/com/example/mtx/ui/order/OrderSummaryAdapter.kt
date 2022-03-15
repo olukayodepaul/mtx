@@ -34,7 +34,7 @@ class OrderSummaryAdapter(
             val df = DecimalFormat("#.#")
             binding.skuTv.text = item.skuname.trim()
             binding.qtyTv.text = item.qtyordered.toString().trim()
-            binding.priceTv.text =  String.format("%,.1f", (df.format(item.amount*item.qtyordered).toDouble())).trim()
+            binding.priceTv.text =  String.format("%,.1f", (df.format(item.amount*item.qtyordered!!).toDouble())).trim()
         }
     }
 }

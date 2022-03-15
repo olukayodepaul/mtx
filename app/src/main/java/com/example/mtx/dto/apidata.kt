@@ -513,7 +513,7 @@ data class AllSkuOrdered(
     var customerinfo: Int = 0,
     @SerializedName("qtyordered")
     @Expose
-    var qtyordered: Int = 0,
+    var qtyordered: Double? = 0.0,
     @SerializedName("skuname")
     @Expose
     var skuname: String = "",
