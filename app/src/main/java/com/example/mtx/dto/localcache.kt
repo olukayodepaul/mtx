@@ -41,6 +41,7 @@ data class CustomersList (
     var depotwaivers: String? = null,
     var spec: String? = null,
     var __v: String? = null,
+    var th: String? = null,
 )
 
 @Entity(tableName = "osqty")

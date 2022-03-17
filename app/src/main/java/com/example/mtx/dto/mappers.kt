@@ -9,8 +9,7 @@ fun Customers.toSalesEntry() : CustomersList {
         auto, dates, timeago, _id, employee_id, urno, customerno, outletname, latitude, longitude, sort, notice,
         outlet_waiver, cust_token, defaulttoken, seq, modes, rep_id, outletclassid, outletlanguageid, outlettypeid,
         outletaddress, contactphone, contactname, outlet_pic, repname, volumeclass, employee_code,
-        customer_code, distance, duration, depotwaivers, spec, __v
-
+        customer_code, distance, duration, depotwaivers, spec, __v, th
     )
 }
 
@@ -20,7 +19,7 @@ fun CustomersList.toCustomers() : Customers {
         auto, dates, timeago, _id, employee_id, urno, customerno, outletname, latitude, longitude, sort, notice,
         outlet_waiver, cust_token, defaulttoken, seq, modes, rep_id, outletclassid, outletlanguageid, outlettypeid,
         outletaddress, contactphone, contactname, outlet_pic, repname, volumeclass, employee_code,
-        customer_code, distance, duration, depotwaivers, spec, __v
+        customer_code, distance, duration, depotwaivers, spec, __v, th
     )
 }
 

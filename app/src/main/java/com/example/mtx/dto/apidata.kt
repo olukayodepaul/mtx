@@ -211,9 +211,9 @@ data class Customers(
     @SerializedName("__v")
     @Expose
     var __v: String? = null,
-    @SerializedName("block")
+    @SerializedName("th")
     @Expose
-    var block: String? = null,
+    var th: String? = null,
 ): Parcelable
 
 data class BasketLimitResponse(
