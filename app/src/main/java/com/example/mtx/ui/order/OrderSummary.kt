@@ -101,7 +101,7 @@ class OrderSummary : AppCompatActivity() {
                         adapter.notifyDataSetChanged()
                         binding.recycleOrderHistory.setItemViewCacheSize(it.data.skuorder!!.size)
                         binding.recycleOrderHistory.adapter = adapter
-                        binding.priceTvs.text = String.format("%,.1f", (df.format(it.data.totalamount * it.data.totalqty).toDouble())).trim()
+                        binding.priceTvs.text = String.format("%,.1f", (df.format(it.data.totalamount).toDouble())).trim()
                         binding.qtyTvs.text = it.data.totalqty.toString()
 
                     }
@@ -124,8 +124,6 @@ class OrderSummary : AppCompatActivity() {
         }
 
         bindings.button.setOnClickListener {
-
-            println("EPOKHAI ${passData.token} ${bindings.tvFieldCustname.text}")
 
             if (bindings.tvFieldCustname.text.toString() == passData.token.toString()) {
 
@@ -155,12 +153,9 @@ class OrderSummary : AppCompatActivity() {
             it.let {
                 when (it) {
 
-                    is NetworkResult.Empty -> {
+                    is NetworkResult.Empty -> {}
 
-                    }
-
-                    is NetworkResult.Loading -> {
-                    }
+                    is NetworkResult.Loading -> {}
 
                     is NetworkResult.Error -> {
                         bindings.progressBar.isVisible = false
@@ -184,6 +179,7 @@ class OrderSummary : AppCompatActivity() {
                         bindings.button.isVisible = true
                         bindings.buttonss.isVisible = false
                         ToastDialog(applicationContext, it.data.msg)
+
                     }
                 }
             }

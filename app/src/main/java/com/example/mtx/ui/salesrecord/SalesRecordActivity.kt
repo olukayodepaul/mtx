@@ -82,7 +82,7 @@ class SalesRecordActivity : AppCompatActivity() {
         binding.recycler.setHasFixedSize(true)
 
         binding.tokenImage.setOnClickListener {
-            if(isIntentData.data!!.th=="block") {
+            if(isIntentData.data!!.th=="b") {
                 ToastDialog(applicationContext, "Token Expired, Please contact token administrator")
             }else{
                 binding.tvFieldCustname.setText(isIntentData.data!!.defaulttoken)
