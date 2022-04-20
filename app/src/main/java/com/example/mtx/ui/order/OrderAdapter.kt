@@ -41,6 +41,12 @@ class OrderAdapter(
             binding.modulecontents.text = item.outletname
             binding.remark.text = ("URNO: ${item.urno}")
             binding.timeago.text = "${item.dates} ${item.trantime}"
+            binding.transType.text = "Cash Payment"
+
+            if(item.trantype.toLowerCase()=="true"){
+                binding.transType.text = "Paid"
+            }
+
             binding.iconsImages.setOnClickListener {
                 clickListener(item, binding)
             }

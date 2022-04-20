@@ -492,7 +492,10 @@ data class AllCustomerProductOrder(
     var dates: String = "",
     @SerializedName("trantime")
     @Expose
-    var trantime: String = ""
+    var trantime: String = "",
+    @SerializedName("trantype")
+    @Expose
+    var trantype: String = ""
 ):Parcelable
 
 data class SkuOrdered(

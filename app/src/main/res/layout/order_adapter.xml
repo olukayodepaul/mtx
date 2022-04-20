@@ -54,7 +54,7 @@
 
             <TextView
                 android:id="@+id/remark"
-                android:layout_width="wrap_content"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/modulecontents"
                 android:lines="1"
@@ -64,6 +64,30 @@
                 android:textColor="@color/base"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"/>
+
+            <ImageView
+                android:id="@+id/transTypeLogo"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:layout_below="@+id/modulecontents"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/remark"
+                android:src="@drawable/ic_baseline_money_24"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/transType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/modulecontents"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/transTypeLogo"
+                android:src="@drawable/ic_baseline_money_24"
+                android:textSize="12sp"
+                android:lines="1"
+                android:textStyle="bold"
+                android:layout_marginLeft="5dp"
+                android:text=""/>
 
 
             <TextView
