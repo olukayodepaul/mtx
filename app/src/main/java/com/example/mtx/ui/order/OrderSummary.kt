@@ -101,6 +101,13 @@ class OrderSummary : AppCompatActivity() {
                         binding.recycleOrderHistory.setItemViewCacheSize(it.data.skuorder!!.size)
                         binding.recycleOrderHistory.adapter = adapter
                         binding.priceTvs.text = String.format("%,.1f", (df.format(it.data.totalamount).toDouble())).trim()
+
+                        binding.skuTvs.text = "total = {Cash Payment}"
+
+                        if(passData.trantype.toLowerCase()=="true") {
+                            binding.skuTvs.text = "total = {Paid}"
+                        }
+
                         binding.qtyTvs.text = it.data.totalqty.toString()
 
                     }
