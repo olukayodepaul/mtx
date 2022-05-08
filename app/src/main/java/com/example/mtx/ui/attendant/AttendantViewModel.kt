@@ -87,9 +87,7 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
         }
     }
 
-
-    private val _errorCorrectionResponseState = MutableStateFlow<NetworkResult<OrderError>>(
-        NetworkResult.Empty)
+    private val _errorCorrectionResponseState = MutableStateFlow<NetworkResult<OrderError>>(NetworkResult.Empty)
     val errorCorrectionResponseState get() = _errorCorrectionResponseState
 
     fun fetchError(employee_id: Int, product_code: String, auto:Int, qty:Double) = viewModelScope.launch {
@@ -100,6 +98,18 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
             _errorCorrectionResponseState.value = NetworkResult.Success(data)
         } catch (e: Throwable) {
             _errorCorrectionResponseState.value = NetworkResult.Error(e)
+        }
+    }
+
+    private val _isMoneyAgentsResponseState = MutableStateFlow<NetworkResult<List<IsMoneyAgent>>>(NetworkResult.Empty)
+    val isMoneyAgentsResponseState get() = _isMoneyAgentsResponseState
+
+    fun isMobileMoneyAgent(route_id:String) = viewModelScope.launch {
+        _isMoneyAgentsResponseState.value = NetworkResult.Loading
+        try {
+            _isMoneyAgentsResponseState.value = NetworkResult.Success(repo.allDailyAssignedAgents(route_id))
+        } catch (e: Throwable) {
+            _isMoneyAgentsResponseState.value = NetworkResult.Error(e)
         }
     }
 

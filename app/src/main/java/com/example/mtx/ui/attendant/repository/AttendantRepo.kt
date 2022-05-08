@@ -1,9 +1,6 @@
 package com.example.mtx.ui.attendant.repository
 
-import com.example.mtx.dto.BasketLimitList
-import com.example.mtx.dto.BasketLimitResponse
-import com.example.mtx.dto.GeneralResponse
-import com.example.mtx.dto.OrderError
+import com.example.mtx.dto.*
 
 interface AttendantRepo {
     suspend fun fetchBasketFromRemoteRep(employee_id: Int): BasketLimitResponse
@@ -15,4 +12,5 @@ interface AttendantRepo {
     suspend fun setAttendantTime(timeago:String, sort:Int )
     suspend fun resetError(employee_id:Int, product_code:String, qty:Double ): OrderError
     suspend fun resetPostEntry(auto:Int, total:Double )
+    suspend fun allDailyAssignedAgents(route_id:String) : List<IsMoneyAgent>
 }

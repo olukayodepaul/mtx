@@ -3,6 +3,8 @@ package com.example.mtx.dto
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "customers")
 data class CustomersList (
@@ -77,3 +79,18 @@ data class UserSpinnerEntity(
     var name: String? = null,
     var sep: Int? = null
 )
+
+@Entity(tableName = "moneyagent")
+data class IsMoneyAgent(
+    @PrimaryKey(autoGenerate = false)
+    var id: Int? = null,
+    var route_id: String? = null,
+    var agenttype: String? = null,
+    var agennama: String? = null,
+    var phone: String? = null,
+    var address: String? = null,
+    var lat: String? = null,
+    var lng: String? = null,
+    var distance: String? = null,
+)
+

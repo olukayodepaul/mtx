@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.mtx.dto.BasketLimitList
 import com.example.mtx.dto.CustomersList
+import com.example.mtx.dto.IsMoneyAgent
 import com.example.mtx.dto.UserSpinnerEntity
 
 @Dao
@@ -64,6 +65,9 @@ interface AppDao {
 
     @Query("UPDATE  osqty SET order_sold = :total WHERE  auto=:auto and seperator = '1'")
     suspend fun resetPostEntry(auto:Int, total:Double )
+
+    @Query("SELECT * FROM moneyagent where route_id = :route_id")
+    suspend fun getAllMobileAgents(route_id:String) : List<IsMoneyAgent>
 
 }
 

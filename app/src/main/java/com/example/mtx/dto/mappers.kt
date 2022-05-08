@@ -83,4 +83,13 @@ data class SpinnerInterface(
     var data: List<UserSpinnerEntity>? = null
 )
 
+fun MoneyAgent.toIsMoneyAgents() : IsMoneyAgent {
+    return IsMoneyAgent(
+        id, route_id, agenttype, agennama, phone,  address, lat, lng, distance
+    )
+}
+
+
+
+
 

@@ -122,7 +122,9 @@ class BankActivity : AppCompatActivity() {
                 task_id = 5
                 getCurrentLocation()
             }
-            R.id.mobileMoney -> { }
+            R.id.mobileMoney -> {
+                isMobileMoneyAgentIntent()
+            }
             R.id.retry->{
                 showLoaders()
             }
@@ -369,5 +371,11 @@ class BankActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun isMobileMoneyAgentIntent(){
+        val intent = Intent(applicationContext, MobileMoneyAgent::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
     }
 }

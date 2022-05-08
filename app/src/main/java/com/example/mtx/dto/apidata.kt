@@ -645,6 +645,48 @@ data class OrderError(
     var sum: Double? = null
 )
 
+data class MoneyAgentResponse(
+    @SerializedName("status")
+    @Expose
+    var status: Int? = null,
+    @SerializedName("msg")
+    @Expose
+    var msg: String? = null,
+    @SerializedName("agents")
+    @Expose
+    var agents: List<MoneyAgent>? = null
+)
+
+data class MoneyAgent(
+    @SerializedName("id")
+    @Expose
+    var id: Int? = null,
+    @SerializedName("route_id")
+    @Expose
+    var route_id: String? = null,
+    @SerializedName("agenttype")
+    @Expose
+    var agenttype: String? = null,
+    @SerializedName("agennama")
+    @Expose
+    var agennama: String? = null,
+    @SerializedName("phone")
+    @Expose
+    var phone: String? = null,
+    @SerializedName("address")
+    @Expose
+    var address: String? = null,
+    @SerializedName("lat")
+    @Expose
+    var lat: String? = null,
+    @SerializedName("lng")
+    @Expose
+    var lng: String? = null,
+    @SerializedName("distance")
+    @Expose
+    var distance: String? = null,
+)
+
 
 
 

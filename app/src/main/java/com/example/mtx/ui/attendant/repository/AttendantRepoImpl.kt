@@ -2,10 +2,7 @@ package com.example.mtx.ui.attendant.repository
 
 import com.example.mtx.datasource.AppDao
 import com.example.mtx.datasource.RetrofitService
-import com.example.mtx.dto.BasketLimitList
-import com.example.mtx.dto.BasketLimitResponse
-import com.example.mtx.dto.GeneralResponse
-import com.example.mtx.dto.OrderError
+import com.example.mtx.dto.*
 
 class AttendantRepoImpl(
     private val retrofitClient: RetrofitService,
@@ -54,5 +51,10 @@ class AttendantRepoImpl(
     override suspend fun resetPostEntry(auto: Int, total: Double) {
         return appdoa.resetPostEntry(auto, total)
     }
+
+    override suspend fun allDailyAssignedAgents(route_id: String): List<IsMoneyAgent> {
+        return appdoa.getAllMobileAgents(route_id.toLowerCase())
+    }
+
 
 }

@@ -76,7 +76,6 @@ class SalesEntryViewModel @ViewModelInject constructor(private val repo: SalesEn
         repo.updateDailySales(inventory, pricing, order, entry_time, controlpricing, controlinventory, controlorder, auto)
     }
 
-
     private val _validateSalesEntryResponseState = MutableStateFlow<NetworkResult<Int>>(NetworkResult.Empty)
     val validateSalesEntryResponseState get() = _validateSalesEntryResponseState
 
