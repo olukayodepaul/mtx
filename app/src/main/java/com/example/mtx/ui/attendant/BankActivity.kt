@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
@@ -123,6 +124,7 @@ class BankActivity : AppCompatActivity() {
                 getCurrentLocation()
             }
             R.id.mobileMoney -> {
+                Log.d("checker","checker")
                 isMobileMoneyAgentIntent()
             }
             R.id.retry->{

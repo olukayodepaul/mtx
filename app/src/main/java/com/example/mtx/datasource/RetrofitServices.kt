@@ -71,4 +71,9 @@ interface RetrofitServices {
         @Query("urno") urno: Int
     ): OutletAsyn
 
+    @GET("/api/mobileagentslist")
+    suspend fun isMobileAgentList(
+        @Query("route_id") route_id: String
+    ): MoneyAgentResponse
+
 }

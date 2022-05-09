@@ -21,6 +21,9 @@ interface AppDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun setBasket(cust: List<BasketLimitList>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun setMobileAgent(cust: List<IsMoneyAgent>)
+
     @Query("SELECT * FROM osqty")
     suspend fun fetchBasketFromLocalRep() : List<BasketLimitList>
 
@@ -32,6 +35,10 @@ interface AppDao {
 
     @Query("delete from spinners")
     suspend fun deleteFromSpinnerLocalRep()
+
+    @Query("delete from moneyagent")
+    suspend fun deleteFromMobileAgent()
+
 
     @Query("UPDATE osqty SET inventory=:inventory, pricing=:pricing, orders=:order, entry_time=:entry_time, controlpricing=:controlpricing, controlinventory = :controlinventory, controlorder=:controlorder where  auto=:auto")
     suspend fun updateDailySales(inventory: Double, pricing: Int, order: Double, entry_time: String, controlpricing:Int, controlinventory:Int, controlorder:Int, auto:Int)

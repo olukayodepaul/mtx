@@ -12,5 +12,7 @@ interface AttendantRepo {
     suspend fun setAttendantTime(timeago:String, sort:Int )
     suspend fun resetError(employee_id:Int, product_code:String, qty:Double ): OrderError
     suspend fun resetPostEntry(auto:Int, total:Double )
-    suspend fun allDailyAssignedAgents(route_id:String) : List<IsMoneyAgent>
+    suspend fun mobileMoneyAgentCacheOnLocalDb(route_id:String) : List<IsMoneyAgent>
+    suspend fun remoteMoneyAgent(route_id:String) :MoneyAgentResponse
+    suspend fun saveRemoteMoneyAgentOnLocalCache(agents: List<IsMoneyAgent>)
 }

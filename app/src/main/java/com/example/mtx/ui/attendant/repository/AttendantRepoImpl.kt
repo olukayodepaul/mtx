@@ -2,11 +2,13 @@ package com.example.mtx.ui.attendant.repository
 
 import com.example.mtx.datasource.AppDao
 import com.example.mtx.datasource.RetrofitService
+import com.example.mtx.datasource.RetrofitServices
 import com.example.mtx.dto.*
 
 class AttendantRepoImpl(
     private val retrofitClient: RetrofitService,
-    private val appdoa: AppDao
+    private val appdoa: AppDao,
+    private val retrofitService: RetrofitServices
 ) :
     AttendantRepo {
 
@@ -52,8 +54,18 @@ class AttendantRepoImpl(
         return appdoa.resetPostEntry(auto, total)
     }
 
-    override suspend fun allDailyAssignedAgents(route_id: String): List<IsMoneyAgent> {
+
+    //This is for the agent
+    override suspend fun mobileMoneyAgentCacheOnLocalDb(route_id: String): List<IsMoneyAgent> {
         return appdoa.getAllMobileAgents(route_id.toLowerCase())
+    }
+
+    override suspend fun remoteMoneyAgent(route_id: String): MoneyAgentResponse {
+        return retrofitService.isMobileAgentList(route_id)
+    }
+
+    override suspend fun saveRemoteMoneyAgentOnLocalCache(agents: List<IsMoneyAgent>) {
+        return appdoa.setMobileAgent(agents)
     }
 
 

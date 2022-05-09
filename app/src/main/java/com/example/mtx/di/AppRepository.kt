@@ -92,10 +92,11 @@ object AppRepository {
     @Provides
     fun provideAttendantRepository(
         retrofitClient: RetrofitService,
-        appdoa: AppDao
+        appdoa: AppDao,
+        retrofitService: RetrofitServices
     ): AttendantRepo {
         return AttendantRepoImpl(
-            retrofitClient, appdoa
+            retrofitClient, appdoa, retrofitService
         )
     }
 

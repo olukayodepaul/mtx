@@ -9,4 +9,5 @@ interface LoginRepo {
     suspend fun deleteBasketFromLocalRep()
     suspend fun deleteFromCustomersLocalRep()
     suspend fun deleteFromSpinnerLocalRep()
+    suspend fun deleteFromMobileAgent()
 }

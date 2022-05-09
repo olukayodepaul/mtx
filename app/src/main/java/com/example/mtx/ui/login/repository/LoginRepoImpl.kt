@@ -27,4 +27,8 @@ class LoginRepoImpl (
     override suspend fun deleteFromSpinnerLocalRep() {
         return appdoa.deleteFromSpinnerLocalRep()
     }
+
+    override suspend fun deleteFromMobileAgent() {
+        return appdoa.deleteFromMobileAgent()
+    }
 }

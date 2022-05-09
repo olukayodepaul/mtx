@@ -1,5 +1,6 @@
 package com.example.mtx.ui.attendant
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -101,16 +102,51 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
         }
     }
 
-    private val _isMoneyAgentsResponseState = MutableStateFlow<NetworkResult<List<IsMoneyAgent>>>(NetworkResult.Empty)
+    private val _isMoneyAgentsResponseState = MutableStateFlow<NetworkResult<AgentMapData>>(NetworkResult.Empty)
     val isMoneyAgentsResponseState get() = _isMoneyAgentsResponseState
 
     fun isMobileMoneyAgent(route_id:String) = viewModelScope.launch {
         _isMoneyAgentsResponseState.value = NetworkResult.Loading
         try {
-            _isMoneyAgentsResponseState.value = NetworkResult.Success(repo.allDailyAssignedAgents(route_id))
+
+            val isLocalRepo = repo.mobileMoneyAgentCacheOnLocalDb(route_id)
+            val isDataExchange  = AgentMapData()
+
+            if(isLocalRepo.isNotEmpty()) {
+
+                isDataExchange.msg = ""
+                isDataExchange.status = 200
+                isDataExchange.orderagent = isLocalRepo
+                _isMoneyAgentsResponseState.value = NetworkResult.Success(isDataExchange)
+
+            }else {
+
+                val isARemoteData =  repo.remoteMoneyAgent(route_id)
+
+                if(isARemoteData.status == 200 ) {
+
+                    val isConvertedRemoteToLocalData = repo.remoteMoneyAgent(route_id).agents!!.map { i->i.toIsMoneyAgents() }//convert remote to local data
+                    repo.saveRemoteMoneyAgentOnLocalCache(isConvertedRemoteToLocalData)
+
+                    val rePullLocalCache = repo.mobileMoneyAgentCacheOnLocalDb(route_id)
+                    isDataExchange.msg = ""
+                    isDataExchange.status = 200
+                    isDataExchange.orderagent = rePullLocalCache
+                    _isMoneyAgentsResponseState.value = NetworkResult.Success(isDataExchange)
+
+                }else {
+
+                    isDataExchange.msg = isARemoteData.msg
+                    isDataExchange.status = 400
+                    isDataExchange.orderagent = emptyList()
+                    _isMoneyAgentsResponseState.value = NetworkResult.Success(isDataExchange)
+                }
+            }
+
         } catch (e: Throwable) {
             _isMoneyAgentsResponseState.value = NetworkResult.Error(e)
         }
     }
+
 
 }

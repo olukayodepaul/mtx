@@ -94,3 +94,9 @@ data class IsMoneyAgent(
     var distance: String? = null,
 )
 
+data class AgentMapData(
+    var status: Int? = null,
+    var msg: String? = null,
+    var orderagent: List<IsMoneyAgent>?  = null,
+)
+

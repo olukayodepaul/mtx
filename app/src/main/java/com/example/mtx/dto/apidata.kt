@@ -645,7 +645,7 @@ data class OrderError(
     var sum: Double? = null
 )
 
-data class MoneyAgentResponse(
+data class MoneyAgentResponse (
     @SerializedName("status")
     @Expose
     var status: Int? = null,
@@ -684,8 +684,9 @@ data class MoneyAgent(
     var lng: String? = null,
     @SerializedName("distance")
     @Expose
-    var distance: String? = null,
+    var distance: String? = null
 )
+
 
 
 
