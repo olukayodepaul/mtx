@@ -43,14 +43,11 @@ class MobileMoneyAgent : AppCompatActivity() {
                 it.let {
                     when (it) {
 
-                        is NetworkResult.Empty -> {
-                        }
+                        is NetworkResult.Empty -> {}
 
-                        is NetworkResult.Error -> {
-                        }
+                        is NetworkResult.Error -> {}
 
-                        is NetworkResult.Loading -> {
-                        }
+                        is NetworkResult.Loading -> {}
 
                         is NetworkResult.Success -> {
 
