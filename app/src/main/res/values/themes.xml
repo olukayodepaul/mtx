@@ -49,8 +49,8 @@
         <item name="background">@color/white</item>
         <item name="colorControlNormal">@color/white</item>
         <item name="actionModeBackground">@color/white</item>
-        <item name="fontFamily">@font/opensanbold</item>
-        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
     <style name="AppTheme.Button" parent="Theme.MaterialComponents.Light.NoActionBar">

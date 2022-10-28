@@ -9,6 +9,8 @@ import com.example.mtx.ui.customers.repository.AddCustomerRep
 import com.example.mtx.ui.customers.repository.AddCustomerRepoImpl
 import com.example.mtx.ui.login.repository.LoginRepo
 import com.example.mtx.ui.login.repository.LoginRepoImpl
+import com.example.mtx.ui.messages.repository.MessageRepo
+import com.example.mtx.ui.messages.repository.MessageRepoImpl
 import com.example.mtx.ui.module.repository.ModulesRepo
 import com.example.mtx.ui.module.repository.ModulesRepoImpl
 import com.example.mtx.ui.order.repository.OrderRepo
@@ -30,6 +32,17 @@ import javax.inject.Singleton
 @Module
 @InstallIn(ApplicationComponent::class)
 object AppRepository {
+
+    @Singleton
+    @Provides
+    fun provideMessageRepository(
+        retrofitClient: RetrofitService,
+        appdoa: AppDao
+    ): MessageRepo {
+        return MessageRepoImpl(
+            retrofitClient, appdoa
+        )
+    }
 
     @Singleton
     @Provides

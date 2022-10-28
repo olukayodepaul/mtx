@@ -67,7 +67,6 @@ data class IsParcelable(
     var atime:String? = null
 ): Parcelable
 
-
 fun UserSpinner.toSpinners() : UserSpinnerEntity {
     return UserSpinnerEntity(
         auto, id, name, sep
@@ -85,9 +84,19 @@ data class SpinnerInterface(
 
 fun MoneyAgent.toIsMoneyAgents() : IsMoneyAgent {
     return IsMoneyAgent(
-        id, route_id, agenttype, agennama, phone,  address, lat, lng, distance
+        id, route_id, agenttype, agennama, phone,  address, lat, lng, distance, employee_id
     )
 }
+
+fun DataAccuracy.DataAccuracyConditions.toAccuracyEntity() : EntityAccuracy {
+    return EntityAccuracy(
+        _id, entry_date, remark, status
+    )
+}
+
+
+
+
 
 
 

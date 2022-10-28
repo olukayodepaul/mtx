@@ -23,7 +23,7 @@ class SalesRepoImpl (private val retrofitClient: RetrofitService, private val ap
         return retrofitClient.postSales(order)
     }
 
-    override suspend fun sendTokenToday(unro: Int): sendTokenToIndividualCustomer {
+    override suspend fun sendTokenToday(unro: Int): SendTokenToIndividualCustomer {
         return  retrofitService.sendTokenToday(unro)
     }
 

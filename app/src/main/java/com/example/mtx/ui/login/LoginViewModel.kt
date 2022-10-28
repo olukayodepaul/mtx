@@ -4,7 +4,6 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mtx.dto.LoginResponse
-import com.example.mtx.dto.LoginResponseWithSpecifier
 import com.example.mtx.ui.login.repository.LoginRepo
 import com.example.mtx.util.NetworkResult
 import kotlinx.coroutines.flow.MutableStateFlow

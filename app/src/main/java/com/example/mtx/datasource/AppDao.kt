@@ -4,10 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.mtx.dto.BasketLimitList
-import com.example.mtx.dto.CustomersList
-import com.example.mtx.dto.IsMoneyAgent
-import com.example.mtx.dto.UserSpinnerEntity
+import com.example.mtx.dto.*
 
 @Dao
 interface AppDao {
@@ -38,7 +35,6 @@ interface AppDao {
 
     @Query("delete from moneyagent")
     suspend fun deleteFromMobileAgent()
-
 
     @Query("UPDATE osqty SET inventory=:inventory, pricing=:pricing, orders=:order, entry_time=:entry_time, controlpricing=:controlpricing, controlinventory = :controlinventory, controlorder=:controlorder where  auto=:auto")
     suspend fun updateDailySales(inventory: Double, pricing: Int, order: Double, entry_time: String, controlpricing:Int, controlinventory:Int, controlorder:Int, auto:Int)
@@ -73,8 +69,17 @@ interface AppDao {
     @Query("UPDATE  osqty SET order_sold = :total WHERE  auto=:auto and seperator = '1'")
     suspend fun resetPostEntry(auto:Int, total:Double )
 
-    @Query("SELECT * FROM moneyagent where route_id = :route_id")
+    @Query("SELECT * FROM moneyagent where employee_id = :route_id")
     suspend fun getAllMobileAgents(route_id:String) : List<IsMoneyAgent>
+
+    @Query("SELECT * FROM  dataAccuracy")
+    suspend fun getDataAccuracy() : List<EntityAccuracy>
+
+    @Query("UPDATE dataAccuracy SET status = :status WHERE _id = :id")
+    suspend fun updateDataAccuracyStatus(status:Int,id:String)
+
+    @Query("SELECT count(status)  FROM  dataAccuracy WHERE status = 2 ")
+    suspend fun getCountDataAccuracyStatus(): Int
 
 }
 

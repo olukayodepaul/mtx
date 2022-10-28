@@ -17,7 +17,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.example.mtx.R
 import com.example.mtx.databinding.ActivityMainBinding
-import com.example.mtx.dto.User
 import com.example.mtx.ui.module.ModulesActivity
 import com.example.mtx.util.*
 import com.google.android.gms.common.ConnectionResult

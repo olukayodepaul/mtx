@@ -11,7 +11,8 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 //apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
+
 
 
 android {
@@ -39,8 +40,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -79,6 +80,7 @@ dependencies {
     kapt AnnotationProcessing.hilt_compiler
     implementation Dependencies.hilt_viewModel
     kapt Dependencies.hilt_viewModel_kapt
+    
 
     //navigation component
     implementation Dependencies.navigation_fragment
@@ -87,8 +89,13 @@ dependencies {
     // -- Retrofit3
     implementation Dependencies.retrofit
     implementation Dependencies.retrofit_gson
-    //implementation 'com.google.code.gson:gson:2.8.5'
-    //implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
+    //http interceptor
+    def okhttp_version = "3.10.0"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+
+    //http interceptor
+    def httpinterceptor_version = "3.8.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:$httpinterceptor_version"
 
     // Lifecycle components
     implementation Dependencies.lifecycle_common
@@ -129,23 +136,17 @@ dependencies {
     //GOOGLE location service
     implementation Dependencies.googlelocationservice
 
-    //http interceptor
-    def okhttp_version = "3.10.0"
-    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
 
-    //http interceptor
-    def httpinterceptor_version = "3.8.0"
-    implementation "com.squareup.okhttp3:logging-interceptor:$httpinterceptor_version"
 
     implementation 'com.nex3z:notification-badge:1.0.4'
 
     //Goodle services
-    implementation 'com.google.firebase:firebase-core:17.0.1'
+    implementation 'com.google.firebase:firebase-core:17.2.0'
     implementation 'com.google.firebase:firebase-messaging:20.1.0'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.firebase:firebase-storage:19.1.0'
     implementation 'com.google.firebase:firebase-database:19.2.0'
-    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+    implementation 'com.google.firebase:firebase-analytics:21.0.0'
 
     def map_version = "17.0.0"
     implementation "com.google.android.gms:play-services-location:$map_version"

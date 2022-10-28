@@ -109,11 +109,14 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
         _isMoneyAgentsResponseState.value = NetworkResult.Loading
         try {
 
+            Log.d("paulResponse 1", "1")
             val isLocalRepo = repo.mobileMoneyAgentCacheOnLocalDb(route_id)
             val isDataExchange  = AgentMapData()
 
             if(isLocalRepo.isNotEmpty()) {
 
+                Log.d("paulResponse 2", "2")
+                Log.d("paulResponse 2", isLocalRepo.toString())
                 isDataExchange.msg = ""
                 isDataExchange.status = 200
                 isDataExchange.orderagent = isLocalRepo
@@ -125,6 +128,8 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
 
                 if(isARemoteData.status == 200 ) {
 
+
+
                     val isConvertedRemoteToLocalData = repo.remoteMoneyAgent(route_id).agents!!.map { i->i.toIsMoneyAgents() }//convert remote to local data
                     repo.saveRemoteMoneyAgentOnLocalCache(isConvertedRemoteToLocalData)
 
@@ -132,9 +137,17 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
                     isDataExchange.msg = ""
                     isDataExchange.status = 200
                     isDataExchange.orderagent = rePullLocalCache
+
+                    Log.d("paulResponse 3", "3")
+                    Log.d("paulResponse 3", isConvertedRemoteToLocalData.toString())
+                    Log.d("paulResponse 3", rePullLocalCache.toString())
+
                     _isMoneyAgentsResponseState.value = NetworkResult.Success(isDataExchange)
 
                 }else {
+
+                    Log.d("paulResponse 4", "4")
+                    Log.d("paulResponse 4", "4")
 
                     isDataExchange.msg = isARemoteData.msg
                     isDataExchange.status = 400

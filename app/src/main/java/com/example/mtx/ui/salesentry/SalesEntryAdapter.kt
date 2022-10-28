@@ -72,6 +72,7 @@ class SalesEntryAdapter(private var mItems: List<BasketLimitList>, private val c
                     }
                 }
             )
+
         }
     }
 }

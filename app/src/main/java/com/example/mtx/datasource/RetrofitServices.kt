@@ -1,7 +1,6 @@
 package com.example.mtx.datasource
 
 import com.example.mtx.dto.*
-import retrofit2.Response
 import retrofit2.http.*
 
 
@@ -18,7 +17,7 @@ interface RetrofitServices {
     @GET("/api/customer/sendtokens")
     suspend fun sendTokenToday(
         @Query("unro") unro: Int
-    ): sendTokenToIndividualCustomer
+    ): SendTokenToIndividualCustomer
 
     @GET("/api/customer/customerorder")
     suspend fun customerOrder(

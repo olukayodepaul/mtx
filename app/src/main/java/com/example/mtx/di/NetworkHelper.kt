@@ -11,7 +11,8 @@ import javax.inject.Inject
 
 
 @Singleton
-class NetworkHelper  @Inject constructor(@ApplicationContext private val context: Context) {
+class
+NetworkHelper  @Inject constructor(@ApplicationContext private val context: Context) {
 
     fun isNetworkConnected(): Boolean {
         var result = false

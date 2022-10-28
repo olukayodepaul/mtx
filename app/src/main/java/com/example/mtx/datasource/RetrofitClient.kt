@@ -72,4 +72,11 @@ interface RetrofitService {
         @Query("product_code") product_code: String,
         @Query("qty") qty: Double
     ): OrderError
+
+    @GET("/zoho/msg")
+    suspend fun dataAccuracy(
+        @Query("customercode") customercode: String
+    ): DataAccuracy
+
+
 }

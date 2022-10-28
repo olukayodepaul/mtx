@@ -2,7 +2,6 @@ package com.example.mtx.dto
 
 
 import android.os.Parcelable
-import com.google.firebase.database.IgnoreExtraProperties
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
@@ -60,7 +59,7 @@ data class Employees(
     @Expose
     var depotwaiver: String? = null,
 
-)
+    )
 
 data class ModulesResponse(
     @SerializedName("status")
@@ -214,7 +213,7 @@ data class Customers(
     @SerializedName("th")
     @Expose
     var th: String? = null,
-): Parcelable
+) : Parcelable
 
 data class BasketLimitResponse(
     @SerializedName("status")
@@ -228,7 +227,7 @@ data class BasketLimitResponse(
     var basketlimit: List<BasketLimit>? = null
 )
 
-data class BasketLimit (
+data class BasketLimit(
     @SerializedName("auto")
     @Expose
     var auto: Int = 0,
@@ -410,16 +409,6 @@ data class GetRequestToken(
     val status: String? = null
 )
 
-
-data class CustomerPurchaseHistory(
-    @SerializedName("etime")
-    @Expose
-    var status: Int? = null,
-    @SerializedName("msg")
-    @Expose
-    var msg: String? = null
-)
-
 data class RealOrder(
     @SerializedName("status")
     @Expose
@@ -428,28 +417,17 @@ data class RealOrder(
     @Expose
     var msg: String = ""
 )
-data class LoginResponseWithSpecifier(
-    @SerializedName("specifier")
-    @Expose
-    var specifier: Boolean? = null,
-    @SerializedName("res")
-    @Expose
-    var res: LoginResponse? = null
-)
 
-data class sendTokenToIndividualCustomer(
+data class SendTokenToIndividualCustomer(
     @SerializedName("status")
     @Expose
     var status: String = ""
 )
 
-@IgnoreExtraProperties
-data class User(val username: String? = null, val email: String? = null)
-
 data class CustomerProductOrder(
     @SerializedName("order")
     @Expose
-    var order: List<AllCustomerProductOrder>?  = null
+    var order: List<AllCustomerProductOrder>? = null
 )
 
 @Parcelize
@@ -496,12 +474,12 @@ data class AllCustomerProductOrder(
     @SerializedName("trantype")
     @Expose
     var trantype: String = ""
-):Parcelable
+) : Parcelable
 
 data class SkuOrdered(
     @SerializedName("skuorder")
     @Expose
-    var skuorder: List<AllSkuOrdered>?  = null,
+    var skuorder: List<AllSkuOrdered>? = null,
     @SerializedName("totalqty")
     @Expose
     var totalqty: Double = 0.0,
@@ -582,7 +560,7 @@ data class OrderParentList(
     var status: Int? = null,
     @SerializedName("orderlist")
     @Expose
-    var orderlist: List<Orders>?  = null
+    var orderlist: List<Orders>? = null
 )
 
 data class Orders(
@@ -600,8 +578,8 @@ data class Orders(
     var expandable: Boolean? = false,
     @SerializedName("order")
     @Expose
-    var order: List<OrderItems>?  = null
-){
+    var order: List<OrderItems>? = null
+) {
     data class OrderItems(
         @SerializedName("entry_time")
         @Expose
@@ -645,7 +623,7 @@ data class OrderError(
     var sum: Double? = null
 )
 
-data class MoneyAgentResponse (
+data class MoneyAgentResponse(
     @SerializedName("status")
     @Expose
     var status: Int? = null,
@@ -684,8 +662,41 @@ data class MoneyAgent(
     var lng: String? = null,
     @SerializedName("distance")
     @Expose
-    var distance: String? = null
+    var distance: String? = null,
+    @SerializedName("employee_id")
+    @Expose
+    var employee_id: String? = null,
 )
+
+data class DataAccuracy(
+    @SerializedName("status")
+    @Expose
+    var status: Int? = null,
+    @SerializedName("msg")
+    @Expose
+    var msg: String? = null,
+    @SerializedName("accuracy")
+    @Expose
+    var accuracy: List<DataAccuracyConditions>? = null
+) {
+    data class DataAccuracyConditions(
+        @SerializedName("_id")
+        @Expose
+        var _id: String? = null,
+        @SerializedName("entry_date")
+        @Expose
+        var entry_date: String? = null,
+        @SerializedName("remark")
+        @Expose
+        var remark: String? = null,
+        @SerializedName("status")
+        @Expose
+        var status: Int? = null
+    )
+}
+
+data class BreadCastNotification(val counts: Int = 0)
+
 
 
 

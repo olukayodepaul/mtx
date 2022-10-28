@@ -354,8 +354,6 @@ class SalesActivity : AppCompatActivity(), View.OnClickListener {
         fusedLocationProviderClient.requestLocationUpdates(
             locationRequest, locationCallback, Looper.getMainLooper()
         )
-
-
     }
 
     private val locationCallback = object : LocationCallback() {

@@ -92,11 +92,21 @@ data class IsMoneyAgent(
     var lat: String? = null,
     var lng: String? = null,
     var distance: String? = null,
+    var employee_id: String? = null,
 )
 
 data class AgentMapData(
     var status: Int? = null,
     var msg: String? = null,
     var orderagent: List<IsMoneyAgent>?  = null,
+)
+
+@Entity(tableName = "dataAccuracy")
+data class EntityAccuracy (
+    @PrimaryKey(autoGenerate = false)
+    var _id: String? = null,
+    var entry_date: String? = null,
+    var remark: String? = null,
+    var status: Int? = null
 )
 

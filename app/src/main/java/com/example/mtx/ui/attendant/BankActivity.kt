@@ -23,6 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mtx.R
 import com.example.mtx.databinding.ActivityBankBinding
+import com.example.mtx.dto.toCustomers
 import com.example.mtx.util.*
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -149,7 +150,7 @@ class BankActivity : AppCompatActivity() {
         }else if(!hasGps){
             isGpsEnableIntent()
             return
-        }else if(available == ConnectionResult.API_UNAVAILABLE){
+        }else if(available == ConnectionResult.API_UNAVAILABLE) {
             ToastDialog(applicationContext, "Play Update the google play service");
             return
         }
@@ -375,9 +376,14 @@ class BankActivity : AppCompatActivity() {
         }
     }
 
-    private fun isMobileMoneyAgentIntent(){
+    private fun isMobileMoneyAgentIntent() = lifecycleScope.launchWhenResumed {
+
         val intent = Intent(applicationContext, MobileMoneyAgent::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.putExtra("employeeId",sessionManager.fetchEmployeeId.first().toString())
         startActivity(intent)
+
     }
+
+
 }

@@ -20,6 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mtx"
         android:usesCleartextTraffic="true">
+
         <activity android:name=".ui.attendant.MobileMoneyAgent"
             android:configChanges="orientation|screenSize|screenLayout"></activity>
         <activity
@@ -64,6 +65,7 @@
         <activity
             android:name=".ui.module.ModulesActivity"
             android:configChanges="orientation|screenSize|screenLayout" />
+
         <activity
             android:name=".ui.login.LoginActivity"
             android:configChanges="orientation|screenSize|screenLayout">
@@ -73,6 +75,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

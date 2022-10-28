@@ -37,7 +37,7 @@ class OrderAdapter(
             val generator = ColorGenerator.MATERIAL
             val drawable = TextDrawable.builder().buildRound(letter, generator.randomColor)
 
-            binding.IdCheck.setImageDrawable(drawable)
+            binding.idCheck.setImageDrawable(drawable)
             binding.modulecontents.text = item.outletname
             binding.remark.text = ("URNO: ${item.urno}")
             binding.timeago.text = "${item.dates} ${item.trantime}"

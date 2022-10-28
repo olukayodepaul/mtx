@@ -4,13 +4,9 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.mtx.datasource.AppDao
-import com.example.mtx.dto.BasketLimitList
-import com.example.mtx.dto.CustomersList
-import com.example.mtx.dto.IsMoneyAgent
-import com.example.mtx.dto.UserSpinnerEntity
+import com.example.mtx.dto.*
 
-
-@Database(entities = [CustomersList::class, BasketLimitList::class, UserSpinnerEntity::class, IsMoneyAgent::class],version = 1, exportSchema = false)
+@Database(entities = [CustomersList::class, BasketLimitList::class, UserSpinnerEntity::class, IsMoneyAgent::class, EntityAccuracy::class],version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract val appdao: AppDao
