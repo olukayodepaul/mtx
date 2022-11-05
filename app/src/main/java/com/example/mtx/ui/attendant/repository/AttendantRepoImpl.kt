@@ -68,5 +68,17 @@ class AttendantRepoImpl(
         return appdoa.setMobileAgent(agents)
     }
 
+    override suspend fun mapMobileAgent(
+        lat: String,
+        lng: String,
+        agentName: String,
+        mobileNumber: String,
+        address: String,
+        depositCapacity: String,
+        employee_id: String
+    ): MobileAgent {
+        return retrofitService.mapMobileAgent(lat, lng, agentName, mobileNumber, address, depositCapacity, employee_id)
+    }
+
 
 }

@@ -75,4 +75,15 @@ interface RetrofitServices {
         @Query("route_id") route_id: String
     ): MoneyAgentResponse
 
+    @GET("/api/map/agent")
+    suspend fun mapMobileAgent(
+        @Query("lat") lat: String,
+        @Query("lng") lng: String,
+        @Query("agentName") agentName: String,
+        @Query("mobileNumber") mobileNumber: String,
+        @Query("address") address: String,
+        @Query("depositCapacity") depositCapacity: String,
+        @Query("employee_id") employee_id: String,
+    ): MobileAgent
+
 }

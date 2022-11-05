@@ -9,6 +9,7 @@ import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.example.mtx.databinding.UserModulesAdapterBinding
 import com.example.mtx.dto.UserModules
+import com.example.mtx.ui.attendant.MapMobileAgent
 import com.example.mtx.ui.messages.MessageActivity
 import com.example.mtx.ui.order.ReOrderActivity
 import com.example.mtx.ui.sales.SalesActivity
@@ -40,8 +41,8 @@ class ModuleAdapter(private var mItems: List<UserModules>, private val context: 
             val generator = ColorGenerator.MATERIAL
             val drawable = TextDrawable.builder().buildRound(letter, generator.randomColor)
             binding.idCheck.setImageDrawable(drawable)
-            binding.modulecontents.text = item.name!!.toLowerCase().capitalize()
-            binding.remark.text = item.imageurl!!.toLowerCase().capitalize()
+            binding.modulecontents.text = item.name!!.lowercase().capitalize()
+            binding.remark.text = item.imageurl!!.lowercase().capitalize()
 
             binding.parentModules.setOnClickListener {
                 when (item.navigationid) {
@@ -60,8 +61,14 @@ class ModuleAdapter(private var mItems: List<UserModules>, private val context: 
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         context.startActivity(intent)
                     }
+                    7-> {
+                        val intent = Intent(context, MapMobileAgent::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        context.startActivity(intent)
+                    }
                 }
             }
+
         }
     }
 }

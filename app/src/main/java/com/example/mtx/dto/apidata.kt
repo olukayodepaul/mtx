@@ -695,8 +695,14 @@ data class DataAccuracy(
     )
 }
 
-data class BreadCastNotification(val counts: Int = 0)
+data class BreadCastNotification(
+    val counts: Int = 0
+)
 
+data class MobileAgent(
+    val status: Int = 0,
+    val message: String = ""
+)
 
 
 
