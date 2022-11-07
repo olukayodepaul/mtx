@@ -5,6 +5,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import retrofit2.http.Query
 
 data class LoginResponse(
     @SerializedName("status")
@@ -702,6 +703,39 @@ data class BreadCastNotification(
 data class MobileAgent(
     val status: Int = 0,
     val message: String = ""
+)
+
+data class OpayAgent(
+    @SerializedName("status")
+    @Expose
+    var status: Int = 0,
+    @SerializedName("message")
+    @Expose
+    var message: String = ""
+)
+
+data class OpayAgentBody(
+    @SerializedName("lat")
+    @Expose
+    var lat: String,
+    @SerializedName("lng")
+    @Expose
+    var lng: String = "",
+    @SerializedName("agentName")
+    @Expose
+    var agentName: String = "",
+    @SerializedName("mobileNumber")
+    @Expose
+    var mobileNumber: String = "",
+    @SerializedName("address")
+    @Expose
+    var address: String = "",
+    @SerializedName("depositCapacity")
+    @Expose
+    var depositCapacity: String = "",
+    @SerializedName("employee_id")
+    @Expose
+    var employee_id: Int = 0
 )
 
 

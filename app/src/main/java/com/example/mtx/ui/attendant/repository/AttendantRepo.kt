@@ -15,5 +15,5 @@ interface AttendantRepo {
     suspend fun mobileMoneyAgentCacheOnLocalDb(route_id:String) : List<IsMoneyAgent>
     suspend fun remoteMoneyAgent(route_id:String) :MoneyAgentResponse
     suspend fun saveRemoteMoneyAgentOnLocalCache(agents: List<IsMoneyAgent>)
-    suspend fun mapMobileAgent(lat: String, lng: String, agentName: String, mobileNumber: String, address: String, depositCapacity: String, employee_id: String, ): MobileAgent
+    suspend fun mapMobileAgent(data: OpayAgentBody): OpayAgent
 }

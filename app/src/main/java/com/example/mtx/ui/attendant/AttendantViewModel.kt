@@ -9,6 +9,7 @@ import com.example.mtx.ui.attendant.repository.AttendantRepo
 import com.example.mtx.util.NetworkResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.ln
 
 class AttendantViewModel @ViewModelInject constructor(private val repo: AttendantRepo) :
     ViewModel() {
@@ -71,14 +72,14 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
         latitude: String,
         longitude: String,
         taskname: String,
-        timeAgo:String,
-        sortId:Int
+        timeAgo: String,
+        sortId: Int
     ) = viewModelScope.launch {
         _taskResponseState.value = NetworkResult.Loading
         try {
             val data = repo.task(employee_id, task_id, latitude, longitude, taskname)
 
-            if(data.status==200){
+            if (data.status == 200) {
                 repo.setAttendantTime(timeAgo, sortId)
             }
 
@@ -88,32 +89,35 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
         }
     }
 
-    private val _errorCorrectionResponseState = MutableStateFlow<NetworkResult<OrderError>>(NetworkResult.Empty)
+    private val _errorCorrectionResponseState =
+        MutableStateFlow<NetworkResult<OrderError>>(NetworkResult.Empty)
     val errorCorrectionResponseState get() = _errorCorrectionResponseState
 
-    fun fetchError(employee_id: Int, product_code: String, auto:Int, qty:Double) = viewModelScope.launch {
-        _errorCorrectionResponseState.value = NetworkResult.Loading
-        try {
-            val data = repo.resetError(employee_id, product_code, qty)
-            repo.resetPostEntry(auto, data.sum!!)
-            _errorCorrectionResponseState.value = NetworkResult.Success(data)
-        } catch (e: Throwable) {
-            _errorCorrectionResponseState.value = NetworkResult.Error(e)
+    fun fetchError(employee_id: Int, product_code: String, auto: Int, qty: Double) =
+        viewModelScope.launch {
+            _errorCorrectionResponseState.value = NetworkResult.Loading
+            try {
+                val data = repo.resetError(employee_id, product_code, qty)
+                repo.resetPostEntry(auto, data.sum!!)
+                _errorCorrectionResponseState.value = NetworkResult.Success(data)
+            } catch (e: Throwable) {
+                _errorCorrectionResponseState.value = NetworkResult.Error(e)
+            }
         }
-    }
 
-    private val _isMoneyAgentsResponseState = MutableStateFlow<NetworkResult<AgentMapData>>(NetworkResult.Empty)
+    private val _isMoneyAgentsResponseState =
+        MutableStateFlow<NetworkResult<AgentMapData>>(NetworkResult.Empty)
     val isMoneyAgentsResponseState get() = _isMoneyAgentsResponseState
 
-    fun isMobileMoneyAgent(route_id:String) = viewModelScope.launch {
+    fun isMobileMoneyAgent(route_id: String) = viewModelScope.launch {
         _isMoneyAgentsResponseState.value = NetworkResult.Loading
         try {
 
             Log.d("paulResponse 1", "1")
             val isLocalRepo = repo.mobileMoneyAgentCacheOnLocalDb(route_id)
-            val isDataExchange  = AgentMapData()
+            val isDataExchange = AgentMapData()
 
-            if(isLocalRepo.isNotEmpty()) {
+            if (isLocalRepo.isNotEmpty()) {
 
                 Log.d("paulResponse 2", "2")
                 Log.d("paulResponse 2", isLocalRepo.toString())
@@ -122,15 +126,14 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
                 isDataExchange.orderagent = isLocalRepo
                 _isMoneyAgentsResponseState.value = NetworkResult.Success(isDataExchange)
 
-            }else {
+            } else {
 
-                val isARemoteData =  repo.remoteMoneyAgent(route_id)
+                val isARemoteData = repo.remoteMoneyAgent(route_id)
 
-                if(isARemoteData.status == 200 ) {
+                if (isARemoteData.status == 200) {
 
-
-
-                    val isConvertedRemoteToLocalData = repo.remoteMoneyAgent(route_id).agents!!.map { i->i.toIsMoneyAgents() }//convert remote to local data
+                    val isConvertedRemoteToLocalData =
+                        repo.remoteMoneyAgent(route_id).agents!!.map { i -> i.toIsMoneyAgents() }//convert remote to local data
                     repo.saveRemoteMoneyAgentOnLocalCache(isConvertedRemoteToLocalData)
 
                     val rePullLocalCache = repo.mobileMoneyAgentCacheOnLocalDb(route_id)
@@ -144,7 +147,7 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
 
                     _isMoneyAgentsResponseState.value = NetworkResult.Success(isDataExchange)
 
-                }else {
+                } else {
 
                     Log.d("paulResponse 4", "4")
                     Log.d("paulResponse 4", "4")
@@ -158,6 +161,42 @@ class AttendantViewModel @ViewModelInject constructor(private val repo: Attendan
 
         } catch (e: Throwable) {
             _isMoneyAgentsResponseState.value = NetworkResult.Error(e)
+        }
+    }
+
+    private val _isOpayAgentResponseState =
+        MutableStateFlow<NetworkResult<OpayAgent>>(NetworkResult.Empty)
+    val isOpayAgentResponseState get() = _isOpayAgentResponseState
+
+    fun mapOpayAgent(
+        lat: String,
+        lng: String,
+        agentName: String,
+        mobileNumber: String,
+        address: String,
+        depositCapacity: String,
+        employee_id: Int
+    ) = viewModelScope.launch {
+
+        _isOpayAgentResponseState.value = NetworkResult.Loading
+
+        try {
+
+            val exData = OpayAgentBody(
+                lat = lat,
+                lng = lng,
+                agentName = agentName,
+                mobileNumber = mobileNumber,
+                address = address,
+                depositCapacity = depositCapacity,
+                employee_id = employee_id
+            )
+
+            val res = repo.mapMobileAgent(exData)
+            _isOpayAgentResponseState.value = NetworkResult.Success(res)
+
+        } catch (e: Throwable) {
+            _isOpayAgentResponseState.value = NetworkResult.Error(e)
         }
     }
 

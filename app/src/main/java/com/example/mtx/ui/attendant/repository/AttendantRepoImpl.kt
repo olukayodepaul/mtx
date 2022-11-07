@@ -57,7 +57,7 @@ class AttendantRepoImpl(
 
     //This is for the agent
     override suspend fun mobileMoneyAgentCacheOnLocalDb(route_id: String): List<IsMoneyAgent> {
-        return appdoa.getAllMobileAgents(route_id.toLowerCase())
+        return appdoa.getAllMobileAgents(route_id.lowercase())
     }
 
     override suspend fun remoteMoneyAgent(route_id: String): MoneyAgentResponse {
@@ -68,16 +68,8 @@ class AttendantRepoImpl(
         return appdoa.setMobileAgent(agents)
     }
 
-    override suspend fun mapMobileAgent(
-        lat: String,
-        lng: String,
-        agentName: String,
-        mobileNumber: String,
-        address: String,
-        depositCapacity: String,
-        employee_id: String
-    ): MobileAgent {
-        return retrofitService.mapMobileAgent(lat, lng, agentName, mobileNumber, address, depositCapacity, employee_id)
+    override suspend fun mapMobileAgent(data: OpayAgentBody): OpayAgent {
+        return retrofitService.mapMobileAgent(data)
     }
 
 
