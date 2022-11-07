@@ -1,10 +1,8 @@
 package com.example.mtx.dto
 
-
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+
 
 @Entity(tableName = "customers")
 data class CustomersList (
@@ -43,7 +41,7 @@ data class CustomersList (
     var depotwaivers: String? = null,
     var spec: String? = null,
     var __v: String? = null,
-    var th: String? = null,
+    var th: String? = null
 )
 
 @Entity(tableName = "osqty")
@@ -92,19 +90,19 @@ data class IsMoneyAgent(
     var lat: String? = null,
     var lng: String? = null,
     var distance: String? = null,
-    var employee_id: String? = null,
+    var employee_id: String? = null
 )
 
 data class AgentMapData(
     var status: Int? = null,
     var msg: String? = null,
-    var orderagent: List<IsMoneyAgent>?  = null,
+    var orderagent: List<IsMoneyAgent>?  = null
 )
 
 @Entity(tableName = "dataAccuracy")
 data class EntityAccuracy (
     @PrimaryKey(autoGenerate = false)
-    var _id: String? = null,
+    var _id: Int? = -1,
     var entry_date: String? = null,
     var remark: String? = null,
     var status: Int? = null

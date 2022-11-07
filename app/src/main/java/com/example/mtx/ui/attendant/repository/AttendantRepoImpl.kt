@@ -57,7 +57,7 @@ class AttendantRepoImpl(
 
     //This is for the agent
     override suspend fun mobileMoneyAgentCacheOnLocalDb(route_id: String): List<IsMoneyAgent> {
-        return appdoa.getAllMobileAgents(route_id.lowercase())
+        return appdoa.getAllMobileAgents(route_id.toLowerCase())
     }
 
     override suspend fun remoteMoneyAgent(route_id: String): MoneyAgentResponse {

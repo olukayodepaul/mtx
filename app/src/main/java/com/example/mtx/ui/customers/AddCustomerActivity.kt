@@ -350,7 +350,7 @@ class AddCustomerActivity : AppCompatActivity() {
 
             viewModel.createCustomers(
                 employee_id, latitude.toDouble(), longitude.toDouble(),  outletName!!,
-                contactPerson!!, contactAddress!!,  mobileNumber!!, outletClassId!!, outletLanguageId!!, outletTypeId!!,
+                contactPerson!!, contactAddress!!,  mobileNumber!!, outletClassId!!, outletLanguageId!!, outletTypeId!!
             )
         }
     }

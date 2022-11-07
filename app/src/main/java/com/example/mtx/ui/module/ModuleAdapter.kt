@@ -40,9 +40,9 @@ class ModuleAdapter(private var mItems: List<UserModules>, private val context: 
             val letter: String = item.name!!.substring(0, 1).toUpperCase()
             val generator = ColorGenerator.MATERIAL
             val drawable = TextDrawable.builder().buildRound(letter, generator.randomColor)
-            binding.idCheck.setImageDrawable(drawable)
-            binding.modulecontents.text = item.name!!.lowercase().capitalize()
-            binding.remark.text = item.imageurl!!.lowercase().capitalize()
+            binding.idcheck.setImageDrawable(drawable)
+            binding.modulecontents.text = item.name!!.toLowerCase().capitalize()
+            binding.remark.text = item.imageurl!!.toLowerCase().capitalize()
 
             binding.parentModules.setOnClickListener {
                 when (item.navigationid) {

@@ -21,7 +21,7 @@
         android:theme="@style/Theme.Mtx"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".MapMobileAgent"
+            android:name=".ui.attendant.MapMobileAgent"
             android:exported="false" />
         <activity
             android:name=".ui.attendant.MobileMoneyAgent"

@@ -12,7 +12,7 @@ class LoginRepoImpl (
 
     override suspend fun isUserLogin(
         username: String,
-        password: String,
+        password: String
     ): LoginResponse {
         return retrofitClient.login(username, password)
     }

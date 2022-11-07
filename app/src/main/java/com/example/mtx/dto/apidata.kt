@@ -5,7 +5,8 @@ import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import retrofit2.http.Query
+
+
 
 data class LoginResponse(
     @SerializedName("status")
@@ -58,7 +59,7 @@ data class Employees(
     var depotlng: String? = null,
     @SerializedName("depotwaiver")
     @Expose
-    var depotwaiver: String? = null,
+    var depotwaiver: String? = null
 
     )
 
@@ -213,7 +214,7 @@ data class Customers(
     var __v: String? = null,
     @SerializedName("th")
     @Expose
-    var th: String? = null,
+    var th: String? = null
 ) : Parcelable
 
 data class BasketLimitResponse(
@@ -608,7 +609,7 @@ data class Orders(
         var product_name: String? = null,
         @SerializedName("seperatorname")
         @Expose
-        var seperatorname: String? = null,
+        var seperatorname: String? = null
     )
 }
 
@@ -666,7 +667,7 @@ data class MoneyAgent(
     var distance: String? = null,
     @SerializedName("employee_id")
     @Expose
-    var employee_id: String? = null,
+    var employee_id: String? = null
 )
 
 data class DataAccuracy(
@@ -683,7 +684,7 @@ data class DataAccuracy(
     data class DataAccuracyConditions(
         @SerializedName("_id")
         @Expose
-        var _id: String? = null,
+        var _id: Int? = -1,
         @SerializedName("entry_date")
         @Expose
         var entry_date: String? = null,

@@ -46,7 +46,7 @@ class SalesAdapter(private var mItems: List<CustomersList>, private val context:
             val letter: String = item.outletname!!.substring(0, 1).toUpperCase()
             val generator = ColorGenerator.MATERIAL
             val drawable = TextDrawable.builder().buildRound(letter, generator.randomColor)
-            binding.IdCheck .setImageDrawable(drawable)
+            binding.idcheck.setImageDrawable(drawable)
             binding.modulecontents.text = item.outletname!!.toLowerCase().capitalize()
             binding.remark.text = ("URNO: ${item.urno}, VCL: ${item.volumeclass}")
             binding.timeago.text = item.timeago

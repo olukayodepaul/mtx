@@ -382,7 +382,7 @@ class UpdateCustomersActivity : AppCompatActivity() {
             val employee_id =sessionManager.fetchEmployeeId.first()
 
             viewModel.updateCustomers(employee_id, isIntentData!!.urno!!, latitude.toDouble(), longitude.toDouble(),  outletName!!,
-                contactPerson!!, contactAddress!!,  mobileNumber!!, outletClassId!!, outletLanguageId!!, outletTypeId!!,
+                contactPerson!!, contactAddress!!,  mobileNumber!!, outletClassId!!, outletLanguageId!!, outletTypeId!!
             )
         }
     }

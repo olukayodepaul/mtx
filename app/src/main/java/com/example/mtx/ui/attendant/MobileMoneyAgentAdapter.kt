@@ -38,7 +38,7 @@ class MobileMoneyAgentAdapter (private var iSAgent: List<IsMoneyAgent>, private 
             val letter: String = item.agennama!!.substring(0, 1).toUpperCase()
             val generator = ColorGenerator.MATERIAL
             val drawable = TextDrawable.builder().buildRound(letter, generator.randomColor)
-            binding.IdCheck.setImageDrawable(drawable)
+            binding.idcheck.setImageDrawable(drawable)
             binding.modulecontents.text = item.agennama!!.toLowerCase().capitalize()
             binding.transType.text = item.phone
             binding.remark.text = item.address!!.toLowerCase().capitalize()
